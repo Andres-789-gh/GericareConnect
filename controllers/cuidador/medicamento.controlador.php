@@ -1,7 +1,7 @@
 <?php
 
-// LA RUTA CORRECTA DESDE controllers/cuidador/ HASTA models/clases/ ES:
-require_once "../../models/clases/medicamento.modelo.php";
+// Usando __DIR__ para una ruta absoluta más robusta al modelo
+require_once __DIR__ . "/../../models/clases/medicamento.modelo.php";
 
 class ControladorMedicamentos {
 
@@ -22,7 +22,6 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    // Redirección desde controlador a vista (sube 2 niveles, entra a views/cuidador/html_cuidador)
                     window.location = "../views/cuidador/html_cuidador/medicamento.php";
                 </script>';
             } else {

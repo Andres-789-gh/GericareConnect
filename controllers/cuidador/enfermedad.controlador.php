@@ -1,6 +1,7 @@
 <?php
 
-require_once "../../models/clases/enfermedad.modelo.php";
+// Usando __DIR__ para una ruta absoluta más robusta al modelo
+require_once __DIR__ . "/../../models/clases/enfermedad.modelo.php";
 
 class ControladorEnfermedades {
 
@@ -21,7 +22,6 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    // Redirección desde controlador a vista (sube 2 niveles, entra a views/cuidador/html_cuidador)
                     window.location = "../views/cuidador/html_cuidador/enfermedad.php";
                 </script>';
             } else {
