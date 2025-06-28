@@ -21,12 +21,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al crear el medicamento.");
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
@@ -50,12 +50,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al editar el medicamento.");
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
@@ -87,12 +87,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al cambiar el estado del medicamento.");
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
@@ -117,12 +117,12 @@ class ControladorMedicamentos {
             if ($respuesta == "ok") {
                 echo '<script>
                     alert("Medicamento eliminado lógicamente (estado cambiado a Inactivo).");
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al intentar eliminar lógicamente el medicamento.");
-                    window.location = "medicamentos.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
