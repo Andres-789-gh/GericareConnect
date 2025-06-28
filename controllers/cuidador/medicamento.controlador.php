@@ -1,7 +1,7 @@
 <?php
 
-// RUTA CORREGIDA: Desde 'controllers/cuidador/' sube DOS niveles para llegar a la raíz (GericareConnect/),
-// y luego entra a 'models/clases/'
+// **CORRECCIÓN CRÍTICA AQUÍ:** Ruta desde 'controllers/cuidador/' hasta 'models/clases/'
+// Sube 2 niveles (../ para 'cuidador', ../ para 'controllers') y entra a 'models/clases'
 require_once "../../models/clases/medicamento.modelo.php";
 
 class ControladorMedicamentos {
@@ -23,7 +23,7 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../views/cuidador/html_cuidador/medicamento.php"; // Redirección desde controlador a vista
                 </script>';
             } else {
                 echo '<script>
@@ -51,7 +51,7 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../views/cuidador/html_cuidador/medicamento.php"; // Redirección desde controlador a vista
                 </script>';
             } else {
                 echo '<script>
@@ -87,7 +87,7 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../views/cuidador/html_cuidador/medicamento.php"; // Redirección desde controlador a vista
                 </script>';
             } else {
                 echo '<script>
