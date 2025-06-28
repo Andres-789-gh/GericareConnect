@@ -1,7 +1,7 @@
 <?php
 // Incluimos los archivos del modelo y controlador
-require_once "../controllers/medicamento.controlador.php"; // Original path
-require_once "../models/medicamento.modelo.php"; // Original path
+require_once "../controllers/medicamento.controlador.php";
+require_once "../models/medicamento.modelo.php";
 
 // Procesar acciones de POST (Crear/Editar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,17 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Procesar acción de GET (Eliminar y Cambiar Estado)
+// Procesar acción de GET (Eliminar - ahora borrado lógico)
+// Notar que la acción de "eliminar" ahora usa el controlador que cambia el estado
 if (isset($_GET['idEliminar'])) {
-    $controlador = new ControladorMedicamentos(); // Instanciamos para llamar a métodos no estáticos
-    $controlador->ctrEliminarMedicamento();
+    $controlador = new ControladorMedicamentos();
+    $controlador->ctrEliminarMedicamento(); // Este método ahora cambia el estado a Inactivo
 }
 
-// Procesar cambio de estado
-if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
-    $controlador = new ControladorMedicamentos(); // Instanciamos para llamar a métodos no estáticos
-    $controlador->ctrCambiarEstadoMedicamento();
-}
+// NO NECESITAMOS PROCESAR CAMBIO DE ESTADO DIRECTAMENTE DESDE LA URL (solo para eliminar lógico)
+// if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
+//     $controlador = new ControladorMedicamentos();
+//     $controlador->ctrCambiarEstadoMedicamento();
+// }
 
 ?>
 <!DOCTYPE html>
@@ -33,7 +34,8 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Medicamentos</title>
-    <link rel="stylesheet" href="css/styles.css"> </head>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
 <body>
     <div class="container">
         <h1>Gestión de Medicamentos</h1>
@@ -52,13 +54,6 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
                     <label for="descripcion_medicamento">Descripción:</label>
                     <textarea id="descripcion_medicamento" name="descripcion_medicamento"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="estado">Estado:</label>
-                    <select id="estado" name="estado">
-                        <option value="Activo">Activo</option>
-                        <option value="Inactivo">Inactivo</option>
-                    </select>
-                </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <button type="button" class="btn btn-secondary" id="btn-cancelar" style="display: none;">Cancelar</button>
@@ -74,16 +69,14 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
-                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    // Obtenemos todos los medicamentos para mostrarlos en la tabla
+                    // Obtenemos solo los medicamentos activos para mostrarlos en la tabla
                     $medicamentos = ControladorMedicamentos::ctrMostrarMedicamentos(null, null);
 
-                    // Check if $medicamentos is an array and not empty to avoid errors
                     if (is_array($medicamentos) && count($medicamentos) > 0) {
                         foreach ($medicamentos as $medicamento):
                         ?>
@@ -91,43 +84,24 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
                             <td><?php echo htmlspecialchars($medicamento["id_medicamento"]); ?></td>
                             <td><?php echo htmlspecialchars($medicamento["nombre_medicamento"]); ?></td>
                             <td><?php echo htmlspecialchars($medicamento["descripcion_medicamento"]); ?></td>
-                            <td><?php echo htmlspecialchars($medicamento["estado"]); ?></td>
                             <td>
                                 <button class="btn btn-warning btn-editar"
                                         data-id="<?php echo $medicamento["id_medicamento"]; ?>"
                                         data-nombre="<?php echo htmlspecialchars($medicamento["nombre_medicamento"]); ?>"
-                                        data-descripcion="<?php echo htmlspecialchars($medicamento["descripcion_medicamento"]); ?>"
-                                        data-estado="<?php echo htmlspecialchars($medicamento["estado"]); ?>"> Editar
+                                        data-descripcion="<?php echo htmlspecialchars($medicamento["descripcion_medicamento"]); ?>">
+                                        Editar
                                 </button>
                                 <a href="medicamento.php?idEliminar=<?php echo $medicamento["id_medicamento"]; ?>"
                                    class="btn btn-danger"
-                                   onclick="return confirm('¿Estás seguro de que quieres eliminar este medicamento?');">
-                                    Eliminar
+                                   onclick="return confirm('¿Estás seguro de que quieres ELIMINAR este medicamento? (Se inhabilitará)');">
+                                   Eliminar
                                 </a>
-                                <?php
-                                // Logic for state change button
-                                // IMPORTANT: These comparisons MUST exactly match your ENUM values in the database
-                                if ($medicamento["estado"] == "Activo") { // Assuming 'Activo' with capital A in DB ENUM
-                                    echo '<a href="medicamento.php?idCambiarEstado=' . $medicamento["id_medicamento"] . '&nuevoEstado=Inactivo"
-                                           class="btn btn-info"
-                                           onclick="return confirm(\'¿Estás seguro de que quieres INACTIVAR este medicamento?\');">
-                                           Inactivar
-                                          </a>';
-                                } else { // Assuming 'Inactivo' with capital I in DB ENUM
-                                    echo '<a href="medicamento.php?idCambiarEstado=' . $medicamento["id_medicamento"] . '&nuevoEstado=Activo"
-                                           class="btn btn-success"
-                                           onclick="return confirm(\'¿Estás seguro de que quieres ACTIVAR este medicamento?\');">
-                                           Activar
-                                          </a>';
-                                }
-                                ?>
-                            </td>
+                                </td>
                         </tr>
                         <?php
                         endforeach;
                     } else {
-                        // Message if no medicines are registered
-                        echo '<tr><td colspan="5">No hay medicamentos registrados.</td></tr>';
+                        echo '<tr><td colspan="3">No hay medicamentos activos registrados.</td></tr>';
                     }
                     ?>
                 </tbody>
@@ -135,14 +109,13 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
         </div>
     </div>
     <script>
-        // Script to handle the edit form and cancel button
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('medicamento-form');
             const formTitle = document.getElementById('form-title');
             const idMedicamentoEditar = document.getElementById('id_medicamento_editar');
             const nombreMedicamento = document.getElementById('nombre_medicamento');
             const descripcionMedicamento = document.getElementById('descripcion_medicamento');
-            const estadoSelect = document.getElementById('estado'); // NEW: Reference to the state select
+            // REMOVED: const estadoSelect = document.getElementById('estado');
             const btnCancelar = document.getElementById('btn-cancelar');
 
             document.querySelectorAll('.btn-editar').forEach(button => {
@@ -150,14 +123,14 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
                     const id = this.getAttribute('data-id');
                     const nombre = this.getAttribute('data-nombre');
                     const descripcion = this.getAttribute('data-descripcion');
-                    const estado = this.getAttribute('data-estado'); // NEW: Get the state from data attribute
+                    // REMOVED: const estado = this.getAttribute('data-estado');
 
                     formTitle.textContent = 'Editar Medicamento';
                     idMedicamentoEditar.value = id;
                     nombreMedicamento.value = nombre;
                     descripcionMedicamento.value = descripcion;
-                    estadoSelect.value = estado; // NEW: Set the value of the select dropdown
-                    btnCancelar.style.display = 'inline-block'; // Show Cancel button
+                    // REMOVED: estadoSelect.value = estado;
+                    btnCancelar.style.display = 'inline-block';
                 });
             });
 
@@ -166,8 +139,8 @@ if (isset($_GET['idCambiarEstado']) && isset($_GET['nuevoEstado'])) {
                 idMedicamentoEditar.value = '';
                 nombreMedicamento.value = '';
                 descripcionMedicamento.value = '';
-                estadoSelect.value = 'Activo'; // Reset the select to default (assuming 'Activo' is default)
-                btnCancelar.style.display = 'none'; // Hide Cancel button
+                // REMOVED: estadoSelect.value = 'Activo';
+                btnCancelar.style.display = 'none';
             });
         });
     </script>

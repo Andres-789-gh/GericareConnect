@@ -1,11 +1,11 @@
 <?php
 
-require_once "../models/medicamento.modelo.php"; // Asegúrate de que esta ruta sea correcta
+require_once "../models/medicamento.modelo.php";
 
 class ControladorMedicamentos {
 
     /*=============================================
-    Controlador para Crear un Medicamento
+    Controlador para Crear un Medicamento (MODIFICADO: 'estado' siempre a 'Activo')
     =============================================*/
     static public function ctrCrearMedicamento() {
         if (isset($_POST["nombre_medicamento"])) {
@@ -14,7 +14,7 @@ class ControladorMedicamentos {
             $datos = array(
                 "nombre_medicamento" => $_POST["nombre_medicamento"],
                 "descripcion_medicamento" => $_POST["descripcion_medicamento"],
-                "estado" => $_POST["estado"] // <-- Asegúrate de que este campo esté aquí
+                "estado" => "Activo" // Siempre se crea como Activo
             );
 
             $respuesta = ModeloMedicamentos::mdlCrearMedicamento($tabla, $datos);
@@ -33,7 +33,7 @@ class ControladorMedicamentos {
     }
 
     /*=============================================
-    Controlador para Editar un Medicamento
+    Controlador para Editar un Medicamento (MODIFICADO: 'estado' ya no se toma del form)
     =============================================*/
     static public function ctrEditarMedicamento() {
         if (isset($_POST["id_medicamento_editar"])) {
@@ -42,8 +42,8 @@ class ControladorMedicamentos {
             $datos = array(
                 "id_medicamento" => $_POST["id_medicamento_editar"],
                 "nombre_medicamento" => $_POST["nombre_medicamento"],
-                "descripcion_medicamento" => $_POST["descripcion_medicamento"],
-                "estado" => $_POST["estado"] // <-- Asegúrate de que este campo esté aquí
+                "descripcion_medicamento" => $_POST["descripcion_medicamento"]
+                // "estado" ya no se maneja directamente desde el formulario de edición
             );
 
             $respuesta = ModeloMedicamentos::mdlEditarMedicamento($tabla, $datos);
@@ -62,7 +62,7 @@ class ControladorMedicamentos {
     }
 
     /*=============================================
-    Controlador para Mostrar Medicamentos
+    Controlador para Mostrar Medicamentos (SIN CAMBIOS)
     =============================================*/
     static public function ctrMostrarMedicamentos($item, $valor) {
         $tabla = "tb_medicamento";
@@ -71,15 +71,16 @@ class ControladorMedicamentos {
     }
 
     /*=============================================
-    Controlador para Cambiar el Estado del Medicamento (por URL, botones de la tabla)
+    Controlador para Cambiar el Estado del Medicamento (MODIFICADO: ahora este maneja el borrado lógico)
     =============================================*/
+    // Este método seguirá existiendo pero su llamada desde la vista cambiará para el borrado lógico
     public function ctrCambiarEstadoMedicamento() {
-        if (isset($_GET["idCambiarEstado"]) && isset($_GET["nuevoEstado"])) {
+        if (isset($_GET["idCambiarEstado"]) && isset($_GET["nuevoEstado"])) { // Estos GET vendrán de los enlaces de borrado lógico
             $tabla = "tb_medicamento";
 
             $datos = array(
                 "id_medicamento" => $_GET["idCambiarEstado"],
-                "estado" => $_GET["nuevoEstado"] // Este valor ya viene del botón y debería ser correcto
+                "estado" => $_GET["nuevoEstado"] // Será 'Inactivo' cuando se "elimine"
             );
 
             $respuesta = ModeloMedicamentos::mdlActualizarEstadoMedicamento($tabla, $datos);
@@ -98,22 +99,29 @@ class ControladorMedicamentos {
     }
 
     /*=============================================
-    Controlador para Eliminar un Medicamento
+    Controlador para Eliminar un Medicamento (MODIFICADO: Ahora llama a cambiar estado)
     =============================================*/
     public function ctrEliminarMedicamento() {
         if (isset($_GET["idEliminar"])) {
+            // No se elimina físicamente, se cambia el estado a 'Inactivo'
             $tabla = "tb_medicamento";
-            $datos = $_GET["idEliminar"];
 
-            $respuesta = ModeloMedicamentos::mdlEliminarMedicamento($tabla, $datos);
+            $datos = array(
+                "id_medicamento" => $_GET["idEliminar"],
+                "estado" => "Inactivo" // Este es el "borrado lógico"
+            );
+
+            // Reutilizamos el método para actualizar estado
+            $respuesta = ModeloMedicamentos::mdlActualizarEstadoMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
+                    alert("Medicamento eliminado lógicamente (estado cambiado a Inactivo).");
                     window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
-                    alert("Error al eliminar el medicamento.");
+                    alert("Error al intentar eliminar lógicamente el medicamento.");
                     window.location = "medicamento.php";
                 </script>';
             }

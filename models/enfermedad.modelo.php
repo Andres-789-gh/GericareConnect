@@ -1,11 +1,13 @@
 <?php
 
-require_once "conexion.php"; // Incluimos el archivo de conexión
+require_once "conexion.php";
 
 class ModeloEnfermedades {
 
+    // ... (Mantén mdlCrearEnfermedad, mdlMostrarEnfermedades, mdlEditarEnfermedad, mdlActualizarEstadoEnfermedad) ...
+
     /*=============================================
-    Método para Crear una Enfermedad
+    Método para Crear una Enfermedad (SIN CAMBIOS)
     =============================================*/
     static public function mdlCrearEnfermedad($tabla, $datos) {
         $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre_enfermedad, descripcion_enfermedad, estado) VALUES (:nombre_enfermedad, :descripcion_enfermedad, :estado)");
@@ -24,16 +26,16 @@ class ModeloEnfermedades {
     }
 
     /*=============================================
-    Método para Mostrar Enfermedades
+    Método para Mostrar Enfermedades (MODIFICADO para filtrar por 'Activo')
     =============================================*/
     static public function mdlMostrarEnfermedades($tabla, $item, $valor) {
         if ($item != null) {
-            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND estado = 'Activo'");
             $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetch();
         } else {
-            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE estado = 'Activo'");
             $stmt->execute();
             return $stmt->fetchAll();
         }
@@ -42,14 +44,13 @@ class ModeloEnfermedades {
     }
 
     /*=============================================
-    Método para Editar una Enfermedad
+    Método para Editar una Enfermedad (MODIFICADO)
     =============================================*/
     static public function mdlEditarEnfermedad($tabla, $datos) {
-        $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre_enfermedad = :nombre_enfermedad, descripcion_enfermedad = :descripcion_enfermedad, estado = :estado WHERE id_enfermedad = :id_enfermedad");
+        $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre_enfermedad = :nombre_enfermedad, descripcion_enfermedad = :descripcion_enfermedad WHERE id_enfermedad = :id_enfermedad");
 
         $stmt->bindParam(":nombre_enfermedad", $datos["nombre_enfermedad"], PDO::PARAM_STR);
         $stmt->bindParam(":descripcion_enfermedad", $datos["descripcion_enfermedad"], PDO::PARAM_STR);
-        $stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_STR);
         $stmt->bindParam(":id_enfermedad", $datos["id_enfermedad"], PDO::PARAM_INT);
 
         if ($stmt->execute()) {
@@ -62,7 +63,7 @@ class ModeloEnfermedades {
     }
 
     /*=============================================
-    Método para Actualizar el Estado de una Enfermedad
+    Método para Actualizar el Estado de una Enfermedad (Para el borrado lógico)
     =============================================*/
     static public function mdlActualizarEstadoEnfermedad($tabla, $datos) {
         $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado = :estado WHERE id_enfermedad = :id_enfermedad");
@@ -80,20 +81,18 @@ class ModeloEnfermedades {
     }
 
     /*=============================================
-    Método para Eliminar una Enfermedad
+    Método para Eliminar una Enfermedad (ELIMINAR ESTE MÉTODO O COMENTARLO)
     =============================================*/
-    static public function mdlEliminarEnfermedad($tabla, $datos) {
-        $stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id_enfermedad = :id_enfermedad");
-        $stmt->bindParam(":id_enfermedad", $datos, PDO::PARAM_INT);
+    // static public function mdlEliminarEnfermedad($tabla, $datos) {
+    //     $stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id_enfermedad = :id_enfermedad");
+    //     $stmt->bindParam(":id_enfermedad", $datos, PDO::PARAM_INT);
 
-        if ($stmt->execute()) {
-            return "ok";
-        } else {
-            return "error";
-        }
-
-        $stmt = null;
-    }
+    //     if ($stmt->execute()) {
+    //         return "ok";
+    //     } else {
+    //         return "error";
+    //     }
+    //     $stmt = null;
+    // }
 }
-
 ?>
