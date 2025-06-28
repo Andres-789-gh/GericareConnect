@@ -86,7 +86,7 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                                         data-id="<?php echo $enfermedad["id_enfermedad"]; ?>"
                                         data-nombre="<?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?>"
                                         data-descripcion="<?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>">
-                                    Editar
+                                        Editar
                                 </button>
                                 <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?>"
                                    class="btn btn-danger"
