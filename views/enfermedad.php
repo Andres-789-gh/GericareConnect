@@ -90,7 +90,7 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                                 </button>
                                 <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?>"
                                    class="btn btn-danger"
-                                   onclick="return confirm('¿Estás seguro de que quieres ELIMINAR esta enfermedad?');">
+                                   onclick="return confirm('¿Estás seguro de que quieres Eliminar esta enfermedad?');">
                                    Eliminar
                                 </a>
                                 </td>
