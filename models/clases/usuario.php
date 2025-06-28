@@ -82,17 +82,22 @@
 
         public function Actualizar($datos) {
             try {
-                $query = $this->conn->prepare("call actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $query = $this->conn->prepare("call actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                $query->bindParam(1, $datos['id_usuario']);
-                $query->bindParam(2, $datos['tipo_documento']);
-                $query->bindParam(3, $datos['documento_identificacion']);
-                $query->bindParam(4, $datos['nombre']);
-                $query->bindParam(5, $datos['apellido']);
-                $query->bindParam(6, $datos['fecha_nacimiento']);
-                $query->bindParam(7, $datos['direccion']);
-                $query->bindParam(8, $datos['correo_electronico']);
-                $query->bindParam(9, $datos['numero_telefono']);
+                $query->bindParam(1,  $datos['id_usuario']);
+                $query->bindParam(2,  $datos['tipo_documento']);
+                $query->bindParam(3,  $datos['documento_identificacion']);
+                $query->bindParam(4,  $datos['nombre']);
+                $query->bindParam(5,  $datos['apellido']);
+                $query->bindParam(6,  $datos['fecha_nacimiento']);
+                $query->bindParam(7,  $datos['direccion']);
+                $query->bindParam(8,  $datos['correo_electronico']);
+                $query->bindParam(9,  $datos['numero_telefono']);
+                $query->bindParam(10, $datos['fecha_contratacion']);
+                $query->bindParam(11, $datos['tipo_contrato']);
+                $query->bindParam(12, $datos['contacto_emergencia']);
+                $query->bindParam(13, $datos['parentesco']);
+                $query->bindParam(14, $datos['roles']);
 
                 $query->execute();
 
