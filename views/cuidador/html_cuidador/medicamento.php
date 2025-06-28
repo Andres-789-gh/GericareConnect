@@ -1,9 +1,11 @@
 <?php
 // Incluimos los archivos del controlador y modelo
-// Desde 'views/cuidador/html_cuidador/' sube tres niveles para llegar a 'controllers/' y luego entra a 'cuidador/'
-require_once "../../controllers/cuidador/medicamento.controlador.php";
-// Desde 'views/cuidador/html_cuidador/' sube tres niveles para llegar a 'models/' y luego entra a 'clases/'
-require_once "../../models/clases/medicamento.modelo.php";
+// RUTA CORREGIDA: Desde 'views/cuidador/html_cuidador/' sube TRES niveles para llegar a la raíz (GericareConnect/),
+// y luego entra a 'controllers/cuidador/'
+require_once "../../../controllers/cuidador/medicamento.controlador.php";
+// RUTA CORREGIDA: Desde 'views/cuidador/html_cuidador/' sube TRES niveles para llegar a la raíz (GericareConnect/),
+// y luego entra a 'models/clases/'
+require_once "../../../models/clases/medicamento.modelo.php";
 
 // Procesar acciones de POST (Crear/Editar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,7 +29,7 @@ if (isset($_GET['idEliminar'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Medicamentos</title>
-    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../../css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -85,7 +87,7 @@ if (isset($_GET['idEliminar'])) {
                                 </button>
                                 <a href="medicamento.php?idEliminar=<?php echo $medicamento["id_medicamento"]; ?>"
                                    class="btn btn-danger"
-                                   onclick="return confirm('¿Estás seguro de que quieres ELIMINAR este medicamento?');">
+                                   onclick="return confirm('¿Estás seguro de que quieres ELIMINAR este medicamento? (Se inhabilitará)');">
                                    Eliminar
                                 </a>
                             </td>
