@@ -24,7 +24,7 @@
                 $validar = $this->conn->prepare("
                     select u.*, r.nombre_rol 
                     from tb_usuario u 
-                    inner join tb_rol r ON u.id_rol = r.id_rol
+                    inner join tb_rol r on u.id_rol = r.id_rol
                     where u.tipo_documento = ? 
                     and u.documento_identificacion = ? 
                     and u.estado = 'Activo'
@@ -38,22 +38,22 @@
 
         public function Actualizar($datos) {
             try {
-                $query = $this->conn->prepare("call actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $query = $this->conn->prepare("CALL actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 $query->bindParam(1,  $datos['id_usuario']);
                 $query->bindParam(2,  $datos['tipo_documento']);
                 $query->bindParam(3,  $datos['documento_identificacion']);
                 $query->bindParam(4,  $datos['nombre']);
                 $query->bindParam(5,  $datos['apellido']);
-                $query->bindParam(6,  $datos['fecha_nacimiento']);
-                $query->bindParam(7,  $datos['direccion']);
-                $query->bindParam(8,  $datos['correo_electronico']);
-                $query->bindParam(9,  $datos['numero_telefono']);
-                $query->bindParam(10, $datos['fecha_contratacion']);
-                $query->bindParam(11, $datos['tipo_contrato']);
-                $query->bindParam(12, $datos['contacto_emergencia']);
+                $query->bindParam(6,  $datos['direccion']);
+                $query->bindParam(7,  $datos['correo_electronico']);
+                $query->bindParam(8,  $datos['numero_telefono']);
+                $query->bindParam(9,  $datos['fecha_contratacion']);
+                $query->bindParam(10, $datos['tipo_contrato']);
+                $query->bindParam(11, $datos['contacto_emergencia']);
+                $query->bindParam(12, $datos['fecha_nacimiento']);
                 $query->bindParam(13, $datos['parentesco']);
-                $query->bindParam(14, $datos['roles']);
+                $query->bindParam(14, $datos['rol']); 
 
                 $query->execute();
 
@@ -67,16 +67,14 @@
         public function obtenerPorId($id_usuario) {
             try {
                 $stmt = $this->conn->prepare("
-                    SELECT 
+                    select 
                         u.*, 
                         t.numero_telefono, 
-                        GROUP_CONCAT(r.nombre_rol) AS roles
-                    FROM tb_usuario u
-                    LEFT JOIN tb_telefono t ON u.id_usuario = t.id_usuario AND t.estado = 'Activo'
-                    LEFT JOIN tb_usuario_rol ur ON u.id_usuario = ur.id_usuario AND ur.estado = 'Activo'
-                    LEFT JOIN tb_rol r ON ur.id_rol = r.id_rol
-                    WHERE u.id_usuario = ?
-                    GROUP BY u.id_usuario
+                        r.nombre_rol as roles
+                    from tb_usuario u
+                    left join tb_telefono t on u.id_usuario = t.id_usuario and t.estado = 'Activo'
+                    left join tb_rol r on u.id_rol = r.id_rol
+                    where u.id_usuario = ?
                 ");
                 $stmt->execute([$id_usuario]);
                 return $stmt->fetch(PDO::FETCH_ASSOC);
