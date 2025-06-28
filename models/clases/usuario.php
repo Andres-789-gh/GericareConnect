@@ -17,64 +17,20 @@
             */
             $this->conn = $conn;
         }
-/*
-        public function Login($tipo_documento, $documento_identificacion, $contraseña) {
-            try{
-                $validar = $this->conn->prepare("select u.id_usuario, u.tipo_documento, u.documento_identificacion, u.contraseña, u.estado, r.nombre_rol 
-                from tb_usuario u 
-                inner join tb_usuario_rol ur on u.id_usuario = ur.id_usuario 
-                inner join tb_rol r on ur.id_rol = r.id_rol
-                where u.tipo_documento=? AND u.documento_identificacion=? AND u.contraseña=? AND u.estado='Activo' AND ur.estado='Activo'
-            ");
-                $validar->execute([$tipo_documento, $documento_identificacion, $contraseña]);
-                $lista = $validar->fetchAll(PDO::FETCH_ASSOC);
-                return $lista;
-            } catch(exception $e) {
-                throw $e;
-            }
-        }
-*/
+
         // archivo usuario.php
         public function Login($tipo_documento, $documento_identificacion) {
             try {
                 $validar = $this->conn->prepare("
-                    SELECT u.*, r.nombre_rol 
-                    FROM tb_usuario u 
-                    INNER JOIN tb_usuario_rol ur ON u.id_usuario = ur.id_usuario 
-                    INNER JOIN tb_rol r ON ur.id_rol = r.id_rol
-                    WHERE u.tipo_documento = ? AND u.documento_identificacion = ? AND u.estado = 'Activo' AND ur.estado = 'Activo'
+                    select u.*, r.nombre_rol 
+                    from tb_usuario u 
+                    inner join tb_rol r ON u.id_rol = r.id_rol
+                    where u.tipo_documento = ? 
+                    and u.documento_identificacion = ? 
+                    and u.estado = 'Activo'
                 ");
-                    $validar->execute([$tipo_documento, $documento_identificacion]);
-                    return $validar->fetchAll(PDO::FETCH_ASSOC);
-            } catch (Exception $e) {
-                throw $e;
-            }
-        }
-
-        public function Registrar($datos) {
-            try {
-                $query = $this->conn->prepare("call registrar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-                $query->bindParam(1,  $datos['tipo_documento']);
-                $query->bindParam(2,  $datos['documento_identificacion']);
-                $query->bindParam(3,  $datos['nombre']);
-                $query->bindParam(4,  $datos['apellido']);
-                $query->bindParam(5,  $datos['fecha_nacimiento']);
-                $query->bindParam(6,  $datos['direccion']);
-                $query->bindParam(7,  $datos['correo_electronico']);
-                $query->bindParam(8,  $datos['contraseña']);
-                $query->bindParam(9,  $datos['numero_telefono']);
-                $query->bindParam(10, $datos['fecha_contratacion']);
-                $query->bindParam(11, $datos['tipo_contrato']);
-                $query->bindParam(12, $datos['contacto_emergencia']);
-                $query->bindParam(13, $datos['parentesco']);
-                $query->bindParam(14, $datos['roles']); // Ej: 'Cuidador,Familiar'
-
-                $query->execute();
-
-                // Retornar resultado del procedimiento (último ID insertado)
-                return $query->fetch(PDO::FETCH_ASSOC);
-
+                $validar->execute([$tipo_documento, $documento_identificacion]);
+                return $validar->fetchAll(PDO::FETCH_ASSOC);
             } catch (Exception $e) {
                 throw $e;
             }
@@ -134,8 +90,30 @@
 
     }
 
-    class familiar extends usuario{
+    class familiar extends usuario {
 
+        public function registrar($datos) {
+            try {
+                $query = $this->conn->prepare("CALL registrar_familiar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                $query->bindParam(1,  $datos['tipo_documento']);
+                $query->bindParam(2,  $datos['documento_identificacion']);
+                $query->bindParam(3,  $datos['nombre']);
+                $query->bindParam(4,  $datos['apellido']);
+                $query->bindParam(5,  $datos['fecha_nacimiento']);
+                $query->bindParam(6,  $datos['direccion']);
+                $query->bindParam(7,  $datos['correo_electronico']);
+                $query->bindParam(8,  $datos['contraseña']);
+                $query->bindParam(9,  $datos['numero_telefono']);
+                $query->bindParam(10, $datos['parentesco']);
+
+                $query->execute();
+
+                return $query->fetch(PDO::FETCH_ASSOC); // Retorna el id_usuario_creado
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
     }
 
     class administrador extends usuario{
