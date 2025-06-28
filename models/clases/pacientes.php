@@ -10,11 +10,17 @@ class Paciente {
     protected $conn;
 
     /**
-     * Constructor de la clase. Inicia la conexión a la base de datos.
+     * Constructor de la clase. Inicia y verifica la conexión a la base de datos.
      */
     public function __construct() {
-        // Incluye el archivo de conexión. __DIR__ asegura que la ruta es correcta.
-        include_once(__DIR__ . '/../../data_base/database.php');
+        // Suprime la salida de error por defecto para manejarla nosotros.
+        @include_once(__DIR__ . '/../../data_base/database.php');
+        
+        // Verificación CRÍTICA: Asegura que la conexión ($conn) se creó correctamente.
+        if (!isset($conn) || !$conn instanceof PDO) {
+            // Si $conn no existe o no es un objeto PDO, lanza una excepción clara.
+            throw new Exception("Falló la conexión a la base de datos. Verifique las credenciales y la ruta en 'database.php'.");
+        }
         
         // Asigna la conexión a la propiedad de la clase.
         $this->conn = $conn;
@@ -53,6 +59,6 @@ class Paciente {
         }
     }
 
-    // ... (Aquí irían tus otros métodos: actualizar, consultar, desactivar) ...
+    // Aquí puedes agregar tus otros métodos: actualizar, consultar, desactivar, etc.
 }
 ?>
