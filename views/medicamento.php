@@ -91,7 +91,7 @@ if (isset($_GET['idEliminar'])) {
                                         data-descripcion="<?php echo htmlspecialchars($medicamento["descripcion_medicamento"]); ?>">
                                         Editar
                                 </button>
-                                <a href="medicamentos.php?idEliminar=<?php echo $medicamento["id_medicamento"]; ?>"
+                                <a href="medicamento.php?idEliminar=<?php echo $medicamento["id_medicamento"]; ?>"
                                    class="btn btn-danger"
                                    onclick="return confirm('¿Estás seguro de que quieres ELIMINAR este medicamento? (Se inhabilitará)');">
                                    Eliminar
