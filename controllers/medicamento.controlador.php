@@ -116,12 +116,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    alert("Medicamento eliminado lógicamente (estado cambiado a Inactivo).");
+                    alert("Medicamento eliminado correctamente.");
                     window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
-                    alert("Error al intentar eliminar lógicamente el medicamento.");
+                    alert("Error al intentar eliminar el medicamento.");
                     window.location = "medicamento.php";
                 </script>';
             }

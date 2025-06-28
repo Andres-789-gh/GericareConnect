@@ -113,12 +113,12 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    alert("Enfermedad eliminada lógicamente (estado cambiado a Inactivo).");
+                    alert("Enfermedad eliminada correctamente.");
                     window.location = "enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
-                    alert("Error al intentar eliminar lógicamente la enfermedad.");
+                    alert("Error al intentar eliminar la enfermedad.");
                     window.location = "enfermedad.php";
                 </script>';
             }
