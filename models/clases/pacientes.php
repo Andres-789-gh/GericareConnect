@@ -1,64 +1,70 @@
 <?php
+// archivo: models/clases/paciente.php
 
-/**
- * Clase para gestionar las operaciones de los pacientes en la base de datos.
- */
 class Paciente {
-    /**
-     * @var PDO La conexión a la base de datos.
-     */
-    protected $conn;
+    private $conn;
 
-    /**
-     * Constructor de la clase. Inicia y verifica la conexión a la base de datos.
-     */
-    public function __construct() {
-        // Suprime la salida de error por defecto para manejarla nosotros.
-        @include_once(__DIR__ . '/../../data_base/database.php');
-        
-        // Verificación CRÍTICA: Asegura que la conexión ($conn) se creó correctamente.
-        if (!isset($conn) || !$conn instanceof PDO) {
-            // Si $conn no existe o no es un objeto PDO, lanza una excepción clara.
-            throw new Exception("Falló la conexión a la base de datos. Verifique las credenciales y la ruta en 'database.php'.");
+    public function __construct($db_conn = null) {
+        if ($db_conn) {
+            $this->conn = $db_conn;
+        } else {
+            include_once(__DIR__ . '/../../data_base/database.php');
+            $db = new Database();
+            $this->conn = $db->conectar();
         }
-        
-        // Asigna la conexión a la propiedad de la clase.
-        $this->conn = $conn;
     }
-    
-    /**
-     * Registra un nuevo paciente llamando al procedimiento almacenado.
-     *
-     * @param array $datos Los datos del paciente a registrar.
-     * @return mixed El resultado del procedimiento almacenado.
-     * @throws Exception Si ocurre un error.
-     */
+
     public function registrar($datos) {
-        try {
-            $query = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            
-            $query->bindParam(1,  $datos['documento_identificacion']);
-            $query->bindParam(2,  $datos['nombre']);
-            $query->bindParam(3,  $datos['apellido']);
-            $query->bindParam(4,  $datos['fecha_nacimiento']);
-            $query->bindParam(5,  $datos['genero']);
-            $query->bindParam(6,  $datos['contacto_emergencia']);
-            $query->bindParam(7,  $datos['estado_civil']);
-            $query->bindParam(8,  $datos['tipo_sangre']);
-            $query->bindParam(9,  $datos['seguro_medico']);
-            $query->bindParam(10, $datos['numero_seguro']);
-            $query->bindParam(11, $datos['id_usuario_familiar']);
-
-            $query->execute();
-
-            return $query->fetch(PDO::FETCH_ASSOC);
-
-        } catch (Exception $e) {
-            // Relanza la excepción para un manejo de errores centralizado.
-            throw $e;
-        }
+        $stmt = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $datos['documento_identificacion'],
+            $datos['nombre'],
+            $datos['apellido'],
+            $datos['fecha_nacimiento'],
+            $datos['genero'],
+            $datos['contacto_emergencia'],
+            $datos['estado_civil'],
+            $datos['tipo_sangre'],
+            $datos['seguro_medico'],
+            $datos['numero_seguro'],
+            $datos['id_usuario_familiar']
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Aquí puedes agregar tus otros métodos: actualizar, consultar, desactivar, etc.
+    public function actualizar($datos) {
+        $stmt = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $datos['id_paciente'],
+            $datos['documento_identificacion'],
+            $datos['nombre'],
+            $datos['apellido'],
+            $datos['fecha_nacimiento'],
+            $datos['genero'],
+            $datos['contacto_emergencia'],
+            $datos['estado_civil'],
+            $datos['tipo_sangre'],
+            $datos['seguro_medico'],
+            $datos['numero_seguro'],
+            $datos['id_usuario_familiar'],
+            $datos['estado']
+        ]);
+        return true;
+    }
+
+    public function desactivar($id_paciente) {
+        $stmt = $this->conn->prepare("CALL desactivar_paciente(?)");
+        return $stmt->execute([$id_paciente]);
+    }
+
+    public function consultar($filtros) {
+        $stmt = $this->conn->prepare("CALL consultar_paciente(?, ?, ?, ?)");
+        $stmt->execute([
+            $filtros['id_paciente'] ?? null,
+            $filtros['documento_identificacion'] ?? null,
+            $filtros['nombre'] ?? null,
+            $filtros['apellido'] ?? null
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
-?>
