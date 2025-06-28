@@ -1,7 +1,6 @@
 <?php
 
-// LA RUTA CORRECTA DESDE controllers/cuidador/ HASTA models/clases/ ES:
-require_once "../../models/clases/medicamento.modelo.php";
+require_once __DIR__ . "/../../models/clases/medicamento.modelo.php";
 
 class ControladorMedicamentos {
 
@@ -22,13 +21,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    // Redirección desde controlador a vista (sube 2 niveles, entra a views/cuidador/html_cuidador)
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al crear el medicamento.");
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
@@ -51,12 +49,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al editar el medicamento.");
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
@@ -87,12 +85,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al cambiar el estado del medicamento.");
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
@@ -115,12 +113,12 @@ class ControladorMedicamentos {
             if ($respuesta == "ok") {
                 echo '<script>
                     alert("Medicamento eliminado lógicamente (estado cambiado a Inactivo).");
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al intentar eliminar lógicamente el medicamento.");
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
+                    window.location = "../../../views/cuidador/html_cuidador/medicamento.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
