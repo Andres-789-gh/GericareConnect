@@ -1,7 +1,6 @@
 <?php
 
-// RUTA CORREGIDA: Desde 'controllers/cuidador/' sube DOS niveles para llegar a la raíz (GericareConnect/),
-// y luego entra a 'models/clases/'
+// LA RUTA CORRECTA DESDE controllers/cuidador/ HASTA models/clases/ ES:
 require_once "../../models/clases/medicamento.modelo.php";
 
 class ControladorMedicamentos {
@@ -23,6 +22,7 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
+                    // Redirección desde controlador a vista (sube 2 niveles, entra a views/cuidador/html_cuidador)
                     window.location = "../views/cuidador/html_cuidador/medicamento.php";
                 </script>';
             } else {
