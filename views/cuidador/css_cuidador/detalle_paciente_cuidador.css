@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.popup-container {
+    background-color: #fff;
+    margin: 20px;
+    padding: 0;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.popup-header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 25px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-header h1 {
+    margin: 0;
+    font-size: 1.6em;
+    font-weight: 600;
+}
+.popup-header h1 i {
+    margin-right: 10px;
+    font-size: 0.9em;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+.close-button:hover {
+    opacity: 1;
+}
+
+.popup-content {
+    padding: 25px;
+}
+
+.popup-content h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+.popup-content h2 i {
+    margin-right: 8px;
+}
+
+
+.actividades-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 350px; 
+    overflow-y: auto;
+    padding-right: 10px; 
+}
+
+.actividad-item {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+.actividad-item:hover {
+    background-color: #e2e6ea;
+}
+
+.actividad-descripcion {
+    flex-grow: 1;
+    margin-right: 15px;
+}
+.actividad-descripcion strong {
+    color: #495057;
+}
+
+.actividad-fecha-hora {
+    font-size: 0.9em;
+    color: #6c757d;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+.actividad-fecha-hora i {
+    margin-right: 4px;
+}
+
+.actividad-item.cargando,
+.sin-actividades-mensaje {
+    text-align: center;
+    font-style: italic;
+    color: #6c757d;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+}
+.sin-actividades-mensaje i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.boton-agregar {
+    display: block;
+    margin: 15px auto 0 auto;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.boton-agregar i {
+    margin-right: 8px;
+}
+.boton-agregar:hover {
+    background-color: #218838;
+}
+
+.popup-footer {
+    text-align: center;
+    padding: 10px 25px;
+    font-size: 0.85em;
+    color: #aaa;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+}
+
+/* Scrollbar styling */
+.actividades-list::-webkit-scrollbar {
+  width: 8px;
+}
+.actividades-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.actividades-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+.actividades-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* Animation */
+.animated {
+  animation-duration: 0.6s;
+}

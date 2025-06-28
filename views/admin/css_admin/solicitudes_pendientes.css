@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f2f5;
+    color: #333;
+}
+
+.main-header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: auto;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.app-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.top-navigation {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.top-navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.top-navigation ul li {
+    margin-left: 1.5rem;
+}
+
+.top-navigation ul li a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.top-navigation ul li a i {
+    margin-right: 0.5rem;
+}
+
+.top-navigation ul li a:hover,
+.top-navigation ul li a.active {
+    color: #007bff; /* Azul para activo/hover */
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea arriba */
+    min-height: calc(100vh - 60px);
+    padding: 2rem;
+}
+
+/* Contenedor renombrado para claridad semántica */
+.solicitudes-historial-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 95%;
+    max-width: 800px; /* Puedes ajustar el ancho */
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: #6f42c1; /* Un tono morado para historial */
+    margin-bottom: 25px;
+    text-align: center;
+}
+h1 i {
+    margin-right: 10px;
+}
+
+
+.solicitudes-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+/* Estilo base para item de solicitud */
+.solicitud-item {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #dee2e6;
+    transition: box-shadow 0.3s ease;
+    cursor: pointer; /* Indicar que es clickeable */
+}
+.solicitud-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.solicitud-info strong {
+    font-weight: 600;
+    color: #495057;
+    margin-right: 8px;
+}
+.solicitud-info span {
+    margin-left: 15px; /* Espacio entre elementos */
+    color: #6c757d;
+    font-size: 0.9em;
+}
+.solicitud-info .estado {
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.85em;
+    /* Los colores específicos se definen en el HTML con clases */
+}
+
+
+/* Estilos para diferenciar estados (ejemplo) - Mantenidos del HTML por ahora */
+.estado-pendiente { background-color: #fff3cd; color: #85640a; border: 1px solid #ffeeba; }
+.estado-aprobada { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.estado-rechazada { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.estado-procesada { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; } /* Para Retiros, por ejemplo */
+
+
+.respuesta-admin {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-left: 4px solid #007bff;
+    font-size: 0.95em;
+    color: #495057;
+    border-radius: 0 4px 4px 0;
+}
+.no-respuesta {
+     font-style: italic;
+     color: #6c757d;
+     font-size: 0.9em;
+     margin-top: 8px;
+     display: block; /* Asegura que ocupe su línea */
+}
+
+.solicitud-item.cargando {
+    text-align: center;
+    color: #6c757d;
+    padding: 20px;
+    cursor: default;
+}
+.solicitud-item.cargando:hover {
+     box-shadow: none;
+}
+
+.solicitud-item.error {
+    text-align: center;
+    color: #721c24;
+    background-color: #f8d7da;
+    padding: 20px;
+    cursor: default;
+}
+.solicitud-item.error:hover {
+     box-shadow: none;
+}
+
+#no-solicitudes {
+    color: #6c757d;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}

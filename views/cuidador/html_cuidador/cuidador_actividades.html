@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades - GeriCare Connect</title>
+    <link rel="stylesheet" href="../../admin/css_admin/admin_actividades.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarPacientesParaSelector();
+
+            const crearTareaForm = document.getElementById('crear-tarea-form');
+            if (crearTareaForm) {
+                crearTareaForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    guardarNuevaTareaVisual(); 
+                });
+            }
+        });
+
+        let actividades = []; 
+
+        function mostrarActividades() {
+            const actividadesList = document.getElementById('actividades-list');
+            actividadesList.innerHTML = '';
+            if (actividades.length > 0) {
+                actividades.forEach(actividad => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('actividad-item', 'animated', 'fadeInUp');
+                    listItem.textContent = `${actividad.descripcion} - Paciente: ${actividad.paciente_nombre || 'Sin asignar'}`;
+                    actividadesList.appendChild(listItem);
+                });
+            } else {
+                const listItem = document.createElement('li');
+                listItem.classList.add('actividad-item');
+                listItem.textContent = 'No hay actividades registradas.';
+                actividadesList.appendChild(listItem);
+            }
+        }
+
+        function cargarPacientesParaSelector() {
+            const pacienteSelect = document.getElementById('nueva-tarea-paciente');
+
+           
+            const pacientes = [
+                { id: 1, nombres: 'Juan', apellidos: 'Pérez' },
+                { id: 2, nombres: 'María', apellidos: 'Gómez' },
+                { id: 3, nombres: 'Pedro', apellidos: 'López' }
+            ];
+
+            pacientes.forEach(paciente => {
+                const option = document.createElement('option');
+                option.value = paciente.id;
+                option.textContent = `${paciente.nombres} ${paciente.apellidos}`;
+                pacienteSelect.appendChild(option);
+            });
+        }
+
+        function guardarNuevaTareaVisual() {
+            const descripcion = document.getElementById('nueva-tarea-descripcion').value;
+            const pacienteId = document.getElementById('nueva-tarea-paciente').value;
+            const pacienteSelect = document.getElementById('nueva-tarea-paciente');
+            const pacienteNombreSeleccionado = pacienteSelect.options[pacienteSelect.selectedIndex].textContent;
+            const pacienteNombre = pacienteId ? pacienteNombreSeleccionado : 'Sin asignar';
+
+            if (!descripcion) {
+                alert('La descripción de la tarea es obligatoria.');
+                return;
+            }
+
+            const nuevaActividad = {
+                descripcion: descripcion,
+                paciente_nombre: pacienteNombre
+            };
+
+            actividades.push(nuevaActividad);
+            mostrarActividades();
+
+            document.getElementById('nueva-tarea-descripcion').value = '';
+            document.getElementById('nueva-tarea-paciente').value = '';
+        }
+    </script>
+</head>
+<body>
+    <header class="admin-header animated fadeInDown">
+        <div class="logo-container">
+            <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='admin_pacientes.html'">
+            <span class="app-name">GERICARE CONNECT</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="admin_pacientes.html"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+                <li><a href="admin_actividades.html" class="active"><i class="fas fa-tasks"></i> Actividades</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="admin-content">
+        <div class="actividades-container animated fadeInUp">
+            <h1 class="animated slideInLeft"><i class="fas fa-tasks"></i> Actividades</h1>
+
+            <div class="crear-tarea-section animated fadeIn">
+                <h2><i class="fas fa-plus-circle"></i> Crear Nueva Tarea</h2>
+                <form id="crear-tarea-form">
+                    <div class="form-group">
+                        <label for="nueva-tarea-descripcion"><i class="fas fa-clipboard"></i> Descripción:</label>
+                        <textarea id="nueva-tarea-descripcion" name="descripcion" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="nueva-tarea-paciente"><i class="fas fa-user-injured"></i> Asignar a Paciente (Opcional):</label>
+                        <select id="nueva-tarea-paciente" name="paciente_id">
+                            <option value="">Sin asignar</option>
+                            </select>
+                    </div>
+                    <button type="submit" class="submit-button"><i class="fas fa-save"></i> Guardar Tarea</button>
+                </form>
+            </div>
+
+            <div class="lista-actividades-section animated fadeInUp delay-0-5s">
+                <h2><i class="fas fa-list-ul"></i> Lista de Actividades</h2>
+                <ul class="actividades-list" id="actividades-list">
+                    </ul>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

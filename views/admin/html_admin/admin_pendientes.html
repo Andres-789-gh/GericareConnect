@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Pacientes - GeriCare Connect</title>
+    <link rel="stylesheet" href="../../admin/css_admin/admin_pacientes1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .paciente-icon { margin-right: 10px; color: #3498db; }
+        .paciente-info { flex-grow: 1; margin-right: 15px; }
+        .menu-icon { display: flex; align-items: center; gap: 15px; }
+        .menu-icon i { cursor: pointer; transition: color 0.2s ease; }
+        .eliminar-paciente-icon:hover { color: #e74c3c !important; }
+        .paciente-item.no-data { color: #777; justify-content: center; }
+        .paciente-item.cargando, .paciente-item.error { justify-content: center; cursor: default; }
+        .paciente-item.cargando:hover, .paciente-item.error:hover { background-color: inherit; transform: none; box-shadow: none;}
+    </style>
+</head>
+<body>
+    <header class="admin-header animated fadeInDown">
+        <div class="logo-container">
+            <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='admin_pacientes.html'">
+            <span class="app-name">GERICARE CONNECT</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="admin_pacientes.html" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+                <li>
+                    <a href="admin_solicitudes.html">
+                        <i class="fas fa-envelope-open-text"></i> Solicitudes
+                        <span class="notification-badge" id="solicitudes-badge"></span> 
+                    </a>
+                </li>
+                <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+        <div class="add-button-container">
+            <a href="agregar_paciente.html" class="add-paciente-button">
+                <i class="fas fa-user-plus"></i> Agregar Paciente
+            </a>
+        </div>
+    </header>
+    <main class="admin-content">
+        <div class="pacientes-container animated fadeInUp">
+            <h1 class="animated slideInLeft"><i class="fas fa-user-injured"></i> Pacientes Registrados</h1>
+            <div class="search-container animated slideInRight">
+                <form id="buscarPacientesForm" method="GET" action="javascript:void(0);">
+                    <input type="search" id="buscar-paciente" name="buscar-paciente" placeholder="Buscar por nombre, apellido o documento...">
+                    <button type="submit" class="search-button" title="Buscar"><i class="fas fa-search"></i></button>
+                    <button type="button" class="clear-button" id="clear-search-button" title="Limpiar Búsqueda"><i class="fas fa-times"></i></button>
+                </form>
+            </div>
+            <ul class="paciente-list" id="paciente-list">
+                <li class="paciente-item cargando">Cargando pacientes...</li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pacienteList = document.getElementById('paciente-list');
+            const buscarForm = document.getElementById('buscarPacientesForm');
+            const buscarInput = document.getElementById('buscar-paciente');
+            const clearButton = document.getElementById('clear-search-button');
+
+
+            cargarPacientes();
+
+
+            if (buscarForm) {
+                buscarForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    cargarPacientes(buscarInput.value);
+                });
+            }
+
+
+            if (clearButton) {
+                clearButton.addEventListener('click', () => {
+                    buscarInput.value = '';
+                    cargarPacientes();
+                });
+            }
+
+
+
+            if (pacienteList) {
+                pacienteList.addEventListener('click', function(event) {
+
+                    const eliminarIcon = event.target.closest('.eliminar-paciente-icon');
+                    if (eliminarIcon) {
+                        const pacienteId = eliminarIcon.dataset.pacienteId;
+
+                        confirmarYEliminarPaciente(pacienteId);
+                    }
+
+                });
+            }
+        });
+
+
+        function cargarPacientes(busqueda = '') {
+            const pacienteList = document.getElementById('paciente-list');
+            pacienteList.innerHTML = '<li class="paciente-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando...</li>';
+            let url = '../../../controllers/admin/admin_pacientes_obtener_lista.php';
+            if (busqueda) {
+                url += `?buscar-paciente=${encodeURIComponent(busqueda)}`;
+            }
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    pacienteList.innerHTML = '';
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        data.forEach(paciente => {
+                            const listItem = document.createElement('li');
+                            listItem.classList.add('paciente-item', 'animated', 'fadeInUp');
+                            listItem.innerHTML = `
+                                <i class="fas fa-user-injured paciente-icon"></i>
+                                <span class="paciente-info">
+                                    ${paciente.nombres} ${paciente.apellidos} - ${paciente.tipo_documento}: ${paciente.documento}
+                                </span>
+                                <span class="menu-icon">
+                                    <i class="fas fa-trash-alt eliminar-paciente-icon" data-paciente-id="${paciente.id}" title="Eliminar Paciente" style="cursor: pointer; color: #dc3545;"></i>
+                                </span>
+                            `;
+                            pacienteList.appendChild(listItem);
+                        });
+                    } else if (data && data.error) {
+                         throw new Error(data.error);
+                    } else {
+                        pacienteList.innerHTML = '<li class="paciente-item no-data"><i class="fas fa-info-circle"></i> No se encontraron pacientes que coincidan.</li>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar los pacientes:', error);
+                    pacienteList.innerHTML = `<li class="paciente-item error"><i class="fas fa-exclamation-triangle"></i> Error al cargar la lista de pacientes. ${error.message}</li>`;
+                });
+        }
+
+
+
+        function confirmarYEliminarPaciente(pacienteId) {
+            Swal.fire({
+                title: '¿Estás realmente seguro?',
+                text: `Se eliminará el paciente con ID ${pacienteId}. Esta acción no se puede deshacer y podría afectar datos relacionados si no están configurados para borrarse en cascada.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '<i class="fas fa-trash-alt"></i> Sí, eliminar',
+                cancelButtonText: '<i class="fas fa-times"></i> Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    ejecutarEliminacionPaciente(pacienteId);
+                }
+            });
+        }
+
+        function ejecutarEliminacionPaciente(pacienteId) {
+
+             Swal.fire({
+                title: 'Eliminando...',
+                text: 'Por favor espera mientras se elimina el paciente.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+             });
+
+             fetch('../../../controllers/admin/admin_pacientes_eliminar.php', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/x-www-form-urlencoded'
+                 },
+                 body: `paciente_id=${pacienteId}`
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     Swal.fire(
+                         '¡Eliminado!',
+                          data.message || 'Paciente eliminado correctamente.',
+                         'success'
+                     );
+                     cargarPacientes(document.getElementById('buscar-paciente').value);
+                 } else {
+                     Swal.fire(
+                         'Error al Eliminar',
+                          data.message || 'No se pudo eliminar el paciente.',
+                         'error'
+                     );
+                 }
+             })
+             .catch(error => {
+                 console.error('Error en fetch al eliminar paciente:', error);
+                 Swal.fire(
+                     'Error de Red',
+                     'No se pudo comunicar con el servidor para eliminar el paciente. Verifica tu conexión.',
+                     'error'
+                 );
+             });
+        }
+    </script>
+
+</body>
+</html>

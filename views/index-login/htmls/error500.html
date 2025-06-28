@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 500 - Error interno del servidor</title>
+    <link rel="stylesheet" href="login.css"> 
+    <style>
+        body {
+            background-color: #fff0f0; /* Fondo rojizo suave */
+            font-family: 'Poppins', sans-serif; /* Usar misma fuente */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .error-container {
+            background-color: white;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 550px;
+            width: 90%;
+            border-top: 5px solid #e74c3c; /* Borde superior rojo */
+        }
+        .logo {
+             width: 80px; /* Tamaño del logo */
+             margin-bottom: 20px;
+             /* Quitar position absolute para centrarlo */
+        }
+        h1 {
+            font-size: 6em;
+            margin: 0 0 10px 0;
+            color: #c0392b; /* Rojo oscuro */
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        p {
+            color: #666;
+            margin-bottom: 35px;
+            font-size: 1.1em;
+        }
+        a.boton-volver {
+            background-color: #e74c3c; /* Rojo */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block; /* Para aplicar padding */
+        }
+        a.boton-volver:hover {
+            background-color: #c0392b; /* Rojo más oscuro */
+            transform: translateY(-2px);
+        }
+        @keyframes spin { /* Mantener animación si se usa */
+             from { transform: rotate(0deg); }
+             to { transform: rotate(360deg); }
+        }
+        /* Si el logo debe girar */
+        /* .logo { animation: spin 10s linear infinite; } */
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <img src="../imagenes/Geri_Logo-..png" alt="Logo de GeriCare" class="logo">
+        <h1>500</h1>
+        <h2>¡Ups! Algo salió mal en el servidor</h2>
+        <p>Parece que hubo un problema interno. Ya estamos trabajando para solucionarlo. Por favor, intenta de nuevo más tarde.</p>
+        <a href="index.html" class="boton-volver">Volver al Inicio</a>
+    </div>
+</body>
+</html>

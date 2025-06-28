@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 404 - Página no encontrada</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f2f4f8;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .error-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .logo {
+        width: 7%;
+        position: absolute;
+        top: 2%;
+        left: 2%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 5px;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        animation: spin 10s linear infinite;
+        }
+        h1 {
+            font-size: 6em;
+            margin: 0;
+            color: #e74c3c;
+        }
+        h2 {
+            font-size: 1.6em;
+            color: #333;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        a {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <img src="imagenes/Geri_Logo-..png" alt="Logo de GeriCare" class="logo">
+        <h1>404</h1>
+        <h2>Oops... Página no encontrada</h2>
+        <p>La página que estás buscando no existe o no fue encontrada.</p>
+        <a href="index.html">Volver al inicio</a>
+    </div>
+</body>
+</html>

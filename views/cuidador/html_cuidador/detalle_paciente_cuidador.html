@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Paciente - GeriCare Connect</title>
+    <link rel="stylesheet" href="../../cuidador/css_cuidador/detalle_paciente_cuidador.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        .actividad-estado {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-left: 10px; 
+            white-space: nowrap;
+        }
+        .estado-pendiente { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .estado-en.progreso { background-color: #cce5ff; color: #004085; border: 1px solid #b8daff; } 
+        .estado-completada { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .estado-cancelada { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="popup-container animated fadeIn">
+        <header class="popup-header">
+            <h1 id="nombre-paciente"><i class="fas fa-spinner fa-spin"></i> Cargando...</h1>
+            <button class="close-button" onclick="window.close()" title="Cerrar">&times;</button>
+        </header>
+        <main class="popup-content">
+            <h2><i class="fas fa-tasks"></i> Actividades Programadas</h2>
+            <ul class="actividades-list" id="actividades-list">
+                <li class="actividad-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando actividades...</li>
+            </ul>
+            <div id="sin-actividades" class="sin-actividades-mensaje" style="display: none;">
+                <i class="fas fa-info-circle"></i>
+                <span id="mensaje-sin-actividades-texto">Este paciente no tiene actividades asignadas.</span>
+                <button id="btn-agregar-actividad" class="boton-agregar"><i class="fas fa-plus-circle"></i> Añadir Actividad</button>
+            </div>
+        </main>
+        <footer class="popup-footer">
+            GeriCare Connect - Detalles del Paciente
+        </footer>
+    </div>
+    <script src="../../cuidador/js_cuidador/detalle_paciente_cuidador.js"></script>
+</body>
+</html>

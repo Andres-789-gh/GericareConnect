@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Solicitud - GeriCare Connect</title>
+    <link rel="stylesheet" href="../../familiar/css_familiar/enviar_solicitud.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      
+        .campos-condicionales {
+            display: none; 
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .campos-condicionales.visible {
+            display: block; 
+        }
+        .form-section-title {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .mensaje-enviado {
+            background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;
+            padding: 10px 15px; border-radius: 5px; margin-top: 15px;
+        }
+        .mensaje-error {
+            background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
+            padding: 10px 15px; border-radius: 5px; margin-top: 15px;
+        }
+         .mensaje-enviado i, .mensaje-error i {
+             margin-right: 8px;
+         }
+    </style>
+</head>
+<body>
+    <header class="main-header animated fadeInDown">
+        <div class="logo-container">
+            <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='familiares.html'">
+            <span class="app-name">GERICARE CONNECT</span>
+        </div>
+        <nav class="top-navigation">
+            <ul>
+                <li><a href="familiares.html"><i class="fas fa-users"></i> Tus Familiares</a></li>
+                <li><a href="enviar_solicitud.html" class="active"><i class="fas fa-envelope"></i> Enviar Solicitud</a></li>
+                <li><a href="solicitudes_pentientes1.html"><i class="fas fa-list-alt"></i> Solicitudes Pendientes</a></li>
+                <li><a href="../../../controllers/familiar/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="main-content">
+        <div class="enviar-solicitud-container animated fadeInUp">
+            <h1 class="animated slideInLeft"><i class="fas fa-paper-plane"></i> Enviar una Solicitud</h1>
+            <form id="enviarSolicitudForm">
+                <div class="form-group animated fadeIn">
+                    <label for="tipo_solicitud"><i class="fas fa-tag"></i> Tipo de Solicitud:</label>
+                    <select id="tipo_solicitud" name="tipo_solicitud" required>
+                        <option value="">Seleccionar tipo</option>
+                        <option value="Ingreso">Solicitud de Ingreso</option>
+                        <option value="Retiro">Solicitud de Retiro</option>
+                        <option value="Consulta">Consulta General</option>
+                    </select>
+                </div>
+
+                <div id="campos-ingreso" class="campos-condicionales">
+                    <h3 class="form-section-title"><i class="fas fa-user-friends"></i> Datos para Ingreso</h3>
+                    <h4><i class="fas fa-user-circle"></i> Datos del Familiar (Solicitante)</h4>
+                     <div class="form-group animated fadeIn">
+                        <label for="familiar_nombre"><i class="fas fa-user"></i> Nombres del Familiar:</label>
+                        <input type="text" id="familiar_nombre" name="familiar_nombre">
+                    </div>
+                     <div class="form-group animated fadeIn">
+                        <label for="familiar_apellido"><i class="fas fa-user"></i> Apellidos del Familiar:</label>
+                        <input type="text" id="familiar_apellido" name="familiar_apellido">
+                    </div>
+                     <div class="form-group animated fadeIn">
+                        <label for="familiar_cc"><i class="fas fa-id-card"></i> Cédula del Familiar:</label>
+                        <input type="text" id="familiar_cc" name="familiar_cc">
+                    </div>
+                     <div class="form-group animated fadeIn">
+                        <label for="familiar_email"><i class="fas fa-envelope"></i> Email del Familiar:</label>
+                        <input type="email" id="familiar_email" name="familiar_email">
+                    </div>
+                    <h4 style="margin-top: 20px;"><i class="fas fa-user-injured"></i> Datos del Paciente (A ingresar)</h4>
+                    <div class="form-group animated fadeIn">
+                        <label for="paciente_nombre"><i class="fas fa-user"></i> Nombres del Paciente:</label>
+                        <input type="text" id="paciente_nombre" name="paciente_nombre">
+                    </div>
+                    <div class="form-group animated fadeIn">
+                        <label for="paciente_apellido"><i class="fas fa-user"></i> Apellidos del Paciente:</label>
+                        <input type="text" id="paciente_apellido" name="paciente_apellido">
+                    </div>
+                     <div class="form-group animated fadeIn">
+                        <label for="paciente_cc"><i class="fas fa-id-card"></i> Cédula del Paciente:</label>
+                        <input type="text" id="paciente_cc" name="paciente_cc">
+                    </div>
+                </div>
+                <div id="campos-retiro" class="campos-condicionales">
+                     <h3 class="form-section-title"><i class="fas fa-user-minus"></i> Datos para Retiro</h3>
+                     <div class="form-group animated fadeIn">
+                        <label for="paciente_a_retirar"><i class="fas fa-user-injured"></i> Seleccione el Paciente a Retirar:</label>
+                        <select id="paciente_a_retirar" name="paciente_id_a_retirar">
+                            <option value="">Cargando pacientes...</option>
+                            </select>
+                    </div>
+                </div>
+                 <div class="form-group animated fadeIn">
+                    <label for="motivo"><i class="fas fa-file-alt"></i> Motivo / Detalles de la Solicitud:</label>
+                    <textarea id="motivo" name="motivo" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-button animated fadeInUp"><i class="fas fa-paper-plane"></i> Enviar Solicitud</button>
+            </form>
+            <div id="mensaje-feedback" style="margin-top: 15px;"></div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tipoSolicitudSelect = document.getElementById('tipo_solicitud');
+            const camposIngresoDiv = document.getElementById('campos-ingreso');
+            const camposRetiroDiv = document.getElementById('campos-retiro');
+            const pacienteRetirarSelect = document.getElementById('paciente_a_retirar');
+            const enviarSolicitudForm = document.getElementById('enviarSolicitudForm');
+            const mensajeFeedback = document.getElementById('mensaje-feedback');
+            let pacientesAsociados = []; 
+
+            function fetchPacientesAsociados() {
+                 
+                fetch('../../../controllers/familiar/obtener_pacientes_familiares.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error("Error al cargar pacientes:", data.error);
+                             pacienteRetirarSelect.innerHTML = '<option value="">Error al cargar</option>';
+                             pacientesAsociados = []; 
+                        } else {
+                             
+                             if(tipoSolicitudSelect.value === 'Retiro') {
+                                 populatePacienteRetirarSelect();
+                             }
+                        }
+                    })
+                    .catch(error => {
+                         console.error('Error en fetchPacientesAsociados:', error);
+                         pacienteRetirarSelect.innerHTML = '<option value="">Error al cargar</option>';
+                         pacientesAsociados = [];
+                     });
+            }
+             fetchPacientesAsociados(); 
+
+
+            function populatePacienteRetirarSelect() {
+                pacienteRetirarSelect.innerHTML = ''; 
+                 if (pacientesAsociados.length > 0) {
+                     pacienteRetirarSelect.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                     pacientesAsociados.forEach(paciente => {
+                        const option = document.createElement('option');
+                        option.value = paciente.id;
+                        option.textContent = `${paciente.nombres} ${paciente.apellidos} (${paciente.tipo_documento}: ${paciente.documento})`;
+                        pacienteRetirarSelect.appendChild(option);
+                     });
+                 } else {
+                     pacienteRetirarSelect.innerHTML = '<option value="">No tiene pacientes asociados</option>';
+                 }
+            }
+
+
+
+            tipoSolicitudSelect.addEventListener('change', function() {
+                const tipo = this.value;
+
+ro
+                camposIngresoDiv.classList.remove('visible');
+                camposRetiroDiv.classList.remove('visible');
+                toggleRequiredFields(camposIngresoDiv, false);
+                toggleRequiredFields(camposRetiroDiv, false);
+
+
+                if (tipo === 'Ingreso') {
+                    camposIngresoDiv.classList.add('visible');
+                    toggleRequiredFields(camposIngresoDiv, true);
+                } else if (tipo === 'Retiro') {
+                    camposRetiroDiv.classList.add('visible');
+                    populatePacienteRetirarSelect(); 
+                    toggleRequiredFields(camposRetiroDiv, true); 
+                }
+            });
+
+             function toggleRequiredFields(container, isRequired) {
+                 const fields = container.querySelectorAll('input, select, textarea');
+                 fields.forEach(field => {
+                    if(field.tagName === 'INPUT' || field.tagName === 'SELECT' || field.tagName === 'TEXTAREA') {
+                         field.required = isRequired;
+                    }
+                 });
+            }
+
+            enviarSolicitudForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                mensajeFeedback.innerHTML = '';
+                mensajeFeedback.className = '';
+
+                const formData = new FormData(enviarSolicitudForm);
+                const submitButton = enviarSolicitudForm.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+
+                fetch('../../../controllers/familiar/enviar_solicitud.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        mensajeFeedback.innerHTML = `<div class="mensaje-enviado animated fadeIn"><i class="fas fa-check-circle"></i> ${data.message || 'Solicitud enviada correctamente.'}</div>`;
+                        mensajeFeedback.classList.add('success');
+                        enviarSolicitudForm.reset();
+                        camposIngresoDiv.classList.remove('visible');
+                        camposRetiroDiv.classList.remove('visible');
+                        pacienteRetirarSelect.innerHTML = '<option value="">Cargando pacientes...</option>';
+                        fetchPacientesAsociados();
+
+                        setTimeout(() => {
+                           mensajeFeedback.innerHTML = '';
+                           mensajeFeedback.className = '';
+                        }, 5000);
+                    } else {
+                        throw new Error(data.message || 'Error desconocido al enviar la solicitud.');
+                    }
+                })
+                .catch(error => {
+                    mensajeFeedback.innerHTML = `<div class="mensaje-error animated fadeIn"><i class="fas fa-exclamation-triangle"></i> Error: ${error.message}</div>`;
+                    mensajeFeedback.classList.add('error');
+                     console.error('Error:', error);
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Solicitud';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
