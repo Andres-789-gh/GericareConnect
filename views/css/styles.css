@@ -1,33 +1,44 @@
+/* Este archivo CSS está diseñado para tus páginas CRUD (medicamentos.php, enfermedad.php)
+   y toma inspiración del estilo general de tu archivo styles.css de la página de registro. */
+
+/* Fuente base */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #e9e6f0; /* Morado muy claro para el fondo */
+    font-family: 'Arial', sans-serif; /* Mantiene la fuente de tu CSS original */
+    background-color: #f7f3fb; /* Un morado muy pálido para el fondo de las páginas CRUD */
     color: #333;
     margin: 0;
     padding: 20px;
+    /* Las animaciones de body (fadeIn) son más para la página de registro/login, no se aplican aquí */
 }
 
+/* Contenedor principal de la página CRUD */
 .container {
-    max-width: 900px;
+    max-width: 900px; /* Ancho similar al register-container, pero un poco más amplio */
     margin: auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Sombra ligeramente más pronunciada */
+    background: rgba(255, 255, 255, 0.95); /* Fondo blanco semitransparente como register-container */
+    padding: 2.5rem; /* Padding similar al register-container */
+    border-radius: 15px; /* Bordes redondeados como register-container */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Sombra como register-container */
+    /* No necesitamos las propiedades de 'display: flex', 'flex-direction', 'position', 'animation' específicas de register-container */
+    margin-top: 50px; /* Margen superior para separarlo del borde de la pantalla */
+    margin-bottom: 50px; /* Margen inferior para que no se pegue al fondo */
 }
 
 h1, h2 {
-    color: #6a0dad; /* Morado oscuro para títulos */
+    color: #6200ea; /* El morado principal de tu CSS original para títulos */
     text-align: center;
+    margin-top: 0; /* Reinicia margin-top para h1/h2 dentro del container */
     margin-bottom: 25px; /* Espacio debajo de los títulos */
 }
 
 /* Formulario */
 .form-container {
     margin-bottom: 30px;
-    padding: 25px; /* Un poco más de padding */
-    border: 1px solid #d4c2ed; /* Borde morado claro */
-    border-radius: 8px;
-    background-color: #f8f6fc; /* Fondo muy claro para el formulario */
+    padding: 25px; /* Más padding para que el formulario se vea espacioso */
+    border: 1px solid #e1d5f2; /* Borde morado más claro, sutil */
+    border-radius: 10px; /* Bordes redondeados más suaves */
+    background-color: #ffffff; /* Fondo blanco para el formulario */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra suave */
 }
 
 .form-group {
@@ -36,27 +47,32 @@ h1, h2 {
 
 .form-group label {
     display: block;
-    margin-bottom: 8px; /* Más espacio debajo de las etiquetas */
-    font-weight: bold;
-    color: #4a0572; /* Tono morado para etiquetas */
+    margin-bottom: 8px; /* Espacio debajo de las etiquetas */
+    font-weight: 600; /* Peso de fuente de tu CSS original para labels */
+    color: #555; /* Color de texto de tu CSS original para labels */
 }
 
-.form-group input[type="text"],
-.form-group textarea,
-.form-group select {
+input[type="text"],
+input[type="number"],
+input[type="email"], /* Incluido por si alguna vez los usas en CRUDs */
+input[type="password"], /* Incluido por si alguna vez los usas en CRUDs */
+input[type="date"], /* Incluido por si alguna vez los usas en CRUDs */
+.form-group textarea, /* Se agregó .form-group para especificidad */
+.form-group select { /* Se agregó .form-group para especificidad */
     width: 100%;
-    padding: 12px; /* Un poco más de padding */
-    border: 1px solid #9b59b6; /* Borde morado medio */
-    border-radius: 5px; /* Bordes ligeramente más redondeados */
+    padding: 12px; /* Padding de tu CSS original */
+    border: 1px solid #ccc; /* Borde de tu CSS original */
+    border-radius: 8px; /* Bordes redondeados de tu CSS original */
     box-sizing: border-box;
-    font-size: 16px; /* Aumentar un poco el tamaño de la fuente */
+    transition: all 0.3s ease; /* Transición de tu CSS original */
+    font-size: 16px; /* Tamaño de fuente de tu CSS original */
 }
 
-.form-group input[type="text"]:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #6a0dad; /* Morado oscuro al enfocar */
-    box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.2); /* Sombra suave al enfocar */
+input:focus,
+.form-group textarea:focus, /* Se agregó .form-group para especificidad */
+.form-group select:focus { /* Se agregó .form-group para especificidad */
+    border-color: #6200ea; /* Color de borde al enfocar de tu CSS original */
+    box-shadow: 0 0 8px rgba(98, 0, 234, 0.4); /* Sombra al enfocar de tu CSS original */
     outline: none;
 }
 
@@ -68,92 +84,130 @@ h1, h2 {
 /* Tabla */
 .table-container {
     overflow-x: auto;
-    margin-top: 30px; /* Más espacio sobre la tabla */
+    margin-top: 35px; /* Más espacio sobre la tabla */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Sombra para la tabla */
-    border-radius: 8px; /* Bordes redondeados para la tabla */
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra para la tabla */
+    border-radius: 10px; /* Bordes redondeados para la tabla */
     overflow: hidden; /* Asegura que los bordes redondeados se apliquen bien */
 }
 
 th, td {
     padding: 14px; /* Aumentar un poco el padding de las celdas */
-    border: 1px solid #e1bee7; /* Borde morado muy claro */
+    border: 1px solid #e1d5f2; /* Borde morado muy claro para celdas */
     text-align: left;
-    vertical-align: middle; /* Asegura que el contenido esté centrado verticalmente */
+    vertical-align: middle; /* Centra el contenido verticalmente */
 }
 
 thead {
-    background-color: #6a0dad; /* Morado oscuro para el encabezado */
+    background-color: #6200ea; /* Morado principal para el encabezado */
     color: #fff;
 }
 
 tbody tr:nth-child(even) {
-    background-color: #f0e6f8; /* Morado muy claro para filas pares */
+    background-color: #f0e6f8; /* Un morado muy suave para filas pares */
 }
 
 tbody tr:hover {
-    background-color: #d4a7ed; /* Morado más claro al pasar el ratón */
-    cursor: pointer; /* Indica que la fila es interactiva */
+    background-color: #d8c2f5; /* Morado más claro al pasar el ratón */
+    cursor: pointer;
 }
 
-/* --- Ajuste de Botones en Celdas de Tabla --- */
-/* Target the last <td> which usually contains the action buttons */
+/* --- Ajuste de Botones en Celdas de Tabla (SOLUCIÓN FLEXBOX) --- */
+/* Apunta a la última <td> que contiene los botones de acción */
 table td:last-child {
-    display: flex; /* Make the cell a flex container */
-    gap: 8px; /* Add space between the flex items (buttons) */
-    justify-content: center; /* Center the buttons horizontally within the cell */
-    align-items: center; /* Center the buttons vertically within the cell */
-    flex-wrap: wrap; /* Allow buttons to wrap to the next line if the screen is too narrow */
+    display: flex; /* Convierte la celda en un contenedor flex */
+    gap: 8px; /* Añade un espacio de 8px entre los botones */
+    justify-content: center; /* Centra los botones horizontalmente dentro de la celda */
+    align-items: center; /* Centra los botones verticalmente dentro de la celda */
+    flex-wrap: wrap; /* Permite que los botones se envuelvan si la pantalla es muy estrecha */
 }
-
 
 /* Botones Generales */
 .btn {
-    padding: 10px 18px; /* Más padding para que los botones se vean más "cómodos" */
+    padding: 12px 20px; /* Padding similar al botón de submit de tu CSS */
     border: none;
-    border-radius: 5px; /* Bordes ligeramente más redondeados */
+    border-radius: 20px; /* Bordes redondeados como tus botones de rol/submit */
     color: white;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    font-size: 15px; /* Tamaño de fuente ligeramente más grande */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Transición suave para hover */
+    font-size: 16px; /* Tamaño de fuente de tu CSS original */
+    font-weight: bold; /* Hacerlos negrita como tu botón de submit */
+    transition: background 0.3s ease-in-out, transform 0.2s ease; /* Transiciones de tu CSS original y un pequeño efecto transform */
+    white-space: nowrap; /* Evita que el texto del botón se rompa */
 }
 
 .btn:hover {
-    transform: translateY(-1px); /* Efecto sutil al pasar el ratón */
+    transform: translateY(-2px); /* Efecto de "levantar" al pasar el ratón */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra al pasar el ratón */
 }
 
-/* Botones con nueva escala de colores */
+/* Botones con paleta de colores armonizada */
 .btn-primary {
-    background-color: #8e44ad; /* Morado medio */
+    background-color: #6200ea; /* Morado principal, igual que el botón de submit */
 }
 .btn-primary:hover {
-    background-color: #6a0dad; /* Morado oscuro */
+    background-color: #4b00c2; /* Morado más oscuro al pasar el ratón */
 }
 
 .btn-warning {
-    background-color: #af7ac5; /* Morado claro para "Editar" */
-    color: #fff; /* Texto blanco para mayor contraste */
+    background-color: #9c27b0; /* Un morado magenta distintivo para "Editar" */
+    color: white; /* Asegurar texto blanco para contraste */
 }
 .btn-warning:hover {
-    background-color: #9b59b6; /* Morado un poco más oscuro al pasar el ratón */
+    background-color: #7b1fa2; /* Tono más oscuro al pasar el ratón */
 }
 
 .btn-danger {
-    background-color: #c0392b; /* Rojo fuerte para "Eliminar" (contrastando con morados) */
+    background-color: #dc3545; /* Rojo clásico para "Eliminar", que contrasta bien */
 }
 .btn-danger:hover {
-    background-color: #a93226; /* Rojo más oscuro al pasar el ratón */
+    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
 }
 
 .btn-secondary {
-    background-color: #95a5a6; /* Gris neutro para "Cancelar" */
+    background-color: #6c757d; /* Gris neutro para "Cancelar", como en tu CSS anterior */
 }
 .btn-secondary:hover {
-    background-color: #7f8c8d;
+    background-color: #5a6268;
 }
+
+/* Estilos de mensaje (como tus .mensaje-exito/.mensaje-error) */
+.mensaje-exito {
+    color: #155724; /* Verde oscuro para éxito */
+    background: #d4edda; /* Fondo verde claro */
+    border: 1px solid #c3e6cb;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.mensaje-error, .error-box { /* .error-box también lo incluimos por si acaso */
+    color: #721c24; /* Rojo oscuro para error */
+    background: #f8d7da; /* Fondo rojo claro */
+    border: 1px solid #f5c6cb;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Pequeño ajuste para el ancho de los campos, como en tu CSS */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+    font-size: 16px;
+}
+
+/* NO se incluyeron estilos específicos de registro como .register-container, .logo, .logo2,
+   .form-grid, #campos-cuidador-admin, #campos-familiar, .roles-column-buttons, .checkbox-rol,
+   ni las animaciones de elementos específicos, ya que son para la estructura de tu página de registro. */
