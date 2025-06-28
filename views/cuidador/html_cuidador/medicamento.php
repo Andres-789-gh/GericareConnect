@@ -2,10 +2,8 @@
 // Incluimos los archivos del controlador y modelo
 // RUTA CORREGIDA: Desde 'views/cuidador/html_cuidador/' sube TRES niveles para llegar a la raíz (GericareConnect/),
 // y luego entra a 'controllers/cuidador/'
-require_once "../../../controllers/cuidador/medicamento.controlador.php";
-// RUTA CORREGIDA: Desde 'views/cuidador/html_cuidador/' sube TRES niveles para llegar a la raíz (GericareConnect/),
-// y luego entra a 'models/clases/'
-require_once "../../../models/clases/medicamento.modelo.php";
+require_once __DIR__ . "/../../../controllers/cuidador/medicamento.controlador.php";
+require_once __DIR__ . "/../../../models/clases/medicamento.modelo.php"; 
 
 // Procesar acciones de POST (Crear/Editar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,7 +27,7 @@ if (isset($_GET['idEliminar'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Medicamentos</title>
-    <link rel="stylesheet" href="../../../css/styles.css">
+    <link rel="stylesheet" href="<?php echo __DIR__ . '/../../../css/styles.css'; ?>">
 </head>
 <body>
     <div class="container">
