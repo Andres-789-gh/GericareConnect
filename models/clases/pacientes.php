@@ -1,6 +1,4 @@
 <?php
-// archivo: models/clases/paciente.php
-
 class Paciente {
     private $conn;
 
@@ -8,7 +6,7 @@ class Paciente {
         if ($db_conn) {
             $this->conn = $db_conn;
         } else {
-            include_once(__DIR__ . '/../../data_base/database.php');
+            include_once(__DIR__ . '/../../data_base/database..php');
             $db = new Database();
             $this->conn = $db->conectar();
         }
@@ -68,3 +66,4 @@ class Paciente {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+?>
