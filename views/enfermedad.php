@@ -6,25 +6,23 @@ require_once "../models/enfermedad.modelo.php";
 // Procesar acciones de POST (Crear/Editar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_enfermedad_editar']) && !empty($_POST['id_enfermedad_editar'])) {
-        // Es una edición
         ControladorEnfermedades::ctrEditarEnfermedad();
     } else {
-        // Es una creación
         ControladorEnfermedades::ctrCrearEnfermedad();
     }
 }
 
-// Procesar acción de GET (Eliminar y Cambiar Estado)
+// Procesar acción de GET (Eliminar - ahora borrado lógico)
 if (isset($_GET['idEliminarEnfermedad'])) {
     $controlador = new ControladorEnfermedades();
     $controlador->ctrEliminarEnfermedad();
 }
 
-// Procesar cambio de estado
-if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnfermedad'])) {
-    $controlador = new ControladorEnfermedades();
-    $controlador->ctrCambiarEstadoEnfermedad();
-}
+// NO NECESITAMOS PROCESAR CAMBIO DE ESTADO DIRECTAMENTE DESDE LA URL para los botones de activar/inactivar
+// if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnfermedad'])) {
+//     $controlador = new ControladorEnfermedades();
+//     $controlador->ctrCambiarEstadoEnfermedad();
+// }
 
 ?>
 <!DOCTYPE html>
@@ -33,7 +31,7 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Enfermedades</title>
-    <link rel="stylesheet" href="css/styles.css"> <!-- Asegúrate de que esta ruta sea correcta para tus estilos -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -53,14 +51,6 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
                     <label for="descripcion_enfermedad">Descripción:</label>
                     <textarea id="descripcion_enfermedad" name="descripcion_enfermedad"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="estado">Estado:</label>
-                    <select id="estado" name="estado">
-                        <!-- Los valores deben coincidir exactamente con tu ENUM en la DB: 'Activo', 'Inactivo' -->
-                        <option value="Activo">Activo</option>
-                        <option value="Inactivo">Inactivo</option>
-                    </select>
-                </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <button type="button" class="btn btn-secondary" id="btn-cancelar" style="display: none;">Cancelar</button>
@@ -76,16 +66,14 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
-                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    // Obtenemos todas las enfermedades para mostrarlas en la tabla
+                    // Obtenemos solo las enfermedades activas para mostrarlas en la tabla
                     $enfermedades = ControladorEnfermedades::ctrMostrarEnfermedades(null, null);
 
-                    // Verificamos si hay enfermedades para evitar errores si la tabla está vacía
                     if (is_array($enfermedades) && count($enfermedades) > 0) {
                         foreach ($enfermedades as $enfermedad):
                         ?>
@@ -93,52 +81,30 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
                             <td><?php echo htmlspecialchars($enfermedad["id_enfermedad"]); ?></td>
                             <td><?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?></td>
                             <td><?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?></td>
-                            <td><?php echo htmlspecialchars($enfermedad["estado"]); ?></td>
                             <td>
                                 <button class="btn btn-warning btn-editar"
                                         data-id="<?php echo $enfermedad["id_enfermedad"]; ?>"
                                         data-nombre="<?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?>"
-                                        data-descripcion="<?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>"
-                                        data-estado="<?php echo htmlspecialchars($enfermedad["estado"]); ?>">
+                                        data-descripcion="<?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>">
                                     Editar
                                 </button>
                                 <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?>"
                                    class="btn btn-danger"
-                                   onclick="return confirm('¿Estás seguro de que quieres eliminar esta enfermedad?');">
-                                    Eliminar
+                                   onclick="return confirm('¿Estás seguro de que quieres ELIMINAR esta enfermedad? (Se inhabilitará)');">
+                                   Eliminar
                                 </a>
-                                <?php
-                                // Lógica para el botón de cambio de estado
-                                // Los valores aquí deben coincidir exactamente con tu ENUM en la DB: 'Activo', 'Inactivo'
-                                if ($enfermedad["estado"] == "Activo") {
-                                    echo '<a href="enfermedad.php?idCambiarEstadoEnfermedad=' . $enfermedad["id_enfermedad"] . '&nuevoEstadoEnfermedad=Inactivo"
-                                           class="btn btn-info"
-                                           onclick="return confirm(\'¿Estás seguro de que quieres INACTIVAR esta enfermedad?\');">
-                                           Inactivar
-                                          </a>';
-                                } else {
-                                    echo '<a href="enfermedad.php?idCambiarEstadoEnfermedad=' . $enfermedad["id_enfermedad"] . '&nuevoEstadoEnfermedad=Activo"
-                                           class="btn btn-success"
-                                           onclick="return confirm(\'¿Estás seguro de que quieres ACTIVAR esta enfermedad?\');">
-                                           Activar
-                                          </a>';
-                                }
-                                ?>
-                            </td>
+                                </td>
                         </tr>
                         <?php
                         endforeach;
                     } else {
-                        // Mensaje si no hay enfermedades
-                        echo '<tr><td colspan="5">No hay enfermedades registradas.</td></tr>';
+                        echo '<tr><td colspan="3">No hay enfermedades activas registradas.</td></tr>';
                     }
                     ?>
                 </tbody>
             </table>
         </div>
     </div>
-
-    <!-- Script JavaScript para manejar la edición del formulario -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('enfermedad-form');
@@ -146,7 +112,7 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
             const idEnfermedadEditar = document.getElementById('id_enfermedad_editar');
             const nombreEnfermedad = document.getElementById('nombre_enfermedad');
             const descripcionEnfermedad = document.getElementById('descripcion_enfermedad');
-            const estadoSelect = document.getElementById('estado');
+            // REMOVED: const estadoSelect = document.getElementById('estado');
             const btnCancelar = document.getElementById('btn-cancelar');
 
             document.querySelectorAll('.btn-editar').forEach(button => {
@@ -154,14 +120,14 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
                     const id = this.getAttribute('data-id');
                     const nombre = this.getAttribute('data-nombre');
                     const descripcion = this.getAttribute('data-descripcion');
-                    const estado = this.getAttribute('data-estado');
+                    // REMOVED: const estado = this.getAttribute('data-estado');
 
                     formTitle.textContent = 'Editar Enfermedad';
                     idEnfermedadEditar.value = id;
                     nombreEnfermedad.value = nombre;
                     descripcionEnfermedad.value = descripcion;
-                    estadoSelect.value = estado; // Establecer el valor del select
-                    btnCancelar.style.display = 'inline-block'; // Mostrar botón Cancelar
+                    // REMOVED: estadoSelect.value = estado;
+                    btnCancelar.style.display = 'inline-block';
                 });
             });
 
@@ -170,8 +136,8 @@ if (isset($_GET['idCambiarEstadoEnfermedad']) && isset($_GET['nuevoEstadoEnferme
                 idEnfermedadEditar.value = '';
                 nombreEnfermedad.value = '';
                 descripcionEnfermedad.value = '';
-                estadoSelect.value = 'Activo'; // Restablecer el select al valor por defecto
-                btnCancelar.style.display = 'none'; // Ocultar botón Cancelar
+                // REMOVED: estadoSelect.value = 'Activo';
+                btnCancelar.style.display = 'none';
             });
         });
     </script>
