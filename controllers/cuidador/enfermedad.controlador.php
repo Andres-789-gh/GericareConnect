@@ -1,6 +1,7 @@
 <?php
 
-// La conexión al modelo ahora sube dos niveles para llegar a 'models/clases/'
+// RUTA CORREGIDA: Desde 'controllers/cuidador/' sube DOS niveles para llegar a la raíz (GericareConnect/),
+// y luego entra a 'models/clases/'
 require_once "../../models/clases/enfermedad.modelo.php";
 
 class ControladorEnfermedades {
@@ -22,7 +23,7 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php"; // Redirección correcta
+                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
@@ -59,7 +60,7 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php"; // Redirección correcta
+                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
@@ -86,7 +87,7 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php"; // Redirección correcta
+                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
@@ -114,7 +115,7 @@ class ControladorEnfermedades {
             if ($respuesta == "ok") {
                 echo '<script>
                     alert("Enfermedad eliminada lógicamente (estado cambiado a Inactivo).");
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php"; // Redirección correcta
+                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
