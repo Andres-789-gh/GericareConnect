@@ -1,15 +1,36 @@
 <?php
-session_start();
+// --- Manejador de Errores Avanzado para Depuración ---
+// Este bloque es crucial para atrapar errores fatales (ej. archivo no encontrado) y devolverlos como JSON.
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 header('Content-Type: application/json');
 
-// Asegúrate que la ruta a tu clase es correcta.
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
+        if (!headers_sent()) {
+            http_response_code(500);
+        }
+        echo json_encode([
+            'success' => false,
+            'message' => "Error fatal en el script del servidor.",
+            'debug_error' => [
+                'type'    => $error['type'],
+                'message' => $error['message'],
+                'file'    => $error['file'],
+                'line'    => $error['line']
+            ]
+        ]);
+    }
+});
+// --- Fin del Manejador de Errores ---
+
+session_start();
 require_once __DIR__ . '/../../models/clases/pacientes.php';
 
 $response = ['success' => false, 'message' => 'Error: Solicitud no válida.'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Se recolectan los datos usando los 'name' exactos del formulario HTML.
     $datos_paciente = [
         'documento_identificacion' => filter_input(INPUT_POST, 'documento_identificacion', FILTER_SANITIZE_NUMBER_INT),
         'nombre'                   => filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING),
@@ -21,17 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'tipo_sangre'              => $_POST['tipo_sangre'] ?? null,
         'seguro_medico'            => filter_input(INPUT_POST, 'seguro_medico', FILTER_SANITIZE_STRING),
         'numero_seguro'            => filter_input(INPUT_POST, 'numero_seguro', FILTER_SANITIZE_STRING),
-        // Este campo es opcional y viene del campo oculto.
         'id_usuario_familiar'      => filter_input(INPUT_POST, 'familiar_solicitante_id', FILTER_VALIDATE_INT) ?: null
     ];
     
-    // Validaciones del lado del servidor.
     $errores = [];
     if (empty($datos_paciente['nombre'])) $errores[] = "El nombre es requerido.";
     if (empty($datos_paciente['apellido'])) $errores[] = "El apellido es requerido.";
     if (empty($datos_paciente['documento_identificacion'])) $errores[] = "El número de documento es requerido.";
-    if (empty($datos_paciente['fecha_nacimiento'])) $errores[] = "La fecha de nacimiento es requerida.";
-    if (empty($datos_paciente['genero'])) $errores[] = "El género es requerido.";
     
     if (empty($errores)) {
         try {
@@ -40,18 +57,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($resultado && isset($resultado['id_paciente_creado'])) {
                 $response['success'] = true;
-                $response['message'] = "Paciente '{$datos_paciente['nombre']} {$datos_paciente['apellido']}' agregado correctamente.";
-                $response['paciente_id'] = $resultado['id_paciente_creado'];
+                $response['message'] = "¡Paciente '{$datos_paciente['nombre']}' agregado con éxito!";
             } else {
-                $response['message'] = "Error: No se pudo confirmar el registro en la base de datos.";
+                $response['message'] = "El registro fue procesado pero no se recibió confirmación de la base de datos.";
             }
 
-        } catch (PDOException $e) {
-            $response['message'] = "Error de base de datos: " . $e->getMessage();
-            error_log("Error PDO en agregar_paciente_procesar.php: " . $e->getMessage());
         } catch (Exception $e) {
-            $response['message'] = "Error inesperado en el servidor: " . $e->getMessage();
-            error_log("Error general en agregar_paciente_procesar.php: " . $e->getMessage());
+            $response['message'] = $e->getMessage();
+            $response['debug_error'] = [ 'file' => $e->getFile(), 'line' => $e->getLine() ];
         }
     } else {
         $response['message'] = implode("<br>", $errores);
