@@ -1,69 +1,37 @@
 <?php
+require_once __DIR__ . '/../data_base/database.php';
+
 class Paciente {
     private $conn;
 
-    public function __construct($db_conn = null) {
-        if ($db_conn) {
-            $this->conn = $db_conn;
-        } else {
-            include_once(__DIR__ . '/../../data_base/database..php');
-            $db = new Database();
-            $this->conn = $db->conectar();
-        }
+    public function __construct() {
+        $db = new Database();
+        $this->conn = $db->conectar();
     }
 
     public function registrar($datos) {
-        $stmt = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $datos['documento_identificacion'],
-            $datos['nombre'],
-            $datos['apellido'],
-            $datos['fecha_nacimiento'],
-            $datos['genero'],
-            $datos['contacto_emergencia'],
-            $datos['estado_civil'],
-            $datos['tipo_sangre'],
-            $datos['seguro_medico'],
-            $datos['numero_seguro'],
-            $datos['id_usuario_familiar']
-        ]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+        try {
+            $query = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    public function actualizar($datos) {
-        $stmt = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $datos['id_paciente'],
-            $datos['documento_identificacion'],
-            $datos['nombre'],
-            $datos['apellido'],
-            $datos['fecha_nacimiento'],
-            $datos['genero'],
-            $datos['contacto_emergencia'],
-            $datos['estado_civil'],
-            $datos['tipo_sangre'],
-            $datos['seguro_medico'],
-            $datos['numero_seguro'],
-            $datos['id_usuario_familiar'],
-            $datos['estado']
-        ]);
-        return true;
-    }
+            $query->bindParam(1,  $datos['documento_identificacion']);
+            $query->bindParam(2,  $datos['nombre']);
+            $query->bindParam(3,  $datos['apellido']);
+            $query->bindParam(4,  $datos['fecha_nacimiento']);
+            $query->bindParam(5,  $datos['genero']);
+            $query->bindParam(6,  $datos['contacto_emergencia']);
+            $query->bindParam(7,  $datos['estado_civil']);
+            $query->bindParam(8,  $datos['tipo_sangre']);
+            $query->bindParam(9,  $datos['seguro_medico']);
+            $query->bindParam(10, $datos['numero_seguro']);
+            $query->bindParam(11, $datos['id_usuario_familiar']);
 
-    public function desactivar($id_paciente) {
-        $stmt = $this->conn->prepare("CALL desactivar_paciente(?)");
-        return $stmt->execute([$id_paciente]);
-    }
+            $query->execute();
 
-    public function consultar($filtros) {
-        $stmt = $this->conn->prepare("CALL consultar_paciente(?, ?, ?, ?)");
-        $stmt->execute([
-            $filtros['id_paciente'] ?? null,
-            $filtros['documento_identificacion'] ?? null,
-            $filtros['nombre'] ?? null,
-            $filtros['apellido'] ?? null
-        ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $query->fetch(PDO::FETCH_ASSOC);
+
+        } catch (Exception $e) {
+            throw new Exception("Error al registrar paciente: " . $e->getMessage());
+        }
     }
 }
 ?>
