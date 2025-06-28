@@ -1,7 +1,6 @@
 <?php
 
-// **CORRECCIÓN CRÍTICA AQUÍ:** Ruta desde 'controllers/cuidador/' hasta 'models/clases/'
-// Sube 2 niveles (../ para 'cuidador', ../ para 'controllers') y entra a 'models/clases'
+// LA RUTA CORRECTA DESDE controllers/cuidador/ HASTA models/clases/ ES:
 require_once "../../models/clases/medicamento.modelo.php";
 
 class ControladorMedicamentos {
@@ -23,7 +22,8 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php"; // Redirección desde controlador a vista
+                    // Redirección desde controlador a vista (sube 2 niveles, entra a views/cuidador/html_cuidador)
+                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
                 </script>';
             } else {
                 echo '<script>
@@ -51,7 +51,7 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php"; // Redirección desde controlador a vista
+                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
                 </script>';
             } else {
                 echo '<script>
@@ -87,7 +87,7 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/medicamento.php"; // Redirección desde controlador a vista
+                    window.location = "../views/cuidador/html_cuidador/medicamento.php";
                 </script>';
             } else {
                 echo '<script>
