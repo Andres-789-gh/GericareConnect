@@ -14,39 +14,43 @@ create procedure registrar_usuario(
     in p_tipo_contrato varchar(50),
     in p_contacto_emergencia varchar(20),
     in p_parentesco varchar(50),
-    in p_nombre_rol varchar(50)  -- se espera un único rol (por ejemplo, 'Cuidador')
+    in p_nombre_rol varchar(50)
 )
 begin
     declare v_id_usuario int;
     declare v_id_rol int;
     declare v_error_msg varchar(255);
 
-    -- validación duplicado documento
+    -- Validar duplicado por documento
     if exists (select 1 from tb_usuario where documento_identificacion = p_documento_identificacion) then
         signal sqlstate '45000' set message_text = 'Error: Ya existe un usuario con ese número de documento.';
     end if;
 
-    -- validación duplicado correo
+    -- Validar duplicado por correo
     if exists (select 1 from tb_usuario where correo_electronico = p_correo_electronico) then
         signal sqlstate '45000' set message_text = 'Error: Ya existe un usuario con ese correo electrónico.';
     end if;
 
-    -- obtener el id del rol
+    -- Obtener id del rol
     select id_rol into v_id_rol from tb_rol where nombre_rol = trim(p_nombre_rol);
-
+    
     if v_id_rol is null then
         set v_error_msg = concat('Error: El rol "', trim(p_nombre_rol), '" no es válido.');
         signal sqlstate '45000' set message_text = v_error_msg;
     end if;
 
-    -- validación: no permitir "Administrador" con datos de "Cuidador"
-    if p_nombre_rol = 'Administrador' and (p_contacto_emergencia is not null or p_tipo_contrato is not null) then
-        signal sqlstate '45000' set message_text = 'Error: Un Administrador no debe tener atributos de Cuidador.';
+    -- Validación: un Familiar no debe tener datos de cuidador/admin
+    if p_nombre_rol = 'Familiar' and (
+        p_fecha_contratacion is not null or 
+        p_tipo_contrato is not null or 
+        p_contacto_emergencia is not null
+    ) then
+        signal sqlstate '45000' set message_text = 'Error: Un Familiar no debe tener datos de Cuidador o Administrador.';
     end if;
 
     start transaction;
 
-    -- insertar en tb_usuario
+    -- Insertar en tb_usuario
     insert into tb_usuario (
         tipo_documento, documento_identificacion, nombre, apellido, fecha_nacimiento,
         direccion, correo_electronico, contraseña,
@@ -61,7 +65,7 @@ begin
 
     set v_id_usuario = last_insert_id();
 
-    -- insertar en tb_telefono
+    -- Insertar teléfono
     if p_numero_telefono is not null then
         insert into tb_telefono (id_usuario, numero_telefono)
         values (v_id_usuario, p_numero_telefono);
@@ -73,6 +77,7 @@ begin
 end //
 
 delimiter ;
+
 
 
 delimiter //
@@ -150,6 +155,67 @@ begin
     end if;
 
     commit;
+end //
+
+delimiter ;
+
+
+delimiter //
+
+create procedure registrar_familiar(
+    in p_tipo_documento enum('CC','CE','PA'),
+    in p_documento_identificacion int,
+    in p_nombre varchar(50),
+    in p_apellido varchar(50),
+    in p_fecha_nacimiento date,
+    in p_direccion varchar(250),
+    in p_correo_electronico varchar(100),
+    in p_contraseña varchar(255),
+    in p_numero_telefono varchar(20),
+    in p_parentesco varchar(50)
+)
+begin
+    declare v_id_usuario int;
+    declare v_id_rol int;
+    declare v_error_msg varchar(255);
+
+    -- obtener id del rol 'Familiar'
+    select id_rol into v_id_rol from tb_rol where nombre_rol = 'Familiar';
+
+    if v_id_rol is null then
+        signal sqlstate '45000' set message_text = 'error: el rol "Familiar" no está registrado en la tabla de roles.';
+    end if;
+
+    -- validación documento duplicado
+    if exists (select 1 from tb_usuario where documento_identificacion = p_documento_identificacion) then
+        signal sqlstate '45000' set message_text = 'error: ya existe un usuario con ese número de documento.';
+    end if;
+
+    -- validación correo duplicado
+    if exists (select 1 from tb_usuario where correo_electronico = p_correo_electronico) then
+        signal sqlstate '45000' set message_text = 'error: ya existe un usuario con ese correo electrónico.';
+    end if;
+
+    start transaction;
+
+    insert into tb_usuario (
+        tipo_documento, documento_identificacion, nombre, apellido, fecha_nacimiento,
+        direccion, correo_electronico, contraseña, parentesco, id_rol
+    ) values (
+        p_tipo_documento, p_documento_identificacion, p_nombre, p_apellido, p_fecha_nacimiento,
+        p_direccion, p_correo_electronico, p_contraseña, p_parentesco, v_id_rol
+    );
+
+    set v_id_usuario = last_insert_id();
+
+    if p_numero_telefono is not null then
+        insert into tb_telefono (id_usuario, numero_telefono)
+        values (v_id_usuario, p_numero_telefono);
+    end if;
+
+    commit;
+
+    select v_id_usuario as id_usuario_creado;
 end //
 
 delimiter ;

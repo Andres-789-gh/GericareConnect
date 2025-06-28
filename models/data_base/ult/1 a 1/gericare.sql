@@ -310,5 +310,5 @@ values
  null, null, null, 'Madre', 3);
 
 
-select * from tb_usuario; -- 29f2644b6e / 08ef4b83e8 / 7ba57cc376
+select * from tb_usuario; 
 select * from tb_rol;
