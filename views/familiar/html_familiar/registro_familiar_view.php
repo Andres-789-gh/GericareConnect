@@ -11,7 +11,7 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - GeriCare Connect</title>
-    <link rel="stylesheet" href="../files_css/styles.css">
+    <link rel="stylesheet" href="../../index-login/files_css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -29,7 +29,7 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
             <div class="mensaje-error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form id="registerForm" action="../../../controllers/index-login/registro_familiar_controller.php" method="POST">
+        <form id="registerForm" action="../../../controllers/familiar/registro_familiar_controller.php" method="POST">
             <div class="form-grid">
                 <!-- Datos generales -->
                 <select name="tipo_documento" required>
@@ -43,15 +43,12 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
                 <input type="text" name="nombre" placeholder="Nombre" required>
                 <input type="text" name="apellido" placeholder="Apellido" required>
 
-                <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nacimiento" required>
-
                 <input type="text" name="direccion" placeholder="Dirección" required>
                 <input type="email" name="correo_electronico" placeholder="Correo electrónico" required>
                 <input type="text" name="numero_telefono" placeholder="Número de teléfono">
 
-                <!-- Parentesco (exclusivo de familiar) -->
-                <input type="text" name="parentesco" placeholder="Parentesco con el paciente">
+                <!-- Parentesco -->
+                <input type="text" name="parentesco" placeholder="Parentesco con el paciente" required>
             </div>
 
             <!-- Botón -->
@@ -62,6 +59,6 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
 
         <p>¿Ya tienes una cuenta? <a href="index.html">Iniciar sesión</a></p>
     </div>
-    <script src="../files_js/scripts.js"></script>
+    <script src="../../index-login/files_js/scripts.js"></script>
 </body>
 </html>

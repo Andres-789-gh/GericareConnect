@@ -94,18 +94,17 @@
 
         public function registrar($datos) {
             try {
-                $query = $this->conn->prepare("CALL registrar_familiar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $query = $this->conn->prepare("CALL registrar_familiar(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 $query->bindParam(1,  $datos['tipo_documento']);
                 $query->bindParam(2,  $datos['documento_identificacion']);
                 $query->bindParam(3,  $datos['nombre']);
                 $query->bindParam(4,  $datos['apellido']);
-                $query->bindParam(5,  $datos['fecha_nacimiento']);
-                $query->bindParam(6,  $datos['direccion']);
-                $query->bindParam(7,  $datos['correo_electronico']);
-                $query->bindParam(8,  $datos['contraseña']);
-                $query->bindParam(9,  $datos['numero_telefono']);
-                $query->bindParam(10, $datos['parentesco']);
+                $query->bindParam(5,  $datos['direccion']);
+                $query->bindParam(6,  $datos['correo_electronico']);
+                $query->bindParam(7,  $datos['contraseña']);
+                $query->bindParam(8,  $datos['numero_telefono']);
+                $query->bindParam(9,  $datos['parentesco']);
 
                 $query->execute();
 

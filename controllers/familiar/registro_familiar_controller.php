@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'documento_identificacion' => $_POST['documento_identificacion'] ?? '',
         'nombre'                   => $_POST['nombre'] ?? '',
         'apellido'                 => $_POST['apellido'] ?? '',
-        'fecha_nacimiento'         => $_POST['fecha_nacimiento'] ?? '',
         'direccion'                => $_POST['direccion'] ?? '',
         'correo_electronico'       => $_POST['correo_electronico'] ?? '',
         'contraseña'               => password_hash($clave_temporal, PASSWORD_DEFAULT),
@@ -26,12 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validación de campo parentesco obligatorio
     if (empty($datos['parentesco'])) {
         $_SESSION['error'] = 'Debes completar el campo "Parentesco con el paciente".';
-        header('Location: ../../views/index-login/htmls/registro_familiar_view.php');
+        header('Location: ../../views/familiar/html_familiar/registro_familiar_view.php');
         exit();
     }
 
     try {
         $usuario = new familiar(); // Se usa la clase específica
+
+        // Eliminar campo 'rol' antes de pasarlo si no se usa en el SP
+        unset($datos['rol']); 
+
         $usuario->registrar($datos);
 
         $_SESSION['mensaje'] = 'Familiar registrado correctamente. Contraseña temporal: ' . $clave_temporal;
@@ -50,12 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['error'] = 'Error inesperado: ' . $e->getMessage();
     }
 
-    header('Location: ../../views/index-login/htmls/registro_familiar_view.php');
+    header('Location: ../../views/familiar/html_familiar/registro_familiar_view.php');
     exit();
 
 } else {
     session_start();
     $_SESSION['error'] = 'Acceso no permitido.';
-    header('Location: ../../views/index-login/htmls/registro_familiar_view.php');
+    header('Location: ../../views/familiar/html_familiar/registro_familiar_view.php');
     exit();
 }

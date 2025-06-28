@@ -15,7 +15,6 @@ create table tb_usuario (
     documento_identificacion int not null unique,
     nombre varchar(50) not null,
     apellido varchar(50) not null,
-    fecha_nacimiento date not null,
     direccion varchar(250) not null,
     correo_electronico varchar(100) not null unique,
     contraseña varchar(255) not null,
@@ -25,6 +24,7 @@ create table tb_usuario (
     fecha_contratacion date null,
     tipo_contrato varchar(50) null,
     contacto_emergencia varchar(20) null,
+    fecha_nacimiento date null,
     -- atributo familiar
     parentesco varchar(50) null
 );
