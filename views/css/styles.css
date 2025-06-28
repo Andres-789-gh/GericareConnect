@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #e9e6f0; /* Morado muy claro para el fondo */
     color: #333;
     margin: 0;
     padding: 20px;
@@ -12,115 +12,148 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Sombra ligeramente más pronunciada */
 }
 
 h1, h2 {
-    color: #0056b3;
+    color: #6a0dad; /* Morado oscuro para títulos */
     text-align: center;
+    margin-bottom: 25px; /* Espacio debajo de los títulos */
 }
 
 /* Formulario */
 .form-container {
     margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid #ddd;
+    padding: 25px; /* Un poco más de padding */
+    border: 1px solid #d4c2ed; /* Borde morado claro */
     border-radius: 8px;
+    background-color: #f8f6fc; /* Fondo muy claro para el formulario */
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 18px; /* Un poco más de espacio entre grupos */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px; /* Más espacio debajo de las etiquetas */
     font-weight: bold;
+    color: #4a0572; /* Tono morado para etiquetas */
 }
 
 .form-group input[type="text"],
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Importante para el padding */
+    padding: 12px; /* Un poco más de padding */
+    border: 1px solid #9b59b6; /* Borde morado medio */
+    border-radius: 5px; /* Bordes ligeramente más redondeados */
+    box-sizing: border-box;
+    font-size: 16px; /* Aumentar un poco el tamaño de la fuente */
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #6a0dad; /* Morado oscuro al enfocar */
+    box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.2); /* Sombra suave al enfocar */
+    outline: none;
 }
 
 .form-actions {
     text-align: right;
+    padding-top: 15px; /* Espacio arriba de los botones de acción */
 }
 
 /* Tabla */
 .table-container {
     overflow-x: auto;
+    margin-top: 30px; /* Más espacio sobre la tabla */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Sombra para la tabla */
+    border-radius: 8px; /* Bordes redondeados para la tabla */
+    overflow: hidden; /* Asegura que los bordes redondeados se apliquen bien */
 }
 
 th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
+    padding: 14px; /* Aumentar un poco el padding de las celdas */
+    border: 1px solid #e1bee7; /* Borde morado muy claro */
     text-align: left;
+    vertical-align: middle; /* Asegura que el contenido esté centrado verticalmente */
 }
 
 thead {
-    background-color: #0056b3;
+    background-color: #6a0dad; /* Morado oscuro para el encabezado */
     color: #fff;
 }
 
 tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f0e6f8; /* Morado muy claro para filas pares */
 }
 
 tbody tr:hover {
-    background-color: #e9ecef;
+    background-color: #d4a7ed; /* Morado más claro al pasar el ratón */
+    cursor: pointer; /* Indica que la fila es interactiva */
+}
+
+/* --- Ajuste de Botones en Celdas de Tabla --- */
+/* Target the last <td> which usually contains the action buttons */
+table td:last-child {
+    display: flex; /* Make the cell a flex container */
+    gap: 8px; /* Add space between the flex items (buttons) */
+    justify-content: center; /* Center the buttons horizontally within the cell */
+    align-items: center; /* Center the buttons vertically within the cell */
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line if the screen is too narrow */
 }
 
 
-/* Botones */
+/* Botones Generales */
 .btn {
-    padding: 10px 15px;
+    padding: 10px 18px; /* Más padding para que los botones se vean más "cómodos" */
     border: none;
-    border-radius: 4px;
+    border-radius: 5px; /* Bordes ligeramente más redondeados */
     color: white;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
-    margin: 2px;
+    font-size: 15px; /* Tamaño de fuente ligeramente más grande */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transición suave para hover */
 }
 
+.btn:hover {
+    transform: translateY(-1px); /* Efecto sutil al pasar el ratón */
+}
+
+/* Botones con nueva escala de colores */
 .btn-primary {
-    background-color: #007bff;
+    background-color: #8e44ad; /* Morado medio */
 }
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #6a0dad; /* Morado oscuro */
 }
 
 .btn-warning {
-    background-color: #ffc107;
-    color: #212529;
+    background-color: #af7ac5; /* Morado claro para "Editar" */
+    color: #fff; /* Texto blanco para mayor contraste */
 }
 .btn-warning:hover {
-    background-color: #e0a800;
+    background-color: #9b59b6; /* Morado un poco más oscuro al pasar el ratón */
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background-color: #c0392b; /* Rojo fuerte para "Eliminar" (contrastando con morados) */
 }
 .btn-danger:hover {
-    background-color: #c82333;
+    background-color: #a93226; /* Rojo más oscuro al pasar el ratón */
 }
 
 .btn-secondary {
-    background-color: #6c757d;
+    background-color: #95a5a6; /* Gris neutro para "Cancelar" */
 }
 .btn-secondary:hover {
-    background-color: #5a6268;
+    background-color: #7f8c8d;
 }
