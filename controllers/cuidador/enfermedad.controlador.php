@@ -1,6 +1,5 @@
 <?php
 
-// LA RUTA CORRECTA DESDE controllers/cuidador/ HASTA models/clases/ ES:
 require_once "../../models/clases/enfermedad.modelo.php";
 
 class ControladorEnfermedades {
