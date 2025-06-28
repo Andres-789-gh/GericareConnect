@@ -1,42 +1,18 @@
 <?php
+require_once __DIR__ . '/../data_base/database.php';
 
-/**
- * Clase para gestionar las operaciones de los pacientes en la base de datos.
- */
 class Paciente {
-    /**
-     * @var PDO La conexión a la base de datos.
-     */
-    protected $conn;
+    private $conn;
 
-    /**
-     * Constructor de la clase. Inicia y verifica la conexión a la base de datos.
-     */
     public function __construct() {
-        // Suprime la salida de error por defecto para manejarla nosotros.
-        @include_once(__DIR__ . '/../../data_base/database.php');
-        
-        // Verificación CRÍTICA: Asegura que la conexión ($conn) se creó correctamente.
-        if (!isset($conn) || !$conn instanceof PDO) {
-            // Si $conn no existe o no es un objeto PDO, lanza una excepción clara.
-            throw new Exception("Falló la conexión a la base de datos. Verifique las credenciales y la ruta en 'database.php'.");
-        }
-        
-        // Asigna la conexión a la propiedad de la clase.
-        $this->conn = $conn;
+        $db = new Database();
+        $this->conn = $db->conectar();
     }
-    
-    /**
-     * Registra un nuevo paciente llamando al procedimiento almacenado.
-     *
-     * @param array $datos Los datos del paciente a registrar.
-     * @return mixed El resultado del procedimiento almacenado.
-     * @throws Exception Si ocurre un error.
-     */
+
     public function registrar($datos) {
         try {
             $query = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            
+
             $query->bindParam(1,  $datos['documento_identificacion']);
             $query->bindParam(2,  $datos['nombre']);
             $query->bindParam(3,  $datos['apellido']);
@@ -54,11 +30,8 @@ class Paciente {
             return $query->fetch(PDO::FETCH_ASSOC);
 
         } catch (Exception $e) {
-            // Relanza la excepción para un manejo de errores centralizado.
-            throw $e;
+            throw new Exception("Error al registrar paciente: " . $e->getMessage());
         }
     }
-
-    // Aquí puedes agregar tus otros métodos: actualizar, consultar, desactivar, etc.
 }
 ?>

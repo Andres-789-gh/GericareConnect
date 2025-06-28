@@ -1,7 +1,6 @@
 <?php
 
-// LA RUTA CORRECTA DESDE controllers/cuidador/ HASTA models/clases/ ES:
-require_once "../../models/clases/enfermedad.modelo.php";
+require_once __DIR__ . "/../../models/clases/enfermedad.modelo.php";
 
 class ControladorEnfermedades {
 
@@ -22,13 +21,12 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    // Redirección desde controlador a vista (sube 2 niveles, entra a views/cuidador/html_cuidador)
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al crear la enfermedad.");
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
@@ -60,12 +58,12 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al editar la enfermedad.");
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
@@ -87,12 +85,12 @@ class ControladorEnfermedades {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al cambiar el estado de la enfermedad.");
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
@@ -115,12 +113,12 @@ class ControladorEnfermedades {
             if ($respuesta == "ok") {
                 echo '<script>
                     alert("Enfermedad eliminada lógicamente (estado cambiado a Inactivo).");
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al intentar eliminar lógicamente la enfermedad.");
-                    window.location = "../views/cuidador/html_cuidador/enfermedad.php";
+                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
                 </script>';
             }
         }
