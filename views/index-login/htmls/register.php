@@ -63,7 +63,7 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
                 <!--Selección de roles-->
                 <div class="roles-column-buttons">
                     <label class="checkbox-rol">
-                        <input type="checkbox" name="roles[]" value="Administrador" id="rol-admin">
+                        <input type="checkbox" name="roles[]" value="Administrador" id="rol-administrador">
                         <span>Administrador</span>
                     </label>
                     <label class="checkbox-rol">

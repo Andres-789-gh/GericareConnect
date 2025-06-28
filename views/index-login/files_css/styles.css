@@ -28,13 +28,13 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     max-width: 500px;
-    width: 100%;
+    width: 120%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     position: relative;
     animation: fadeInUp 1s ease-in-out;
-    padding-right: 10px;
+    padding-right: 50px;
+    padding-left: 50px;
     margin-top: 50px;
 }
 
@@ -42,8 +42,8 @@ body {
 .logo {
     width: 25%;
     position: absolute;
-    top: -30px;
-    left: 0%;
+    top: -45px;
+    left: -1%;
     transform: translateX(-50%);
     background: white;
     padding: 5px;
@@ -112,7 +112,7 @@ select:focus {
 #campos-cuidador-admin input,
 #campos-familiar input {
     width: 100%;
-    max-width: 100%;
+    max-width: 150%;
     margin: 0 auto;
     display: block;
     margin-bottom: 10px;
@@ -160,12 +160,20 @@ button[type="submit"]:hover {
 p {
     margin-top: 15px;
     color: #555;
+    text-align: center;
+    align-items: center;
 }
-
+.cancel-button {
+    margin-top: 15px; /*arreglar*/
+    text-align: center;
+    align-items: center;
+    padding-left: 215px;
+}
 p a {
     color: #6200ea;
     text-decoration: none;
     font-weight: bold;
+    text-align: center;
 }
 
 p a:hover {

@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Validar campos específicos por rol
-        const rolAdmin = document.getElementById("rol-admin").checked;
+        const rolAdmin = document.getElementById("rol-administrador").checked;
         const rolCuidador = document.getElementById("rol-cuidador").checked;
         const rolFamiliar = document.getElementById("rol-familiar").checked;
 
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    const rolAdmin = document.getElementById("rol-admin");
+    const rolAdmin = document.getElementById("rol-administrador");
     const rolCuidador = document.getElementById("rol-cuidador");
     const rolFamiliar = document.getElementById("rol-familiar");
 

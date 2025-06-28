@@ -1,11 +1,11 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}
+}/*
 if (!isset($datosUsuario)) {
     header("Location: listar_usuarios.php");
     exit;
-}
+}*/
 $rolesActuales = explode(',', $datosUsuario['roles']);
 ?>
 <!DOCTYPE html>
@@ -13,20 +13,20 @@ $rolesActuales = explode(',', $datosUsuario['roles']);
 <head>
     <meta charset="UTF-8">
     <title>Actualizar Usuario</title>
-    <link rel="stylesheet" href="/gericare_connect/views/index-login/files_css/styles.css">
-    <script src="/gericare_connect/views/index-login/files_js/scripts.js" defer></script>
+    <link rel="stylesheet" href="/GericareConnect/views/index-login/files_css/styles.css">
+    <script src="/GericareConnect/views/index-login/files_js/scripts.js" defer></script>
 </head>
 <body>
     <div class="register-container">
-        <img src="/gericare_connect/views/imagenes/Geri_Logo-..png" alt="Logo" class="logo">
-        <img src="/gericare_connect/views/imagenes/Geri_Logo-.png" alt="Logo" class="logo2">
+        <img src="/GericareConnect/views/imagenes/Geri_Logo-..png" alt="Logo" class="logo">
+        <img src="/GericareConnect/views/imagenes/Geri_Logo-.png" alt="Logo" class="logo2">
         <h2>Actualizar Usuario</h2>
 
         <?php if (isset($_SESSION['error'])): ?>
             <div class="mensaje-error"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
-        <form id="registerForm" action="../../../controllers/index-login/actualizar_controller.php" method="POST">
+        <form id="registerForm" action="/GericareConnect/controllers/index-login/actualizar_controller.php" method="POST">
             <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($datosUsuario['id_usuario']) ?>">
 
             <div class="form-grid">
@@ -78,7 +78,7 @@ $rolesActuales = explode(',', $datosUsuario['roles']);
 
                 <div id="boton-registro">
                     <button type="submit">Actualizar</button>
-                    <a href="listar_usuarios.php" class="cancel-button">Cancelar</a>
+                    <a href="/GericareConnect/views/admin/html_admin/admin_pacientes.php" class="cancel-button">Cancelar</a>
                 </div>
             </div>
         </form>
