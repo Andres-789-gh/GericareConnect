@@ -1,20 +1,18 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}/*
-if (!isset($datosUsuario)) {
-    header("Location: listar_usuarios.php");
-    exit;
-}*/
-$rolesActuales = explode(',', $datosUsuario['roles']);
+}
+
+$rol = $datosUsuario['roles'];
+$isFamiliar = $rol === 'Familiar';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Actualizar Usuario</title>
-    <link rel="stylesheet" href="/GericareConnect/views/index-login/files_css/styles.css">
-    <script src="/GericareConnect/views/index-login/files_js/scripts.js" defer></script>
+    <link rel="stylesheet" href="/gericare/GericareConnect/views/index-login/files_css/styles.css">
+    <script src="/gericare/GericareConnect/views/index-login/files_js/scripts.js" defer></script>
 </head>
 <body>
     <div class="register-container">
@@ -28,52 +26,57 @@ $rolesActuales = explode(',', $datosUsuario['roles']);
 
         <form id="registerForm" action="/GericareConnect/controllers/index-login/actualizar_controller.php" method="POST">
             <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($datosUsuario['id_usuario']) ?>">
+            <input type="hidden" name="rol" value="<?= htmlspecialchars($rol) ?>">
 
             <div class="form-grid">
-                <select name="tipo_documento" required>
+
+                <label for="tipo_documento" class="form-label">Tipo de documento</label>
+                <select name="tipo_documento" id="tipo_documento" required>
                     <option value="">Seleccione tipo de documento</option>
                     <option value="CC" <?= $datosUsuario['tipo_documento'] == 'CC' ? 'selected' : '' ?>>Cédula de Ciudadanía</option>
                     <option value="CE" <?= $datosUsuario['tipo_documento'] == 'CE' ? 'selected' : '' ?>>Cédula de Extranjería</option>
                     <option value="PA" <?= $datosUsuario['tipo_documento'] == 'PA' ? 'selected' : '' ?>>Pasaporte</option>
                 </select>
 
-                <input type="number" name="documento_identificacion" value="<?= htmlspecialchars($datosUsuario['documento_identificacion']) ?>" required>
-                <input type="text" name="nombre" value="<?= htmlspecialchars($datosUsuario['nombre']) ?>" required>
-                <input type="text" name="apellido" value="<?= htmlspecialchars($datosUsuario['apellido']) ?>" required>
+                <label for="documento_identificacion" class="form-label">Número de documento</label>
+                <input type="number" name="documento_identificacion" id="documento_identificacion" value="<?= htmlspecialchars($datosUsuario['documento_identificacion']) ?>" required>
+
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" name="nombre" id="nombre" value="<?= htmlspecialchars($datosUsuario['nombre']) ?>" required>
+
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" name="apellido" id="apellido" value="<?= htmlspecialchars($datosUsuario['apellido']) ?>" required>
 
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>" required>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>" required>
 
-                <input type="text" name="direccion" value="<?= htmlspecialchars($datosUsuario['direccion']) ?>" required>
-                <input type="email" name="correo_electronico" value="<?= htmlspecialchars($datosUsuario['correo_electronico']) ?>" required>
-                <input type="text" name="numero_telefono" value="<?= htmlspecialchars($datosUsuario['numero_telefono'] ?? '') ?>">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" name="direccion" id="direccion" value="<?= htmlspecialchars($datosUsuario['direccion']) ?>" required>
 
-                <!-- Roles -->
-                <div class="roles-column-buttons">
-                    <?php
-                    $todosLosRoles = ['Administrador', 'Cuidador', 'Familiar'];
-                    foreach ($todosLosRoles as $rol) {
-                        $checked = in_array($rol, $rolesActuales) ? 'checked' : '';
-                        $id = "rol-" . strtolower($rol);
-                        echo "
-                        <label class='checkbox-rol'>
-                            <input type='checkbox' name='roles[]' value='$rol' id='$id' $checked>
-                            <span>$rol</span>
-                        </label>";
-                    }
-                    ?>
-                </div>
+                <label for="correo_electronico" class="form-label">Correo electrónico</label>
+                <input type="email" name="correo_electronico" id="correo_electronico" value="<?= htmlspecialchars($datosUsuario['correo_electronico']) ?>" required>
 
-                <!-- Campos específicos -->
-                <div id="campos-cuidador-admin" class="campos-rol form-grid">
+                <label for="numero_telefono" class="form-label">Número de teléfono</label>
+                <input type="text" name="numero_telefono" id="numero_telefono" value="<?= htmlspecialchars($datosUsuario['numero_telefono'] ?? '') ?>">
+
+                <!-- Campos para Cuidador y Administrador -->
+                <div id="campos-cuidador-admin" class="campos-rol form-grid" style="<?= $isFamiliar ? 'display:none;' : '' ?>">
+
                     <label for="fecha_contratacion" class="form-label">Fecha de contratación</label>
                     <input type="date" name="fecha_contratacion" id="fecha_contratacion" value="<?= htmlspecialchars($datosUsuario['fecha_contratacion'] ?? '') ?>">
-                    <input type="text" name="tipo_contrato" id="tipo_contrato" placeholder="Tipo de contrato" value="<?= htmlspecialchars($datosUsuario['tipo_contrato'] ?? '') ?>">
-                    <input type="text" name="contacto_emergencia" id="contacto_emergencia" placeholder="Contacto de emergencia" value="<?= htmlspecialchars($datosUsuario['contacto_emergencia'] ?? '') ?>">
+
+                    <label for="tipo_contrato" class="form-label">Tipo de contrato</label>
+                    <input type="text" name="tipo_contrato" id="tipo_contrato" value="<?= htmlspecialchars($datosUsuario['tipo_contrato'] ?? '') ?>">
+
+                    <label for="contacto_emergencia" class="form-label">Contacto de emergencia</label>
+                    <input type="text" name="contacto_emergencia" id="contacto_emergencia" value="<?= htmlspecialchars($datosUsuario['contacto_emergencia'] ?? '') ?>">
+
                 </div>
 
-                <div id="campos-familiar" class="campos-rol form-grid">
-                    <input type="text" name="parentesco" id="parentesco" placeholder="Parentesco con el paciente" value="<?= htmlspecialchars($datosUsuario['parentesco'] ?? '') ?>">
+                <!-- Campo para Familiar -->
+                <div id="campos-familiar" class="campos-rol form-grid" style="<?= !$isFamiliar ? 'display:none;' : '' ?>">
+                    <label for="parentesco" class="form-label">Parentesco con el paciente</label>
+                    <input type="text" name="parentesco" id="parentesco" value="<?= htmlspecialchars($datosUsuario['parentesco'] ?? '') ?>">
                 </div>
 
                 <div id="boton-registro">
