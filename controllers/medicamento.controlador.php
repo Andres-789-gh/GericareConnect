@@ -21,12 +21,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al crear el medicamento.");
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
@@ -50,12 +50,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al editar el medicamento.");
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
@@ -86,12 +86,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al cambiar el estado del medicamento.");
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
@@ -109,12 +109,12 @@ class ControladorMedicamentos {
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al eliminar el medicamento.");
-                    window.location = "index.php";
+                    window.location = "medicamento.php";
                 </script>';
             }
         }
