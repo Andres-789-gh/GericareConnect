@@ -11,8 +11,8 @@ $isFamiliar = $rol === 'Familiar';
 <head>
     <meta charset="UTF-8">
     <title>Actualizar Usuario</title>
-    <link rel="stylesheet" href="/gericare/GericareConnect/views/index-login/files_css/styles.css">
-    <script src="/gericare/GericareConnect/views/index-login/files_js/scripts.js" defer></script>
+    <link rel="stylesheet" href="/GericareConnect/views/index-login/files_css/styles.css">
+    <script src="/GericareConnect/views/index-login/files_js/scripts.js" defer></script>
 </head>
 <body>
     <div class="register-container">
