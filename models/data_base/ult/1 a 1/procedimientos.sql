@@ -29,12 +29,20 @@ begin
         signal sqlstate '45000' set message_text = 'error: ya existe un usuario con ese correo electrónico.';
     end if;
 
-    select id_rol into v_id_rol from tb_rol where lower(nombre_rol) = lower(trim(p_nombre_rol));
-
-    if v_id_rol is null then
-        set v_error_msg = concat('error: el rol "', trim(p_nombre_rol), '" no es válido.');
+    if not exists (
+        select 1 from tb_rol where lower(nombre_rol) = lower(trim(p_nombre_rol))
+    ) then
+        if p_nombre_rol is null then
+            set v_error_msg = 'error: el rol es nulo o no fue proporcionado.';
+        else
+            set v_error_msg = concat('error: el rol "', coalesce(trim(p_nombre_rol), ''), '" no es válido.');
+        end if;
         signal sqlstate '45000' set message_text = v_error_msg;
     end if;
+
+    select id_rol into v_id_rol
+    from tb_rol
+    where lower(nombre_rol) = lower(trim(p_nombre_rol));
 
     if lower(p_nombre_rol) = 'familiar' then
         if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null or p_fecha_nacimiento is not null then
@@ -113,12 +121,20 @@ begin
         signal sqlstate '45000' set message_text = 'error: el correo ya está registrado por otro usuario.';
     end if;
 
-    select id_rol into v_id_rol from tb_rol where lower(nombre_rol) = lower(trim(p_nombre_rol));
-
-    if v_id_rol is null then
-        set v_error_msg = concat('error: el rol "', trim(p_nombre_rol), '" no es válido.');
+    if not exists (
+        select 1 from tb_rol where lower(nombre_rol) = lower(trim(p_nombre_rol))
+    ) then
+        if p_nombre_rol is null then
+            set v_error_msg = 'error: el rol es nulo o no fue proporcionado.';
+        else
+            set v_error_msg = concat('error: el rol "', coalesce(trim(p_nombre_rol), ''), '" no es válido.');
+        end if;
         signal sqlstate '45000' set message_text = v_error_msg;
     end if;
+
+    select id_rol into v_id_rol
+    from tb_rol
+    where lower(nombre_rol) = lower(trim(p_nombre_rol));
 
     if lower(p_nombre_rol) = 'familiar' then
         if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null or p_fecha_nacimiento is not null then
@@ -176,11 +192,13 @@ create procedure registrar_familiar(
 begin
     declare v_id_usuario int;
     declare v_id_rol int;
+    declare v_error_msg varchar(255);
 
     select id_rol into v_id_rol from tb_rol where lower(nombre_rol) = 'familiar';
 
     if v_id_rol is null then
-        signal sqlstate '45000' set message_text = 'error: el rol "familiar" no está registrado.';
+        set v_error_msg = 'error: el rol "familiar" no está registrado.';
+        signal sqlstate '45000' set message_text = v_error_msg;
     end if;
 
     if exists (
