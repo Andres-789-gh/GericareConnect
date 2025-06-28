@@ -4,7 +4,7 @@
 /* Fuente base */
 body {
     font-family: 'Arial', sans-serif; /* Mantiene la fuente de tu CSS original */
-    background-color: #f7f3fb; /* Un morado muy pálido para el fondo de las páginas CRUD */
+    background-color: #ffffff; /* Un morado muy pálido para el fondo de las páginas CRUD */
     color: #333;
     margin: 0;
     padding: 20px;
