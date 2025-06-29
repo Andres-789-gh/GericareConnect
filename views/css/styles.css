@@ -177,6 +177,13 @@ table td:last-child {
     background-color: #5a6268;
 }
 
+.btn-success {
+    background-color: #6200ea; /* Morado principal, igual que el botón de submit */
+}
+.btn-success:hover {
+    background-color: #4b00c2; 
+}
+
 /* Estilos de mensaje (como tus .mensaje-exito/.mensaje-error) */
 .mensaje-exito {
     color: #155724; /* Verde oscuro para éxito */

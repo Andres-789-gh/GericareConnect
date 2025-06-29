@@ -98,6 +98,10 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                     ?>
                 </tbody>
             </table>
+            <div class="export-button" style="margin-top: 20px;">
+                <a href="../../../controllers/cuidador/exportar_enfermedad.php" class="btn btn-success">Exportar a Excel</a>
+            </div>
+            
         </div>
     </div>
     <script>

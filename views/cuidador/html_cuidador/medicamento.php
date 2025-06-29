@@ -98,8 +98,11 @@ if (isset($_GET['idEliminar'])) {
                     ?>
                 </tbody>
             </table>
-        </div>
+            <div class="export-button" style="margin-top: 20px;">
+                <a href="../../../controllers/cuidador/exportar_medicamentos.php" class="btn btn-success">Exportar a Excel</a>
+            </div>
     </div>
+        </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('medicamento-form');
