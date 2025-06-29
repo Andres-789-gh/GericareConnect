@@ -25,3 +25,7 @@ foreach ($usuarios as $usuario) {
 
     echo "Contraseña para documento {$usuario['documento']} actualizada a: {$usuario['clave_plana']}<br>";
 }
+
+
+// git config --global user.name "Edbudy"
+// git config --global user.email "giovanni2003go@gmail.com"
