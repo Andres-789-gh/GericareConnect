@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contacto_emergencia'   => $_POST['contacto_emergencia'] ?? null,
         'fecha_nacimiento'      => $_POST['fecha_nacimiento'],
         'parentesco'            => $_POST['parentesco'] ?? null,
-        'roles'                 => $_POST['rol'] // se envía como string, no array
+        'nombre_rol'                 => $_POST['rol'] ?? null, // se envía como string, no array
     ];
 
     try {

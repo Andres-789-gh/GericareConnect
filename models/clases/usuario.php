@@ -53,7 +53,7 @@
                 $query->bindParam(11, $datos['contacto_emergencia']);
                 $query->bindParam(12, $datos['fecha_nacimiento']);
                 $query->bindParam(13, $datos['parentesco']);
-                $query->bindParam(14, $datos['rol']); 
+                $query->bindParam(14, $datos['nombre_rol']); 
 
                 $query->execute();
 

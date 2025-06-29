@@ -312,3 +312,4 @@ values
 
 select * from tb_usuario; 
 select * from tb_rol;
+select * from tb_telefono;

@@ -120,6 +120,7 @@ select:focus {
 
 /* Boton registro */
 button[type="submit"] {
+    margin-top: 5%;
     padding: 12px;
     background-color: #6200ea;
     color: white;
