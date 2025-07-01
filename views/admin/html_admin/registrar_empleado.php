@@ -2,6 +2,7 @@
 session_start();
 // Asegurarse de que solo el administrador pueda ver esta página
 if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
+    // Redirigir si no es administrador
     header("Location: /GericareConnect/views/index-login/htmls/index.html");
     exit();
 }
@@ -10,8 +11,10 @@ if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrado
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Nuevo Empleado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Empleado - GeriCare Connect</title>
     <link rel="stylesheet" href="/GericareConnect/views/index-login/files_css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="register-container">
@@ -19,86 +22,51 @@ if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrado
     <img src="/GericareConnect/views/imagenes/Geri_Logo-.png" alt="Logo" class="logo2">
     <h2>Registrar Nuevo Empleado</h2>
 
-    <!-- Contenedor para mensajes de error/exito -->
     <?php
     if (isset($_SESSION['error_registro'])) {
-        echo '<div class="mensaje-error">' . $_SESSION['error_registro'] . '</div>';
+        echo '<div class="mensaje-error" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">' . htmlspecialchars($_SESSION['error_registro']) . '</div>';
         unset($_SESSION['error_registro']);
     }
     ?>
 
-    <form id="registerForm" action="../../../controllers/admin/registrar_empleado_controller.php" method="POST" novalidate>
+    <form id="registerForm" action="../../../controllers/admin/registrar_empleado_controller.php" method="POST">
         <div class="form-grid">
             
-            <label for="nombre_rol" class="form-label">Rol del Empleado</label>
-            <select name="nombre_rol" id="nombre_rol" required>
-                <option value="">Seleccione un rol...</option>
+            <select name="nombre_rol" required>
+                <option value="" disabled selected>Rol del Empleado</option>
                 <option value="Administrador">Administrador</option>
                 <option value="Cuidador">Cuidador</option>
             </select>
-            <small class="mensaje-error-campo"></small>
 
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" name="nombre" id="nombre" required>
-            <small class="mensaje-error-campo"></small>
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="text" name="apellido" placeholder="Apellido" required>
 
-            <label for="apellido" class="form-label">Apellido</label>
-            <input type="text" name="apellido" id="apellido" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="tipo_documento" class="form-label">Tipo de Documento</label>
-            <select name="tipo_documento" id="tipo_documento" required>
-                <option value="">Seleccione...</option>
+            <select name="tipo_documento" required>
+                <option value="" disabled selected>Tipo de documento</option>
                 <option value="CC">Cédula de Ciudadanía</option>
                 <option value="CE">Cédula de Extranjería</option>
                 <option value="PA">Pasaporte</option>
             </select>
-            <small class="mensaje-error-campo"></small>
 
-            <label for="documento_identificacion" class="form-label">Número de Documento</label>
-            <input type="number" name="documento_identificacion" id="documento_identificacion" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-            <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="direccion" class="form-label">Dirección</label>
-            <input type="text" name="direccion" id="direccion" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-            <input type="email" name="correo_electronico" id="correo_electronico" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="numero_telefono" class="form-label">Número de Teléfono</label>
-            <input type="text" name="numero_telefono" id="numero_telefono" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="fecha_contratacion" class="form-label">Fecha de Contratación</label>
-            <input type="date" name="fecha_contratacion" id="fecha_contratacion" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="tipo_contrato" class="form-label">Tipo de Contrato</label>
-            <input type="text" name="tipo_contrato" id="tipo_contrato" required>
-            <small class="mensaje-error-campo"></small>
-
-            <label for="contacto_emergencia" class="form-label">Contacto de Emergencia</label>
-            <input type="text" name="contacto_emergencia" id="contacto_emergencia" required>
-            <small class="mensaje-error-campo"></small>
+            <input type="number" name="documento_identificacion" placeholder="Número de Documento" required>
             
-            <label for="contrasena" class="form-label">Contraseña</label>
-            <input type="password" name="contrasena" id="contrasena" required>
-            <small class="mensaje-error-campo"></small>
+            <label for="fecha_nacimiento" style="margin-bottom: -10px; font-size: 0.9em; color: #555;">Fecha de Nacimiento</label>
+            <input type="date" name="fecha_nacimiento" required>
 
-            <label for="confirmar_contrasena" class="form-label">Confirmar Contraseña</label>
-            <input type="password" name="confirmar_contrasena" id="confirmar_contrasena" required>
-            <small class="mensaje-error-campo"></small>
+            <input type="text" name="direccion" placeholder="Dirección" required>
+            <input type="email" name="correo_electronico" placeholder="Correo Electrónico" required>
+            <input type="text" name="numero_telefono" placeholder="Número de Teléfono" required>
+
+            <label for="fecha_contratacion" style="margin-bottom: -10px; font-size: 0.9em; color: #555;">Fecha de Contratación</label>
+            <input type="date" name="fecha_contratacion" required>
+
+            <input type="text" name="tipo_contrato" placeholder="Tipo de Contrato" required>
+            <input type="text" name="contacto_emergencia" placeholder="Contacto de Emergencia" required>
 
         </div>
-        <div id="boton-registro">
+        <div id="boton-registro" style="margin-top: 20px;">
             <button type="submit">Registrar Empleado</button>
-            <a href="admin_pacientes.php" class="cancel-button">Cancelar</a>
+            <a href="admin_pacientes.php" class="cancel-button" style="margin-top: 10px;">Cancelar</a>
         </div>
     </form>
 </div>

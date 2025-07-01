@@ -11,20 +11,11 @@ if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrado
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // Validación de Contraseña
-    if ($_POST['contrasena'] !== $_POST['confirmar_contrasena']) {
-        $_SESSION['error_registro'] = "Las contraseñas no coinciden.";
-        header("Location: ../../views/admin/html_admin/registrar_empleado.php");
-        exit();
-    }
-    if (strlen($_POST['contrasena']) < 6) {
-        $_SESSION['error_registro'] = "La contraseña debe tener al menos 6 caracteres.";
-        header("Location: ../../views/admin/html_admin/registrar_empleado.php");
-        exit();
-    }
+    // Generar contraseña temporal aleatoria
+    $clave_temporal = bin2hex(random_bytes(5));
 
-    // Hashear la contraseña
-    $contrasena_hashed = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
+    // Hashear esa contraseña temporal
+    $contraseña_hashed = password_hash($clave_temporal, PASSWORD_DEFAULT);
 
     // Recoger los datos del formulario
     $datos = [
@@ -34,24 +25,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'apellido'                 => $_POST['apellido'],
         'direccion'                => $_POST['direccion'],
         'correo_electronico'       => $_POST['correo_electronico'],
-        'contrasena'               => $contrasena_hashed, // Usar la contraseña hasheada
+        'contraseña'               => $contraseña_hashed,
         'numero_telefono'          => $_POST['numero_telefono'],
         'fecha_contratacion'       => $_POST['fecha_contratacion'],
         'tipo_contrato'            => $_POST['tipo_contrato'],
         'contacto_emergencia'      => $_POST['contacto_emergencia'],
         'fecha_nacimiento'         => $_POST['fecha_nacimiento'],
-        'parentesco'               => null, // Es un empleado asi que no tiene parentesco
+        'parentesco'               => null,
         'nombre_rol'               => $_POST['nombre_rol'],
     ];
 
     try {
         $usuario = new administrador();
-        $usuario->registrarEmpleado($datos);
-        
-        $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado correctamente.";
+        // Llama al método del modelo
+        $usuario->registrarEmpleado($datos); 
+
+        // Muestra la contraseña temporal al administrador
+        $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado. Contraseña temporal: " . $clave_temporal;
 
     } catch (Exception $e) {
-        // Capturar el mensaje de error de la base de datos
         $_SESSION['error'] = "Error al registrar: " . $e->getMessage();
     }
 

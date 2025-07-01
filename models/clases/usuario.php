@@ -125,7 +125,7 @@
                 $query->bindParam(4,  $datos['apellido']);
                 $query->bindParam(5,  $datos['direccion']);
                 $query->bindParam(6,  $datos['correo_electronico']);
-                $query->bindParam(7,  $datos['contrasena']); // Contraseña hasheada desde el controlador
+                $query->bindParam(7,  $datos['contraseña']); // Contraseña hasheada desde el controlador
                 $query->bindParam(8,  $datos['numero_telefono']);
                 $query->bindParam(9,  $datos['fecha_contratacion']);
                 $query->bindParam(10, $datos['tipo_contrato']);
