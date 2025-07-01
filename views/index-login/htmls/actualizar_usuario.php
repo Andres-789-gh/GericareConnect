@@ -87,9 +87,28 @@ $esFamiliar = $rol === 'Familiar';
                 <small id="error-parentesco" class="mensaje-error-campo"></small>
             </div>
 
+            <?php
+            /* Logica para el botón Cancelar */
+            $url_cancelar = '../../views/index-login/htmls/index.html'; // URL por defecto
+
+            if (isset($_SESSION['nombre_rol'])) {
+                switch ($_SESSION['nombre_rol']) {
+                    case 'Administrador':
+                        $url_cancelar = '/GericareConnect/views/admin/html_admin/admin_pacientes.php';
+                        break;
+                    case 'Cuidador':
+                        $url_cancelar = '/GericareConnect/views/cuidador/html_cuidador/cuidadores_panel_principal.php';
+                        break;
+                    case 'Familiar':
+                        $url_cancelar = '/GericareConnect/views/familiar/html_familiar/familiares.php';
+                        break;
+                }
+            }
+            ?>
+
             <div id="boton-registro">
                 <button type="submit">Actualizar</button>
-                <a href="/GericareConnect/views/admin/html_admin/admin_pacientes.php" class="cancel-button">Cancelar</a>
+                <a href="<?= $url_cancelar ?>" class="cancel-button">Cancelar</a>
             </div>
         </div>
     </form>

@@ -81,6 +81,10 @@
             <a href="agregar_paciente.html" class="add-paciente-button">
                 <i class="fas fa-user-plus"></i> Agregar Paciente
             </a>
+
+            <a href="registrar_empleado.php" class="add-empleado-button">
+                <i class="fas fa-user-tie"></i> Registrar Empleado
+            </a>
         </div>
     </header>
     <main class="admin-content">

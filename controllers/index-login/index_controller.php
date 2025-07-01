@@ -29,10 +29,10 @@ if(!empty($respuesta)) {
                     header("location:../../views/admin/html_admin/admin_pacientes.php");
                     break;
                 case "Cuidador":
-                    header("location:../../views/cuidador/html_cuidador/cuidadores_panel_principal.html");
+                    header("location:../../views/cuidador/html_cuidador/cuidadores_panel_principal.php");
                     break;
                 case "Familiar":
-                    header("location:../../views/familiar/html_familiar/familiares.html");
+                    header("location:../../views/familiar/html_familiar/familiares.php");
                     break;
                 default:
                     echo "<script>

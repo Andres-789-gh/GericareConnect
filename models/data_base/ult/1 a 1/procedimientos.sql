@@ -45,10 +45,12 @@ begin
     where lower(nombre_rol) = lower(trim(p_nombre_rol));
 
     if lower(p_nombre_rol) = 'familiar' then
-        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null or p_fecha_nacimiento is not null then
+        /* Para un familiar solo se valida que los campos de empleado estén vacíos. */
+        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null then
             signal sqlstate '45000' set message_text = 'error: un familiar no debe tener datos de empleado.';
         end if;
     else
+        /* Para un empleado (Cuidador/Admin) se valida que los campos de empleado no estén vacíos. */
         if p_fecha_contratacion is null or p_tipo_contrato is null or p_contacto_emergencia is null or p_fecha_nacimiento is null then
             signal sqlstate '45000' set message_text = 'error: datos de empleado incompletos.';
         end if;
@@ -104,6 +106,7 @@ create procedure actualizar_usuario(
 begin
     declare v_id_rol int;
     declare v_error_msg varchar(255);
+    declare v_telefono_count int;
 
     if exists (
         select 1 from tb_usuario
@@ -137,11 +140,13 @@ begin
     where lower(nombre_rol) = lower(trim(p_nombre_rol));
 
     if lower(p_nombre_rol) = 'familiar' then
-        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null or p_fecha_nacimiento is not null then
+        /* Para un familiar solo se valida que los campos de empleado estén vacíos. */
+        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null then
             signal sqlstate '45000' set message_text = 'error: un familiar no debe tener datos de empleado.';
         end if;
     else
-        if p_fecha_contratacion is null or p_tipo_contrato is null or p_contacto_emergencia is null or p_fecha_nacimiento is null then
+        /* Para un empleado (Cuidador/Admin) se valida que los campos de empleado no estén vacíos. */
+        if p_fecha_contratacion is null or p_tipo_contrato is null or p_contacto_emergencia is null then
             signal sqlstate '45000' set message_text = 'error: datos de empleado incompletos.';
         end if;
     end if;
@@ -165,9 +170,20 @@ begin
     where id_usuario = p_id_usuario;
 
     if p_numero_telefono is not null then
-        insert into tb_telefono (id_usuario, numero_telefono)
-        values (p_id_usuario, p_numero_telefono)
-        on duplicate key update numero_telefono = p_numero_telefono;
+        /* Contar cuántos telefonos activos tiene el usuario */
+        select count(*) into v_telefono_count from tb_telefono where id_usuario = p_id_usuario and estado = 'Activo';
+
+        if v_telefono_count > 0 then
+            /* Si ya tiene al menos un teléfono actualizar el primero que encontremos */
+            update tb_telefono
+            set numero_telefono = p_numero_telefono
+            where id_usuario = p_id_usuario AND estado = 'Activo'
+            limit 1; /* limitar a 1 para no actualizar varios si los tiene */
+        else
+            /* Si no tiene ningún teléfono insertar uno nuevo */
+            insert into tb_telefono (id_usuario, numero_telefono, estado)
+            values (p_id_usuario, p_numero_telefono, 'Activo');
+        end if;
     end if;
 
     commit;

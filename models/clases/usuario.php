@@ -115,6 +115,35 @@
 
     class administrador extends usuario{
 
+        public function registrarEmpleado($datos) {
+            try {
+                $query = $this->conn->prepare("CALL registrar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                $query->bindParam(1,  $datos['tipo_documento']);
+                $query->bindParam(2,  $datos['documento_identificacion']);
+                $query->bindParam(3,  $datos['nombre']);
+                $query->bindParam(4,  $datos['apellido']);
+                $query->bindParam(5,  $datos['direccion']);
+                $query->bindParam(6,  $datos['correo_electronico']);
+                $query->bindParam(7,  $datos['contrasena']); // Contraseña hasheada desde el controlador
+                $query->bindParam(8,  $datos['numero_telefono']);
+                $query->bindParam(9,  $datos['fecha_contratacion']);
+                $query->bindParam(10, $datos['tipo_contrato']);
+                $query->bindParam(11, $datos['contacto_emergencia']);
+                $query->bindParam(12, $datos['fecha_nacimiento']);
+                $query->bindParam(13, $datos['parentesco']); // null para empleados
+                $query->bindParam(14, $datos['nombre_rol']); // 'Administrador' o 'Cuidador'
+
+                $query->execute();
+
+                return $query->fetch(PDO::FETCH_ASSOC); // Retorna el id del nuevo usuario
+
+            } catch (Exception $e) {
+                // Si algo sale mal (como un correo duplicado) la excepción se lanza al controlador
+                throw $e;
+            }
+        }
+
     }
 
 ?>
