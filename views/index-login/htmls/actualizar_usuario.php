@@ -13,7 +13,7 @@ $esFamiliar = $rol === 'Familiar';
     <meta charset="UTF-8">
     <title>Actualizar Usuario</title>
     <link rel="stylesheet" href="/GericareConnect/views/index-login/files_css/styles.css">
-    <script src="/GericareConnect/views/index-login/files_js/scripts.js" defer></script>
+    <script src="/GericareConnect/views/index-login/files_js/actualizar.js" defer></script>
 </head>
 <body>
 <div class="register-container">
@@ -21,7 +21,7 @@ $esFamiliar = $rol === 'Familiar';
     <img src="/GericareConnect/views/imagenes/Geri_Logo-.png" alt="Logo" class="logo2">
     <h2>Actualizar Usuario</h2>
 
-    <form id="registerForm" action="/GericareConnect/controllers/index-login/actualizar_controller.php" method="POST">
+    <form id="registerForm" action="/GericareConnect/controllers/index-login/actualizar_controller.php" method="POST" novalidate>
         <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($datosUsuario['id_usuario']) ?>">
         <input type="hidden" name="rol" value="<?= htmlspecialchars($rol) ?>">
 
@@ -60,7 +60,7 @@ $esFamiliar = $rol === 'Familiar';
             <small id="error-correo_electronico" class="mensaje-error-campo"></small>
 
             <label for="numero_telefono" class="form-label">Número de teléfono</label>
-            <input type="text" name="numero_telefono" id="numero_telefono" value="<?= htmlspecialchars($datosUsuario['numero_telefono'] ?? '') ?>">
+            <input type="text" name="numero_telefono" id="numero_telefono" value="<?= htmlspecialchars($datosUsuario['numero_telefono'] ?? '') ?>" required>
             <small id="error-numero_telefono" class="mensaje-error-campo"></small>
 
             <!-- Campos para Cuidador y Administrador -->
