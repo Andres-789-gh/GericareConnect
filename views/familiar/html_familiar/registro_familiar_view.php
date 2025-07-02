@@ -57,7 +57,7 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
             </div>
         </form>
 
-        <p>¿Ya tienes una cuenta? <a href="index.html">Iniciar sesión</a></p>
+        <p>¿Ya tienes una cuenta? <a href="../../index-login/htmls/index.html">Iniciar sesión</a></p>
     </div>
     <script src="../../index-login/files_js/scripts.js"></script>
 </body>

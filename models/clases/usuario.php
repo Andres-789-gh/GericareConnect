@@ -117,7 +117,7 @@
 
         public function registrarEmpleado($datos) {
             try {
-                $query = $this->conn->prepare("CALL registrar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $query = $this->conn->prepare("CALL registrar_empleado(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 $query->bindParam(1,  $datos['tipo_documento']);
                 $query->bindParam(2,  $datos['documento_identificacion']);
@@ -131,8 +131,7 @@
                 $query->bindParam(10, $datos['tipo_contrato']);
                 $query->bindParam(11, $datos['contacto_emergencia']);
                 $query->bindParam(12, $datos['fecha_nacimiento']);
-                $query->bindParam(13, $datos['parentesco']); // null para empleados
-                $query->bindParam(14, $datos['nombre_rol']); // 'Administrador' o 'Cuidador'
+                $query->bindParam(13, $datos['nombre_rol']); // 'Administrador' o 'Cuidador'
 
                 $query->execute();
 

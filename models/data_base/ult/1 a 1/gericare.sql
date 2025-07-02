@@ -309,7 +309,7 @@ values
 ('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@example.com', 'hash_familiar', 'Activo',
  null, null, null, 'Madre', 3);
 
-
+/* familiar 1004 - 8262789db0 admin 1005 - 3995c8601e */
 select * from tb_usuario; 
 select * from tb_rol;
 select * from tb_telefono;
