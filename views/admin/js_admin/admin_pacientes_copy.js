@@ -42,8 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <span>(CC: ${item.documento})</span>
                                 <span class="rol rol-${item.rol.toLowerCase().replace(' ', '-')}">${item.rol}</span>
                             </div>
-                            <div class="contacto">
-                                <i class="fas fa-envelope"></i> ${item.contacto || 'N/A'}
+                            <div class="actions">
+                                <i class="fas fa-trash-alt action-icon delete-icon" 
+                                   data-id="${item.id}" 
+                                   data-tipo="${item.tipo_entidad}" 
+                                   data-nombre="${item.nombre_completo}"
+                                   title="Desactivar"></i>
                             </div>
                         `;
                         resultsContainer.appendChild(li);
@@ -57,6 +61,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error en la búsqueda:', error);
                 resultsContainer.innerHTML = `<li class="result-item" style="justify-content: center; color: red; font-weight: bold;">Error al buscar: ${error.message}</li>`;
             });
+    };
+
+    // Event listener para la acción de eliminar 
+    resultsContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-icon')) {
+            const id = event.target.dataset.id;
+            const tipo = event.target.dataset.tipo;
+            const nombre = event.target.dataset.nombre;
+
+            Swal.fire({
+                title: `¿Estás seguro?`,
+                text: `Se desactivará a ${nombre}. Esta acción se puede revertir, pero el usuario no podrá iniciar sesión.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, desactivar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    desactivarEntidad(id, tipo);
+                }
+            });
+        }
+    });
+
+    const desactivarEntidad = (id, tipo) => {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('tipo', tipo);
+
+        fetch('../../../controllers/admin/desactivar_controller.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Desactivado!', data.message, 'success');
+                // Refrescar la búsqueda para que el usuario desaparezca de la lista
+                performSearch(); 
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            Swal.fire('Error de Conexión', 'No se pudo completar la solicitud.', 'error');
+        });
     };
 
     // asignacion de eventos

@@ -180,5 +180,25 @@
                 throw $e;
             }
         }
+
+        public function desactivarUsuario($id_usuario_a_desactivar, $id_admin_actual) {
+            try {
+                $query = $this->conn->prepare("call desactivar_usuario(?, ?)");
+                $query->execute([$id_usuario_a_desactivar, $id_admin_actual]);
+                return true;
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
+
+        public function desactivarPaciente($id_paciente) {
+            try {
+                $query = $this->conn->prepare("call desactivar_paciente(?)");
+                $query->execute([$id_paciente]);
+                return true;
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
     }
 ?>

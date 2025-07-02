@@ -248,3 +248,17 @@ h1 i {
 .result-item.tipo-administrador { 
     border-left-color: #dc3545; 
 }
+
+
+.result-item .actions {
+    color: #adb5bd;
+}
+.action-icon {
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+.delete-icon:hover {
+    color: #dc3545;
+    transform: scale(1.2);
+}
