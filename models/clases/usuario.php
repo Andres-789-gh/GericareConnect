@@ -6,11 +6,10 @@
 
         // metodo contructor (inicia las propiedades de la clase) en este caso es para la conexion a BD. 
         public function __construct() {
-            // se incluye el archivo donde se encuentra la conexión. 
-            //__DIR__" asegura que esta partiendo desde la carpeta actual del archivo usuario.php, para evitar errores por rutas relativas.
+            /* se incluye el archivo donde se encuentra la conexión. 
+            __DIR__" asegura que esta partiendo desde la carpeta actual del archivo usuario.php, para evitar errores por rutas relativas. */
             include(__DIR__ . '/../data_base/database.php');
-            // asigna la conexión ($conn) a la propiedad protegida "$this->conn" del objeto actual.
-            /*
+            /* asigna la conexión ($conn) a la propiedad protegida "$this->conn" del objeto actual.
             $this es una referencia al objeto actual de la clase.
             $this->conn accede a la propiedad $conn de ese objeto (declarada como protected $conn;).
             $conn (sin $this) es la variable definida en database.php que contiene la conexión a la base de datos.
@@ -84,10 +83,6 @@
         }
     }
 
-    class cuidador extends usuario{
-
-    }
-
     class familiar extends usuario {
 
         public function registrar($datos) {
@@ -107,6 +102,39 @@
                 $query->execute();
 
                 return $query->fetch(PDO::FETCH_ASSOC); // Retorna el id_usuario_creado
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
+
+        public function consultarPacientesFamiliar($id_familiar, $busqueda = '') {
+            try {
+                $query = $this->conn->prepare("call consultar_pacientes_familiar(?, ?)");
+                $query->execute([$id_familiar, $busqueda]);
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
+
+        public function consultarSolicitudesFamiliar($id_familiar, $busqueda = '') {
+            try {
+                $query = $this->conn->prepare("call consultar_solicitudes_familiar(?, ?)");
+                $query->execute([$id_familiar, $busqueda]);
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
+    }
+
+    class cuidador extends usuario {
+
+        public function consultarPacientesAsignados($id_cuidador, $busqueda = '') {
+            try {
+                $query = $this->conn->prepare("call consultar_pacientes_cuidador(?, ?)");
+                $query->execute([$id_cuidador, $busqueda]);
+                return $query->fetchAll(PDO::FETCH_ASSOC);
             } catch (Exception $e) {
                 throw $e;
             }
@@ -143,6 +171,14 @@
             }
         }
 
+        public function consultaGlobal($filtro_rol, $busqueda, $id_admin_actual) {
+            try {
+                $query = $this->conn->prepare("call admin_consulta_global(?, ?, ?)");
+                $query->execute([$filtro_rol, $busqueda, $id_admin_actual]);
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
     }
-
 ?>

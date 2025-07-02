@@ -13,21 +13,16 @@ if (!isset($_SESSION['id_usuario'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pacientes - GeriCare Connect</title>
+    <title>Pacientes Asignados - GeriCare Connect</title>
     <link rel="stylesheet" href="../../familiar/css_familiar/fami.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        .paciente-item { cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s ease; padding: 15px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; background-color: #f8f9fa; }
-        .paciente-item:hover { background-color: #e9ecef; }
-        .paciente-info { flex-grow: 1; margin-right: 10px; display: flex; align-items: center; }
-        .paciente-info i { margin-right: 8px; color: #007bff; }
-        .paciente-item i.fa-chevron-right { color: #adb5bd; font-size: 0.9em; }
-        .paciente-item.no-data, .paciente-item.cargando, .paciente-item.error { justify-content: center; font-style: italic; cursor: default; }
-        .paciente-item.cargando:hover, .paciente-item.no-data:hover, .paciente-item.error:hover { background-color: #f8f9fa; }
-        .paciente-item.error { color: #dc3545; background-color: #f8d7da; }
         .search-container { max-width: 100%; }
         .user-info { margin-right: 2rem; font-weight: 500; color: #555; }
+        .pacientes-container h1 { color: #ffc107; }
+        .paciente-item:hover { background-color: #fff8e1; }
+        .search-input-wrapper input:focus { border-color: #ffc107; }
     </style>
 </head>
 <body>
@@ -66,18 +61,19 @@ if (!isset($_SESSION['id_usuario'])) {
         </header>
     <main class="admin-content">
         <div class="pacientes-container animated fadeInUp">
-            <h1 class="animated slideInLeft"><i class="fas fa-users"></i> Lista de Pacientes</h1> 
+            <h1 class="animated slideInLeft"><i class="fas fa-users"></i> Pacientes Asignados</h1> 
             <div class="search-container animated slideInRight">
-                <form id="buscarPacientesForm" method="GET" action="javascript:void(0);">
-                     <input type="search" id="buscar-paciente" name="buscar-paciente" placeholder="Buscar paciente...">
-                     <div class="search-icons">
+                <form id="searchForm" action="javascript:void(0);">
+                    <div class="search-input-wrapper">
+                        <input type="search" id="busquedaInput" name="busqueda" placeholder="Buscar por nombre, apellido o cédula...">
+                        <button type="button" class="clear-button" id="clearButton" title="Limpiar" style="display: none;"><i class="fas fa-times"></i></button>
                         <button type="submit" class="search-button" title="Buscar"><i class="fas fa-search"></i></button>
-                        <button type="button" class="clear-button" id="clear-search-button" title="Limpiar"><i class="fas fa-times"></i></button>
                     </div>
                 </form>
             </div>
-             <ul class="paciente-list" id="paciente-list">
-                <li class="paciente-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando pacientes...</li>
+             <ul id="pacientes-lista" class="paciente-list">
+                <!-- Los resultados se cargarán aquí -->
+                <li class="paciente-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando pacientes asignados...</li>
             </ul>
         </div>
     </main>

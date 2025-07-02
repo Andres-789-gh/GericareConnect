@@ -1,120 +1,73 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const pacienteList = document.getElementById('paciente-list');
-    const buscarForm = document.getElementById('buscarPacientesForm');
-    const buscarInput = document.getElementById('buscar-paciente');
-    const clearButton = document.getElementById('clear-search-button');
+    // Referencias a los elementos del DOM
+    const searchForm = document.getElementById('searchForm');
+    const busquedaInput = document.getElementById('busquedaInput');
+    const pacientesLista = document.getElementById('pacientes-lista');
+    const clearButton = document.getElementById('clearButton');
 
-    // Carga inicial de TODOS los pacientes
-    cargarPacientesCuidador();
+    const cargarPacientesAsignados = (busqueda = '') => {
+        pacientesLista.innerHTML = `<li class="paciente-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando pacientes...</li>`;
 
-    // Event listener para el formulario de búsqueda
-    if (buscarForm) {
-        buscarForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            cargarPacientesCuidador(buscarInput.value);
-        });
-    }
+        // Llama al nuevo controlador del cuidador
+        fetch(`../../../controllers/cuidador/consulta_pacientes_cuidador.php?busqueda=${busqueda}`)
+            .then(response => {
+                if (!response.ok) {
+                    // Intenta leer el mensaje de error del cuerpo de la respuesta
+                    return response.json().then(err => { throw new Error(err.error || 'Error de red o del servidor.') });
+                }
+                return response.json();
+            })
+            .then(data => {
+                pacientesLista.innerHTML = ''; // Limpiar la lista
 
-    // Event listener para el botón de limpiar búsqueda
-    if (clearButton) {
-        clearButton.addEventListener('click', () => {
-            buscarInput.value = '';
-            cargarPacientesCuidador();
-        });
-    }
+                if (data.error) { // Manejar errores devueltos por el PHP
+                    throw new Error(data.error);
+                }
 
-     // Opcional: buscar mientras se escribe (con debounce)
-     if (buscarInput) {
-         let searchTimeout;
-         buscarInput.addEventListener('input', () => {
-             clearTimeout(searchTimeout);
-             searchTimeout = setTimeout(() => {
-                 cargarPacientesCuidador(buscarInput.value);
-             }, 400);
-         });
-     }
+                if (data.length > 0) {
+                    data.forEach(paciente => {
+                        const li = document.createElement('li');
+                        li.className = 'paciente-item';
+                        // Muestra la información del paciente
+                        li.innerHTML = `
+                            <div class="paciente-info">
+                                <i class="fas fa-user-nurse"></i>
+                                <strong>${paciente.nombre} ${paciente.apellido}</strong>
+                                <span>(CC: ${paciente.documento_identificacion})</span>
+                            </div>
+                            <span class="motivo-asignacion">${paciente.motivo_asignacion || ''}</span>
+                        `;
+                        pacientesLista.appendChild(li);
+                    });
+                } else {
+                    pacientesLista.innerHTML = `<li class="paciente-item" style="justify-content: center;">No tienes pacientes asignados que coincidan.</li>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar pacientes asignados:', error);
+                pacientesLista.innerHTML = `<li class="paciente-item error" style="justify-content: center;">${error.message}</li>`;
+            });
+    };
 
-    // Event listener para clics en la lista de pacientes (delegación de eventos)
-    if (pacienteList) {
-        pacienteList.addEventListener('click', function(event) {
-            const listItem = event.target.closest('.paciente-item[data-paciente-id]');
-            if (listItem && !listItem.classList.contains('cargando') && !listItem.classList.contains('error')) {
-                const pacienteId = listItem.dataset.pacienteId;
-                // Abrir detalles en una ventana emergente
-                const url = `detalle_paciente_cuidador.html?paciente_id=${pacienteId}`;
-                const windowName = `DetallePaciente_${pacienteId}`;
-                const windowFeatures = 'width=800,height=650,scrollbars=yes,resizable=yes,status=yes';
-                window.open(url, windowName, windowFeatures);
-            }
-        });
-    }
-}); // Fin DOMContentLoaded
+    // Carga inicial de los pacientes asignados
+    cargarPacientesAsignados();
 
+    // Lógica para el buscador y el botón de limpiar
+    let searchTimeout;
+    busquedaInput.addEventListener('input', () => {
+        clearButton.style.display = busquedaInput.value ? 'block' : 'none';
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            cargarPacientesAsignados(busquedaInput.value);
+        }, 400);
+    });
 
-// --- Función para Cargar TODOS los Pacientes (para Cuidadores) ---
-function cargarPacientesCuidador(busqueda = '') {
-    const pacienteList = document.getElementById('paciente-list');
-    pacienteList.innerHTML = '<li class="paciente-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando lista completa de pacientes...</li>';
+    clearButton.addEventListener('click', () => {
+        busquedaInput.value = '';
+        clearButton.style.display = 'none';
+        cargarPacientesAsignados();
+        busquedaInput.focus();
+    });
 
-    // *** LLAMADA AL SCRIPT DE ADMIN AHORA ***
-    let url = 'admin_pacientes_obtener_lista.php';
-    // Usar el mismo nombre de parámetro que usa el script admin
-    if (busqueda) {
-        url += `?buscar-paciente=${encodeURIComponent(busqueda)}`;
-    }
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                 return response.text().then(text => {
-                    throw new Error(`Error HTTP ${response.status}: ${text}`);
-                 });
-            }
-            return response.json();
-         })
-        .then(data => {
-            pacienteList.innerHTML = ''; // Limpiar lista
-
-            if (data.error) { // Manejar errores devueltos por el script PHP
-                throw new Error(data.error);
-            }
-
-            // *** ACCEDER A data.pacientes ***
-            const pacientes = data.pacientes;
-
-            if (pacientes && Array.isArray(pacientes) && pacientes.length > 0) {
-                pacientes.forEach(paciente => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('paciente-item', 'animated', 'fadeInUp');
-                    listItem.dataset.pacienteId = paciente.id;
-                    // El HTML del item sigue igual
-                    listItem.innerHTML = `
-                        <div class="paciente-info">
-                            <i class="fas fa-user-circle" style="margin-right: 8px; color: #007bff;"></i> ${paciente.nombres} ${paciente.apellidos}
-                            <span style="font-size: 0.85em; color: #777; margin-left: 10px;">(${paciente.tipo_documento || 'Doc'}: ${paciente.documento || 'N/A'})</span>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
-                    `;
-                    pacienteList.appendChild(listItem);
-                });
-            } else {
-                // Mensaje si no hay pacientes o no se encuentran coincidencias
-                pacienteList.innerHTML = '<li class="paciente-item no-data"><i class="fas fa-info-circle"></i> No hay pacientes registrados en el sistema o no se encontraron coincidencias.</li>';
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar la lista completa de pacientes para cuidador:', error);
-            let errorMsg = 'Error al cargar la lista de pacientes.';
-             if (error.message.includes("Usuario no autenticado")) {
-                errorMsg = 'No has iniciado sesión o tu sesión ha expirado.';
-             } else if (error.message.includes("Acceso no autorizado")) {
-                errorMsg = 'No tienes permiso para ver esta información.';
-             } else if (error.message.includes("Error HTTP")) {
-                 errorMsg = `Error de comunicación con el servidor.`;
-                 console.error(error.message);
-             } else {
-                errorMsg = `Error inesperado: ${error.message}`;
-            }
-            pacienteList.innerHTML = `<li class="paciente-item error"><i class="fas fa-exclamation-triangle"></i> ${errorMsg}</li>`;
-        });
-}
+    searchForm.addEventListener('submit', e => e.preventDefault());
+});

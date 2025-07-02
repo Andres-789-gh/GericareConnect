@@ -234,3 +234,47 @@ body {
   text-align: left !important;
   line-height: 1.6 !important;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+
+/* ESTILOS PARA EL BUSCADOR CON BOTÓN DE LIMPIAR */
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-input-wrapper input[type="search"] {
+    padding-right: 70px; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.search-button, .clear-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #999;
+    padding: 0 8px;
+    transition: color 0.2s ease;
+}
+
+.search-button:hover, .clear-button:hover {
+    color: #007bff;
+}
+
+.search-button {
+    right: 5px;
+}
+
+.clear-button {
+    right: 35px;
+}

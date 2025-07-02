@@ -57,22 +57,27 @@ if (!isset($_SESSION['id_usuario'])) {
         <div class="pacientes-container animated fadeInUp">
             <h1 class="animated slideInLeft"><i class="fas fa-users"></i> Tus Familiares (Pacientes Asociados)</h1>
             <div class="search-container animated slideInRight">
-                <form id="buscarPacientesForm" method="GET" action="javascript:void(0);">
-                    <input type="search" id="buscar-paciente" name="buscar-paciente" placeholder="Buscar paciente por nombre, apellido o documento">
-                    <div class="search-icons">
-                        <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
-                        <button type="button" class="clear-button" id="clear-search-button"><i class="fas fa-times"></i></button>
+                <form id="searchForm" action="javascript:void(0);">
+                    <div class="search-input-wrapper">
+                        <input type="search" id="busquedaInput" name="busqueda" placeholder="Buscar por nombre, apellido o cédula...">
+                        <button type="button" class="clear-button" id="clearButton" title="Limpiar" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button type="submit" class="search-button" title="Buscar">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </form>
             </div>
-            <ul class="paciente-list" id="paciente-list">
-                <li class="paciente-item cargando">Cargando familiares...</li>
+            <!-- Contenedor para la lista de pacientes -->
+            <ul id="pacientes-lista" class="paciente-list">
+                <!-- Los resultados se cargan aquí -->
+                <li class="paciente-item cargando"><i class="fas fa-spinner fa-spin"></i> Cargando pacientes...</li>
             </ul>
-             <div id="detalle-paciente-popup" style="display: none; margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                </div>
+             <div id="detalle-paciente-popup" style="display: none; margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></div>
         </div>
     </main>
 
-    <script src="../../familiar/js_familiar/familiares_vista.js"></script>
+    <script src="/GericareConnect/views/familiar/js_familiar/familiares_vista_copy.js"></script>
 </body>
 </html>
