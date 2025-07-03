@@ -59,9 +59,10 @@
         <div class="logo-container">
             <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='admin_pacientes.php'">
             <span class="app-name">GERICARE CONNECT</span>
-        </div>
-        <div class="user-info">
-            <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Desconocido') ?>
+
+            <div class="user-info">
+                <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Desconocido') ?>
+            </div>
         </div>
         <nav>
             <ul>
