@@ -1,128 +1,143 @@
+<?php
+session_start();
+
+// --- SEGURIDAD: VERIFICACIÓN DE ROL DE ADMINISTRADOR ---
+if (!isset($_SESSION['id_usuario']) || $_SESSION['nombre_rol'] !== 'Administrador') {
+    // Si no es admin, lo redirige al login.
+    header("Location: /GericareConnect/views/index-login/htmls/index.html");
+    exit();
+}
+
+// --- LÓGICA PARA OBTENER LOS PACIENTES ---
+// Se incluye la clase Paciente para poder usar sus funciones.
+require_once __DIR__ . '/../../../models/clases/pacientes.php';
+
+// Se crea un objeto del modelo de Pacientes.
+$pacienteModel = new Paciente();
+// Se obtienen todos los pacientes de la base de datos.
+$lista_de_pacientes = $pacienteModel->consultar();
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Pacientes - GeriCare Connect</title>
-    <link rel="stylesheet" href="../../admin/css_admin/admin_pacientes.css">
+    <title>Gestión de Pacientes - GeriCare Connect</title>
+    <link rel="stylesheet" href="../css_admin/admin_pacientes1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        .paciente-icon { margin-right: 10px; color: #3498db; }
-        .paciente-info { flex-grow: 1; margin-right: 15px; }
-        .menu-icon { display: flex; align-items: center; gap: 15px; }
-        .menu-icon i { cursor: pointer; transition: color 0.2s ease; font-size: 1.1rem; }
-        .eliminar-paciente-icon { color: #dc3545; }
-        .eliminar-paciente-icon:hover { color: #c82333 !important; transform: scale(1.1); }
-        .paciente-item.no-data { color: #777; justify-content: center; font-style: italic; }
-        .paciente-item.cargando, .paciente-item.error { justify-content: center; cursor: default; font-style: italic; }
-        .paciente-item.cargando:hover, .paciente-item.error:hover { background-color: inherit; transform: none; box-shadow: none;}
-        .paciente-item.error { background-color: #f8d7da; color: #721c24; border-left: 5px solid #dc3545; }
-
-
-        .notification-badge {
-            background-color: #dc3545; 
-            color: white;
-            border-radius: 50%; 
-            padding: 2px 6px; 
-            font-size: 0.75em; 
-            font-weight: bold;
-            margin-left: 5px; 
-            vertical-align: super; 
-            min-width: 18px;
-            text-align: center;
-            line-height: 1;
-            display: inline-block; 
-        }
-        .notification-badge:empty {
-            display: none; 
-        }
-        .user-info {
-            margin-left: 20px;
-        }
-    </style>
 </head>
 <body>
-    <?php
-    session_start();
-    if (isset($_SESSION['mensaje'])) {
-        echo '<div class="alert alert-success" role="alert">' .
-            '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['mensaje']) . '</span>' .
-            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
-            '</div>';
-        unset($_SESSION['mensaje']);
-    }
-    if (isset($_SESSION['error'])) {
-        echo '<div class="alert alert-danger" role="alert">' .
-            '<span><i class="fas fa-exclamation-triangle"></i> ' . htmlspecialchars($_SESSION['error']) . '</span>' .
-            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
-            '</div>';
-        unset($_SESSION['error']);
-    }
-    ?>
-    <header class="admin-header animated fadeInDown">
-        <div class="logo-container">
-            <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='admin_pacientes.php'">
-            <span class="app-name">GERICARE CONNECT</span>
 
-            <div class="user-info">
-                <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Desconocido') ?>
-            </div>
+    <header class="admin-header">
+        <div class="logo-container">
+            <img src="../../../imagenes/Geri_Logo-..png" alt="Logo GeriCare" class="logo">
+            <span class="app-name">GERICARE CONNECT</span>
         </div>
         <nav>
             <ul>
-                <li>
-                    <a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>">
-                        <i class="fas fa-user-cog"></i> Mi Perfil
-                    </a>
-                </li>
                 <li><a href="admin_pacientes.php" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
-                <li>
-                    <a href="admin_solicitudes.html">
-                        <i class="fas fa-envelope-open-text"></i> Solicitudes
-                        <span class="notification-badge" id="solicitudes-badge"></span>
-                    </a>
-                </li>
+                <li><a href="admin_solicitudes.html"><i class="fas fa-envelope-open-text"></i> Solicitudes</a></li>
                 <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </nav>
-        <div class="add-button-container">
-            <a href="agregar_paciente.html" class="add-paciente-button">
-                <i class="fas fa-user-plus"></i> Agregar Paciente
-            </a>
-
-            <a href="registrar_empleado.php" class="add-empleado-button">
-                <i class="fas fa-user-tie"></i> Registrar Empleado
-            </a>
-        </div>
     </header>
+
     <main class="admin-content">
-        <div class="pacientes-container animated fadeInUp">
-            <h1 class="animated slideInLeft"><i class="fas fa-search"></i> Búsqueda De Usuarios Y Pacientes</h1>
-            <div class="search-container animated slideInRight">
-                <!-- Formulario Búsqueda Global -->
-                <form id="universalSearchForm" class="universal-search-container">
-                    <select name="filtro_rol" id="filtro_rol">
-                        <option value="">Buscar en Todos</option>
-                        <option value="Paciente">Pacientes</option>
-                        <option value="Cuidador">Cuidadores</option>
-                        <option value="Familiar">Familiares</option>
-                        <option value="Administrador">Administradores</option>
-                    </select>
-                    <input type="search" id="termino_busqueda" name="busqueda" placeholder="Buscar por nombre, apellido o cédula...">
-                </form>
+        <div class="pacientes-container">
+            <h1><i class="fas fa-users-cog"></i> Gestión de Pacientes</h1>
+            <div class="toolbar" style="margin-bottom: 20px;">
+                <a href="form_paciente.php" class="add-paciente-button"><i class="fas fa-user-plus"></i> Agregar Nuevo Paciente</a>
             </div>
-                <!-- Contenedor para mostrar los resultados -->
-                <ul id="resultsContainer" class="results-list">
-                    <li class="result-item" style="justify-content: center; color: #777;">
-                        Use el buscador para encontrar usuarios o pacientes.
-                    </li>
-                </ul>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Documento</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Si no hay pacientes registrados, se muestra un mensaje amigable.
+                        if (empty($lista_de_pacientes)) {
+                            echo '<tr><td colspan="5" style="text-align:center; padding: 20px;">No hay pacientes registrados todavía.</td></tr>';
+                        } else {
+                            // Si hay pacientes, se recorren y se muestra una fila por cada uno.
+                            foreach ($lista_de_pacientes as $paciente) {
+                                echo '<tr>';
+                                echo '    <td>' . htmlspecialchars($paciente['id_paciente']) . '</td>';
+                                echo '    <td>' . htmlspecialchars($paciente['nombre'] . ' ' . $paciente['apellido']) . '</td>';
+                                echo '    <td>' . htmlspecialchars($paciente['documento_identificacion']) . '</td>';
+                                echo '    <td>' . htmlspecialchars($paciente['fecha_nacimiento']) . '</td>';
+                                echo '    <td class="actions">';
+                                // Botón para Editar: lleva al formulario con el ID del paciente.
+                                echo '        <a href="form_paciente.php?id=' . $paciente['id_paciente'] . '" class="btn-action btn-edit" title="Editar"><i class="fas fa-edit"></i></a>';
+                                // Botón para Desactivar: usa JavaScript para confirmar la acción.
+                                echo '        <button class="btn-action btn-delete" onclick="confirmarDesactivacion(' . $paciente['id_paciente'] . ')" title="Desactivar"><i class="fas fa-trash-alt"></i></button>';
+                                echo '    </td>';
+                                echo '</tr>';
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 
-    <script src="../../admin/js_admin/admin_pacientes_copy.js" defer></script>
+    <form id="delete-form" action="../../../controllers/admin/paciente_controller.php" method="POST" style="display:none;">
+        <input type="hidden" name="accion" value="desactivar">
+        <input type="hidden" id="delete-paciente-id" name="id_paciente">
+    </form>
 
+    <script>
+    // Función de JavaScript para confirmar la desactivación con SweetAlert2
+    function confirmarDesactivacion(pacienteId) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "El paciente será desactivado y no aparecerá en las listas principales.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, ¡desactivar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, se asigna el ID al formulario oculto y se envía.
+                document.getElementById('delete-paciente-id').value = pacienteId;
+                document.getElementById('delete-form').submit();
+            }
+        });
+    }
+
+    // Código para mostrar notificaciones de éxito o error al cargar la página.
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php if(isset($_SESSION['mensaje'])): ?>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: '<?= addslashes($_SESSION['mensaje']) ?>',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            <?php unset($_SESSION['mensaje']); ?>
+        <?php endif; ?>
+
+        <?php if(isset($_SESSION['error'])): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '<?= addslashes($_SESSION['error']) ?>'
+            });
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+    });
+    </script>
 </body>
 </html>
