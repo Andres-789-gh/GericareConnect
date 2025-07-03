@@ -83,28 +83,25 @@ begin
 end //
 delimiter ;
 
-/* administrador - usuarios y pacientes */
+
 delimiter //
+
 create procedure admin_consulta_global(
-    in p_filtro_tipo varchar(50), -- 'Familiar', 'Cuidador', 'Paciente', 'Administrador' o ''
+    in p_filtro_tipo varchar(50),
     in p_busqueda varchar(100),
-    in p_id_admin_actual int -- ID del admin que está haciendo la consulta
+    in p_id_admin_actual int
 )
 begin
-    -- si se filtra por un rol de usuario (familiar, cuidador o administrador)
+    -- si se filtra por un rol de usuario
     if p_filtro_tipo in ('Familiar', 'Cuidador', 'Administrador') then
         select
-            u.id_usuario as id,
-            'Usuario' as tipo_entidad,
-            u.documento_identificacion as documento,
-            concat(u.nombre, ' ', u.apellido) as nombre_completo,
-            r.nombre_rol as rol,
-            u.correo_electronico as contacto
+            u.id_usuario as id, 'Usuario' as tipo_entidad, u.documento_identificacion as documento,
+            concat(u.nombre, ' ', u.apellido) as nombre_completo, r.nombre_rol as rol, u.correo_electronico as contacto
         from tb_usuario as u
         join tb_rol as r on u.id_rol = r.id_rol
         where
             r.nombre_rol = p_filtro_tipo
-            -- Excluir al admin que hace la consulta de los resultados
+            and u.estado = 'Activo'
             and u.id_usuario != p_id_admin_actual
             and (
                 p_busqueda is null or p_busqueda = '' or
@@ -115,32 +112,28 @@ begin
     -- si se filtra por paciente
     elseif p_filtro_tipo = 'Paciente' then
         select
-            p.id_paciente as id,
-            'Paciente' as tipo_entidad,
-            p.documento_identificacion as documento,
-            concat(p.nombre, ' ', p.apellido) as nombre_completo,
-            'Paciente' as rol,
-            p.contacto_emergencia as contacto
+            p.id_paciente as id, 'Paciente' as tipo_entidad, p.documento_identificacion as documento,
+            concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto
         from tb_paciente as p
         where
-            p_busqueda is null or p_busqueda = '' or
-            p.nombre like concat('%', p_busqueda, '%') or
-            p.apellido like concat('%', p_busqueda, '%') or
-            p.documento_identificacion like concat('%', p_busqueda, '%');
-    -- si no hay filtro de tipo, busca en usuarios (sin admins) y pacientes
+            p.estado = 'Activo'
+            and (
+                p_busqueda is null or p_busqueda = '' or
+                p.nombre like concat('%', p_busqueda, '%') or
+                p.apellido like concat('%', p_busqueda, '%') or
+                p.documento_identificacion like concat('%', p_busqueda, '%')
+            );
+    -- si no hay filtro de tipo, busca en todos los activos
     else
         (select
-            u.id_usuario as id,
-            'Usuario' as tipo_entidad,
-            u.documento_identificacion as documento,
-            concat(u.nombre, ' ', u.apellido) as nombre_completo,
-            r.nombre_rol as rol,
-            u.correo_electronico as contacto
+            u.id_usuario as id, 'Usuario' as tipo_entidad, u.documento_identificacion as documento,
+            concat(u.nombre, ' ', u.apellido) as nombre_completo, r.nombre_rol as rol, u.correo_electronico as contacto
         from tb_usuario as u
         join tb_rol as r on u.id_rol = r.id_rol
         where
-            -- se excluyen los admins de la busqueda general
-            r.nombre_rol != 'Administrador' and (
+            r.nombre_rol != 'Administrador'
+            and u.estado = 'Activo' -- <<< CORRECCIÓN AÑADIDA
+            and (
                 p_busqueda is null or p_busqueda = '' or
                 u.nombre like concat('%', p_busqueda, '%') or
                 u.apellido like concat('%', p_busqueda, '%') or
@@ -149,18 +142,17 @@ begin
         )
         union all
         (select
-            p.id_paciente as id,
-            'Paciente' as tipo_entidad,
-            p.documento_identificacion as documento,
-            concat(p.nombre, ' ', p.apellido) as nombre_completo,
-            'Paciente' as rol,
-            p.contacto_emergencia as contacto
+            p.id_paciente as id, 'Paciente' as tipo_entidad, p.documento_identificacion as documento,
+            concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto
         from tb_paciente as p
         where
-            p_busqueda is null or p_busqueda = '' or
-            p.nombre like concat('%', p_busqueda, '%') or
-            p.apellido like concat('%', p_busqueda, '%') or
-            p.documento_identificacion like concat('%', p_busqueda, '%')
+            p.estado = 'Activo' -- <<< CORRECCIÓN AÑADIDA
+            and (
+                p_busqueda is null or p_busqueda = '' or
+                p.nombre like concat('%', p_busqueda, '%') or
+                p.apellido like concat('%', p_busqueda, '%') or
+                p.documento_identificacion like concat('%', p_busqueda, '%')
+            )
         );
     end if;
 end //

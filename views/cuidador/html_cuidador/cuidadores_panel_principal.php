@@ -41,11 +41,12 @@ if (!isset($_SESSION['id_usuario'])) {
         <div class="logo-container">
             <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='cuidadores_panel_principal.php'">
             <span class="app-name">GERICARE CONNECT</span>
+
+            <div class="user-info">
+                <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Cuidador') ?>
+            </div>
         </div>
         
-        <div class="user-info">
-            <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Cuidador') ?>
-        </div>
         <nav class="top-navigation">
              <ul>
                 <li>

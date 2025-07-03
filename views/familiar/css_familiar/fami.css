@@ -29,6 +29,16 @@ body {
     margin-right: 10px;
 }
 
+.logo-container .user-info {
+    margin-left: 1.5rem;
+    font-weight: 500;
+    color: #555;
+    background-color: #e9ecef;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
 .app-name {
     font-size: 1.2rem;
     font-weight: 600;
