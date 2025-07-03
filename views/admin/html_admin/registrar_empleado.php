@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Administrador']);
 // Asegurarse de que solo el administrador pueda ver esta página
 if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
     // Redirigir si no es administrador

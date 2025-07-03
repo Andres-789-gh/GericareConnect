@@ -1,6 +1,6 @@
 <?php
-// Iniciar la sesión para poder acceder a las variables del usuario
-session_start();
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Familiar']);
 
 // Si no hay un usuario en la sesión redirigir al login
 if (!isset($_SESSION['id_usuario'])) {

@@ -144,7 +144,7 @@ function irAgregarPaciente(datos) {
         return;
     }
     const datosCodificados = encodeURIComponent(JSON.stringify(datos));
-    const url = `agregar_paciente.html?data=${datosCodificados}`;
+    const url = `agregar_paciente.php?data=${datosCodificados}`;
     window.open(url, '_blank');
 }
 

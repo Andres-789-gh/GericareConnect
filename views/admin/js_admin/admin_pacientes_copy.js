@@ -81,12 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             Swal.fire({
                 title: `¿Estás seguro?`,
-                text: `Se desactivará a ${nombre}. Esta acción se puede revertir, pero el usuario no podrá iniciar sesión.`,
+                text: `Se eliminara a ${nombre}. Esta acción se puede revertir, pero el usuario no podrá iniciar sesión.`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, desactivar',
+                confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                Swal.fire('¡Desactivado!', data.message, 'success');
+                Swal.fire('¡Eliminado!', data.message, 'success');
                 // Refrescar la búsqueda para que el usuario desaparezca de la lista
                 performSearch(); 
             } else {
