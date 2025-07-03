@@ -47,11 +47,17 @@
     <?php
     session_start();
     if (isset($_SESSION['mensaje'])) {
-        echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['mensaje']) . '</div>';
+        echo '<div class="alert alert-success" role="alert">' .
+            '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['mensaje']) . '</span>' .
+            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
+            '</div>';
         unset($_SESSION['mensaje']);
     }
     if (isset($_SESSION['error'])) {
-        echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['error']) . '</div>';
+        echo '<div class="alert alert-danger" role="alert">' .
+            '<span><i class="fas fa-exclamation-triangle"></i> ' . htmlspecialchars($_SESSION['error']) . '</span>' .
+            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
+            '</div>';
         unset($_SESSION['error']);
     }
     ?>

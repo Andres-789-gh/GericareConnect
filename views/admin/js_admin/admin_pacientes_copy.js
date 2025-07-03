@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
+    
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            alert.classList.add('fade-out');
+            setTimeout(() => alert.remove(), 500);
+        }, 5000);
+    });
+
     // Referencias a los elementos del nuevo buscador en la vista
     const searchForm = document.getElementById('universalSearchForm');
     const filtroRol = document.getElementById('filtro_rol');
