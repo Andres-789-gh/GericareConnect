@@ -82,9 +82,11 @@
             }
         }
         
-        // ****** NUEVA FUNCIÓN INTEGRADA AQUÍ ******
-        // Esta función busca a todos los usuarios con un rol específico (ej. "Familiar")
-        // para poblar la lista desplegable en el formulario de pacientes.
+        // ======================================================
+        // ||       CAMBIO PARA EL FORMULARIO DE PACIENTES       ||
+        // ======================================================
+        // Esta función busca a todos los usuarios que tengan un rol específico 
+        // para rellenar la lista desplegable de familiares en el formulario de pacientes.
         public function obtenerUsuariosPorRol($nombre_rol) {
             try {
                 $query = $this->conn->prepare("
@@ -97,7 +99,6 @@
                 $query->execute([$nombre_rol]);
                 return $query->fetchAll(PDO::FETCH_ASSOC);
             } catch (Exception $e) {
-                // Si hay un error, lo registra en el log del servidor y devuelve un array vacío.
                 error_log("Error al obtener usuarios por rol: " . $e->getMessage());
                 return [];
             }
