@@ -1,11 +1,9 @@
 <?php
-// Incluimos los archivos del controlador y modelo
-// RUTA CORREGIDA: Desde 'views/cuidador/html_cuidador/' sube TRES niveles para llegar a la raíz (GericareConnect/),
-// y luego entra a 'controllers/cuidador/'
-require_once __DIR__ . "/../../../controllers/cuidador/enfermedad.controlador.php"; 
-require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php"; 
+require_once __DIR__ . "/../../../controllers/cuidador/enfermedad.controlador.php";
+require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php";
 
-// Procesar acciones de POST (Crear/Editar)
+$modoSeleccion = isset($_GET['seleccionar']) && $_GET['seleccionar'] === 'true';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_enfermedad_editar']) && !empty($_POST['id_enfermedad_editar'])) {
         ControladorEnfermedades::ctrEditarEnfermedad();
@@ -13,32 +11,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ControladorEnfermedades::ctrCrearEnfermedad();
     }
 }
-
-// Procesar acción de GET (Eliminar - ahora borrado lógico)
 if (isset($_GET['idEliminarEnfermedad'])) {
     $controlador = new ControladorEnfermedades();
     $controlador->ctrEliminarEnfermedad();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Enfermedades</title>
+    <title><?php echo $modoSeleccion ? 'Seleccionar Enfermedad' : 'Gestión de Enfermedades'; ?></title>
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Gestión de Enfermedades</h1>
-
+        <h1><?php echo $modoSeleccion ? 'Seleccione o Cree Enfermedades' : 'Gestión de Enfermedades'; ?></h1>
         <div class="form-container">
-            <form method="post" id="enfermedad-form">
+            <form method="post" id="enfermedad-form" action="enfermedad.php<?php echo $modoSeleccion ? '?seleccionar=true' : ''; ?>">
                 <h2 id="form-title">Agregar Nueva Enfermedad</h2>
-
                 <input type="hidden" id="id_enfermedad_editar" name="id_enfermedad_editar">
-
                 <div class="form-group">
                     <label for="nombre_enfermedad">Nombre de la Enfermedad:</label>
                     <input type="text" id="nombre_enfermedad" name="nombre_enfermedad" required>
@@ -53,7 +44,6 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                 </div>
             </form>
         </div>
-
         <div class="table-container">
             <h2>Listado de Enfermedades</h2>
             <table>
@@ -68,7 +58,6 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                 <tbody>
                     <?php
                     $enfermedades = ControladorEnfermedades::ctrMostrarEnfermedades(null, null);
-
                     if (is_array($enfermedades) && count($enfermedades) > 0) {
                         foreach ($enfermedades as $enfermedad):
                         ?>
@@ -77,34 +66,34 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                             <td><?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?></td>
                             <td><?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?></td>
                             <td>
-                                <button class="btn btn-warning btn-editar"
-                                        data-id="<?php echo $enfermedad["id_enfermedad"]; ?>"
-                                        data-nombre="<?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?>"
-                                        data-descripcion="<?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>">
-                                    Editar
-                                </button>
-                                <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?>"
-                                   class="btn btn-danger"
-                                   onclick="return confirm('¿Estás seguro de que quieres ELIMINAR esta enfermedad? (Se inhabilitará)');">
-                                   Eliminar
-                                </a>
+                                <button class="btn btn-warning btn-editar" data-id="<?php echo $enfermedad["id_enfermedad"]; ?>" data-nombre="<?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?>" data-descripcion="<?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>">Editar</button>
+                                <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?><?php echo $modoSeleccion ? '&seleccionar=true' : ''; ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                                
+                                <?php if ($modoSeleccion): ?>
+                                    <button type="button" class="btn btn-primary" onclick="seleccionarItem(<?php echo $enfermedad['id_enfermedad']; ?>, '<?php echo htmlspecialchars(addslashes($enfermedad['nombre_enfermedad'])); ?>', 'enfermedad')">Seleccionar</button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php
                         endforeach;
-                    } else {
-                        echo '<tr><td colspan="3">No hay enfermedades activas registradas.</td></tr>';
                     }
                     ?>
                 </tbody>
             </table>
-            <div class="export-button" style="margin-top: 20px;">
-                <a href="../../../controllers/cuidador/exportar_enfermedad.php" class="btn btn-success">Exportar a Excel</a>
-            </div>
-            
         </div>
     </div>
+    
     <script>
+        function seleccionarItem(id, nombre, tipo) {
+            const key = `selected_${tipo}s`;
+            let seleccionados = JSON.parse(localStorage.getItem(key)) || [];
+            if (!seleccionados.some(item => item.id == id)) {
+                seleccionados.push({ id: id, nombre: nombre });
+                localStorage.setItem(key, JSON.stringify(seleccionados));
+            }
+            window.close();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('enfermedad-form');
             const formTitle = document.getElementById('form-title');
@@ -115,23 +104,19 @@ if (isset($_GET['idEliminarEnfermedad'])) {
 
             document.querySelectorAll('.btn-editar').forEach(button => {
                 button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const nombre = this.getAttribute('data-nombre');
-                    const descripcion = this.getAttribute('data-descripcion');
-
                     formTitle.textContent = 'Editar Enfermedad';
-                    idEnfermedadEditar.value = id;
-                    nombreEnfermedad.value = nombre;
-                    descripcionEnfermedad.value = descripcion;
+                    idEnfermedadEditar.value = this.getAttribute('data-id');
+                    nombreEnfermedad.value = this.getAttribute('data-nombre');
+                    descripcionEnfermedad.value = this.getAttribute('data-descripcion');
                     btnCancelar.style.display = 'inline-block';
+                    window.scrollTo(0, 0);
                 });
             });
 
             btnCancelar.addEventListener('click', () => {
                 formTitle.textContent = 'Agregar Nueva Enfermedad';
+                form.reset();
                 idEnfermedadEditar.value = '';
-                nombreEnfermedad.value = '';
-                descripcionEnfermedad.value = '';
                 btnCancelar.style.display = 'none';
             });
         });
