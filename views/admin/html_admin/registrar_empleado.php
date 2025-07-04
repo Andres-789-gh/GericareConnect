@@ -30,7 +30,7 @@ if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrado
     }
     ?>
 
-    <form id="registerForm" action="../../../controllers/admin/registrar_empleado_controller.php" method="POST">
+    <form id="registerForm" action="../../../controllers/admin/usuario/registrar_empleado_controller.php" method="POST">
         <div class="form-grid">
             
             <select name="nombre_rol" required>

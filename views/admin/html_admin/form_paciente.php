@@ -64,7 +64,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <body>
     <div class="container">
         <h1><i class="fas fa-user-plus"></i> <?= $modo_edicion ? 'Editar Paciente' : 'Registrar Paciente' ?></h1>
-        <form action="../../../controllers/admin/paciente_controller.php" method="POST">
+        <form action="../../../controllers/cuidador/paciente/paciente_controller.php" method="POST">
             <input type="hidden" name="accion" value="<?= $modo_edicion ? 'actualizar' : 'registrar' ?>">
             <?php if ($modo_edicion) echo "<input type='hidden' name='id_paciente' value='{$datos_paciente['id_paciente']}'>"; ?>
             
