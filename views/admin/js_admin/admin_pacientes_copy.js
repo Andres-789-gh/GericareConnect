@@ -28,7 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Llama al controlador PHP para obtener los resultados
         fetch(`../../../controllers/admin/consulta_controller.php?filtro=${rol}&busqueda=${busqueda}&id_admin=${idAdmin}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error de red al intentar contactar al servidor.');
+                }
+                return response.json();
+            })
             .then(data => {
                 resultsContainer.innerHTML = ''; // Limpiar resultados anteriores
 
@@ -84,12 +89,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             Swal.fire({
                 title: `¿Estás seguro?`,
-                text: `Se desactivará a ${nombre}. El usuario no podrá iniciar sesión.`,
+                text: `Se eliminara a ${nombre}. El usuario no podrá iniciar sesión.`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, desactivar',
+                confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -100,7 +105,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const desactivarEntidad = (id, tipo) => {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('tipo', tipo);
 
+        fetch('../../../controllers/admin/desactivar_controller.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Eliminado!', data.message, 'success');
+                // Refrescar la búsqueda para que el usuario desaparezca de la lista
+                performSearch(); 
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            Swal.fire('Error de Conexión', 'No se pudo completar la solicitud.', 'error');
+        });
     };
 
     // Eventos para el buscador
