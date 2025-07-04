@@ -1,16 +1,14 @@
 <?php
 session_start();
 // Incluir modelos para obtener listas de pacientes (aun no la tenemos)
-require_once(__DIR__ . '/../../models/clases/entrada_salida.php');
+require_once(__DIR__ . '/../../../models/clases/entrada_salida.php');
 
 $entrada_salida_modelo = new entradaSalida();
 $historial = $entrada_salida_modelo->consultar();
 
-/*
-require_once(__DIR__ . '/../../models/clases/pacientes.php');
+require_once(__DIR__ . '/../../../models/clases/pacientes.php');
 $paciente_modelo = new Paciente();
-$lista_pacientes = $paciente_modelo->consultarTodos(); 
-$lista_pacientes = []; */
+$lista_pacientes = $paciente_modelo->consultar(); 
 
 ?>
 <!DOCTYPE html>
