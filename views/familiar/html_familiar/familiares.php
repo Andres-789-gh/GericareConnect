@@ -1,6 +1,6 @@
 <?php
-// Iniciar la sesión para poder acceder a las variables del usuario
-session_start();
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Familiar']);
 
 // Si no hay un usuario en la sesión redirigir al login
 if (!isset($_SESSION['id_usuario'])) {
@@ -22,11 +22,17 @@ if (!isset($_SESSION['id_usuario'])) {
 <body>
     <?php
     if (isset($_SESSION['mensaje'])) {
-        echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['mensaje']) . '</div>';
+        echo '<div class="alert alert-success" role="alert">' .
+            '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['mensaje']) . '</span>' .
+            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
+            '</div>';
         unset($_SESSION['mensaje']);
     }
     if (isset($_SESSION['error'])) {
-        echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['error']) . '</div>';
+        echo '<div class="alert alert-danger" role="alert">' .
+            '<span><i class="fas fa-exclamation-triangle"></i> ' . htmlspecialchars($_SESSION['error']) . '</span>' .
+            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
+            '</div>';
         unset($_SESSION['error']);
     }
     ?>
@@ -35,11 +41,12 @@ if (!isset($_SESSION['id_usuario'])) {
         <div class="logo-container">
             <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='familiares.php'">
             <span class="app-name">GERICARE CONNECT</span>
+
+            <div class="user-info">
+                <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Familiar') ?>
+            </div>
         </div>
         
-        <div class="user-info">
-            <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Familiar') ?>
-        </div>
         <nav class="top-navigation">
             <ul>
                 <li>

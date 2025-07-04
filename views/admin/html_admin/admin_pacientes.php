@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Administrador']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -45,13 +49,18 @@
 </head>
 <body>
     <?php
-    session_start();
     if (isset($_SESSION['mensaje'])) {
-        echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['mensaje']) . '</div>';
+        echo '<div class="alert alert-success" role="alert">' .
+            '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['mensaje']) . '</span>' .
+            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
+            '</div>';
         unset($_SESSION['mensaje']);
     }
     if (isset($_SESSION['error'])) {
-        echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['error']) . '</div>';
+        echo '<div class="alert alert-danger" role="alert">' .
+            '<span><i class="fas fa-exclamation-triangle"></i> ' . htmlspecialchars($_SESSION['error']) . '</span>' .
+            '<button type="button" class="alert-close-btn" onclick="this.parentElement.remove();">&times;</button>' .
+            '</div>';
         unset($_SESSION['error']);
     }
     ?>
@@ -59,9 +68,10 @@
         <div class="logo-container">
             <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='admin_pacientes.php'">
             <span class="app-name">GERICARE CONNECT</span>
-        </div>
-        <div class="user-info">
-            <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Desconocido') ?>
+
+            <div class="user-info">
+                <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Desconocido') ?>
+            </div>
         </div>
         <nav>
             <ul>
@@ -72,7 +82,7 @@
                 </li>
                 <li><a href="admin_pacientes.php" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
                 <li>
-                    <a href="admin_solicitudes.html">
+                    <a href="admin_solicitudes.php">
                         <i class="fas fa-envelope-open-text"></i> Solicitudes
                         <span class="notification-badge" id="solicitudes-badge"></span>
                     </a>
@@ -81,7 +91,7 @@
             </ul>
         </nav>
         <div class="add-button-container">
-            <a href="agregar_paciente.html" class="add-paciente-button">
+            <a href="agregar_paciente.php" class="add-paciente-button">
                 <i class="fas fa-user-plus"></i> Agregar Paciente
             </a>
 

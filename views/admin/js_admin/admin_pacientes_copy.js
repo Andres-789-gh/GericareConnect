@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
+    
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            alert.classList.add('fade-out');
+            setTimeout(() => alert.remove(), 500);
+        }, 5000);
+    });
+
     // Referencias a los elementos del nuevo buscador en la vista
     const searchForm = document.getElementById('universalSearchForm');
     const filtroRol = document.getElementById('filtro_rol');
@@ -72,12 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             Swal.fire({
                 title: `¿Estás seguro?`,
-                text: `Se desactivará a ${nombre}. Esta acción se puede revertir, pero el usuario no podrá iniciar sesión.`,
+                text: `Se eliminara a ${nombre}. Esta acción se puede revertir, pero el usuario no podrá iniciar sesión.`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, desactivar',
+                confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -99,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                Swal.fire('¡Desactivado!', data.message, 'success');
+                Swal.fire('¡Eliminado!', data.message, 'success');
                 // Refrescar la búsqueda para que el usuario desaparezca de la lista
                 performSearch(); 
             } else {

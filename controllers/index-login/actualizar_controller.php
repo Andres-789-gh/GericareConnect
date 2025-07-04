@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/../auth/verificar_sesion.php';
+verificarAcceso();
 require_once (__DIR__ . '/../../models/clases/usuario.php');
 
 /* Definir la URL de retorno dependiendo del rol */

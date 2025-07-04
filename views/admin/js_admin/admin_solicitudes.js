@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let mensaje = `Solicitud de tipo: ${solicitudTipo}\nID: ${solicitudId}\n\nMotivo:\n${solicitudDescripcion}`;
 
             if (solicitudTipo === 'Ingreso') {
-                mensaje += `\n\nPara agregar a este paciente, haga clic en el siguiente enlace:\n<a href="agregar_paciente.html?solicitud_id=${solicitudId}" target="_blank">Agregar Paciente</a>`;
+                mensaje += `\n\nPara agregar a este paciente, haga clic en el siguiente enlace:\n<a href="agregar_paciente.php?solicitud_id=${solicitudId}" target="_blank">Agregar Paciente</a>`;
             }
 
             const mensajeDiv = document.createElement('div');
