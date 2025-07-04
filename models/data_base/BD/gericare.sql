@@ -301,22 +301,20 @@ insert into tb_usuario (
     fecha_contratacion, tipo_contrato, contacto_emergencia, parentesco, id_rol
 )
 values
--- Administrador
-('CC', 1001, 'Ana', 'Gómez', '1980-05-10', 'Calle 1 #23-45', 'ana.admin@example.com', 'hash_admin', 'Activo',
+-- Administrador (contraseña: admin123)
+('CC', 1001, 'Ana', 'Gómez', '1980-05-10', 'Calle 1 #23-45', 'ana.admin@gmail.com', 'contraseña1', 'Activo',
  '2020-01-01', 'Término indefinido', '3123456789', null, 1),
-
--- Cuidador
-('CC', 1002, 'Luis', 'Pérez', '1990-07-15', 'Carrera 7 #89-12', 'luis.cuidador@example.com', 'hash_cuidador', 'Activo',
+-- Cuidador (contraseña: cuidador123)
+('CC', 1002, 'Luis', 'Pérez', '1990-07-15', 'Carrera 7 #89-12', 'luis.cuidador@gmail.com', 'contraseña2', 'Activo',
  '2021-03-20', 'Por prestación', '3009876543', null, 2),
-
--- Familiar
-('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@example.com', 'hash_familiar', 'Activo',
+-- Familiar (contraseña: familiar123)
+('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@gmail.com', 'contraseña3', 'Activo',
  null, null, null, 'Madre', 3);
-
-/* familiar 1004 - 8262789db0 admin 1005 - 3995c8601e cuidador 1006 - 1ec4d522ea*/
+ 
+/*  */
+use gericare_connect;
 select * from tb_usuario; 
 select * from tb_rol;
 select * from tb_telefono;
-use gericare_connect;
 select * from tb_paciente;
 

@@ -73,7 +73,8 @@ begin
         id_entrada_salida_paciente = p_id_registro;
 end//
 delimiter ;
-
+/*
 drop  procedure actualizar_observaciones_registro;
 drop  procedure registrar_entrada_salida;
 drop  procedure consultar_historial_paciente;
+*/

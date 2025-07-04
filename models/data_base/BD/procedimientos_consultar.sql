@@ -146,7 +146,7 @@ begin
             concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto
         from tb_paciente as p
         where
-            p.estado = 'Activo' -- <<< CORRECCIÓN AÑADIDA
+            p.estado = 'Activo'
             and (
                 p_busqueda is null or p_busqueda = '' or
                 p.nombre like concat('%', p_busqueda, '%') or
