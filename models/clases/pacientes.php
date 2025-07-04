@@ -2,7 +2,6 @@
 class Paciente {
     private $conn;
 
-    // Adaptado para usar la conexión original de tu proyecto.
     public function __construct() {
         require(__DIR__ . '/../data_base/database.php');
         $this->conn = $conn;
@@ -19,6 +18,7 @@ class Paciente {
 
     public function obtenerPorId($id_paciente) {
         try {
+            // Este método consulta directamente de tb_paciente
             $query = $this->conn->prepare("SELECT * FROM tb_paciente WHERE id_paciente = ?");
             $query->execute([$id_paciente]);
             return $query->fetch(PDO::FETCH_ASSOC);
@@ -27,12 +27,19 @@ class Paciente {
 
     public function registrar($datos) {
         try {
-            $query = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $query = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $query->execute([
-                $datos['documento_identificacion'], $datos['nombre'], $datos['apellido'],
-                $datos['fecha_nacimiento'], $datos['genero'], $datos['contacto_emergencia'],
-                $datos['estado_civil'], $datos['tipo_sangre'], $datos['seguro_medico'],
-                $datos['numero_seguro'], $datos['alergias'], $datos['id_usuario_familiar']
+                $datos['documento_identificacion'],
+                $datos['nombre'],
+                $datos['apellido'],
+                $datos['fecha_nacimiento'],
+                $datos['genero'],
+                $datos['contacto_emergencia'],
+                $datos['estado_civil'],
+                $datos['tipo_sangre'],
+                $datos['seguro_medico'],
+                $datos['numero_seguro'],
+                $datos['id_usuario_familiar']
             ]);
             return $query->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) { throw new Exception("Error al registrar paciente: " . $e->getMessage()); }
@@ -40,12 +47,19 @@ class Paciente {
 
     public function actualizar($datos) {
         try {
-            $query = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $query = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $query->execute([
-                $datos['id_paciente'], $datos['documento_identificacion'], $datos['nombre'],
-                $datos['apellido'], $datos['fecha_nacimiento'], $datos['genero'],
-                $datos['contacto_emergencia'], $datos['estado_civil'], $datos['tipo_sangre'],
-                $datos['seguro_medico'], $datos['numero_seguro'], $datos['alergias'],
+                $datos['id_paciente'],
+                $datos['documento_identificacion'],
+                $datos['nombre'],
+                $datos['apellido'],
+                $datos['fecha_nacimiento'],
+                $datos['genero'],
+                $datos['contacto_emergencia'],
+                $datos['estado_civil'],
+                $datos['tipo_sangre'],
+                $datos['seguro_medico'],
+                $datos['numero_seguro'],
                 $datos['id_usuario_familiar']
             ]);
             return true;

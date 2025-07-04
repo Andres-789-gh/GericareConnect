@@ -295,21 +295,14 @@ insert into tb_rol (nombre_rol, descripcion_rol) values
 ('Cuidador', 'Gestiona actividades, tratamientos e historias clínicas'),
 ('Familiar', 'Realiza solicitudes y ve la información de su paciente');
 
-insert into tb_usuario (
-    tipo_documento, documento_identificacion, nombre, apellido, fecha_nacimiento,
-    direccion, correo_electronico, contraseña, estado,
-    fecha_contratacion, tipo_contrato, contacto_emergencia, parentesco, id_rol
-)
+insert into tb_usuario (tipo_documento, documento_identificacion, nombre, apellido, fecha_nacimiento, direccion, correo_electronico, contraseña, estado, fecha_contratacion, tipo_contrato, contacto_emergencia, parentesco, id_rol)
 values
 -- Administrador (contraseña: admin123)
-('CC', 1001, 'Ana', 'Gómez', '1980-05-10', 'Calle 1 #23-45', 'ana.admin@gmail.com', 'contraseña1', 'Activo',
- '2020-01-01', 'Término indefinido', '3123456789', null, 1),
+('CC', 1001, 'Ana', 'Gómez', '1980-05-10', 'Calle 1 #23-45', 'ana.admin@gmail.com', 'contraseña1', 'Activo', '2020-01-01', 'Término indefinido', '3123456789', null, 1),
 -- Cuidador (contraseña: cuidador123)
-('CC', 1002, 'Luis', 'Pérez', '1990-07-15', 'Carrera 7 #89-12', 'luis.cuidador@gmail.com', 'contraseña2', 'Activo',
- '2021-03-20', 'Por prestación', '3009876543', null, 2),
+('CC', 1002, 'Luis', 'Pérez', '1990-07-15', 'Carrera 7 #89-12', 'luis.cuidador@gmail.com', 'contraseña2', 'Activo', '2021-03-20', 'Por prestación', '3009876543', null, 2),
 -- Familiar (contraseña: familiar123)
-('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@gmail.com', 'contraseña3', 'Activo',
- null, null, null, 'Madre', 3);
+('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@gmail.com', 'contraseña3', 'Activo', null, null, null, 'Madre', 3);
  
 /*  */
 use gericare_connect;

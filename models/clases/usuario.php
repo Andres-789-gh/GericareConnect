@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/pacientes.php'); 
+
     class usuario{
 
         protected $conn;
@@ -161,6 +163,53 @@
                 throw $e;
             }
         }
+
+        // metodos CRUD para Paciente delegando al modelo Paciente
+        public function registrarPaciente($datos) {
+            try {
+                $paciente_model = new Paciente();
+                return $paciente_model->registrar($datos);
+            } catch (Exception $e) {
+                throw new Exception("Error al registrar paciente como cuidador: " . $e->getMessage());
+            }
+        }
+
+        public function actualizarPaciente($datos) {
+            try {
+                $paciente_model = new Paciente();
+                return $paciente_model->actualizar($datos);
+            } catch (Exception $e) {
+                throw new Exception("Error al actualizar paciente como cuidador: " . $e->getMessage());
+            }
+        }
+
+        public function desactivarPaciente($id_paciente) {
+            try {
+                $paciente_model = new Paciente();
+                return $paciente_model->desactivar($id_paciente);
+            } catch (Exception $e) {
+                throw new Exception("Error al desactivar paciente como cuidador: " . $e->getMessage());
+            }
+        }
+
+        public function obtenerPacientePorId($id_paciente) {
+            try {
+                $paciente_model = new Paciente();
+                return $paciente_model->obtenerPorId($id_paciente);
+            } catch (Exception $e) {
+                throw new Exception("Error al obtener paciente por ID como cuidador: " . $e->getMessage());
+            }
+        }
+
+        // metodo para que el cuidador consulte todos los pacientes
+        public function consultarTodosLosPacientes($busqueda = null) {
+            try {
+                $paciente_model = new Paciente();
+                return $paciente_model->consultar($busqueda);
+            } catch (Exception $e) {
+                throw new Exception("Error al consultar todos los pacientes para cuidador: " . $e->getMessage());
+            }
+        }
     }
 
     class administrador extends usuario{
@@ -213,13 +262,13 @@
             }
         }
 
+        // metodo para que el administrador pueda desactivar pacientes delegando al modelo Paciente
         public function desactivarPaciente($id_paciente) {
             try {
-                $query = $this->conn->prepare("call desactivar_paciente(?)");
-                $query->execute([$id_paciente]);
-                return true;
+                $paciente_model = new Paciente();
+                return $paciente_model->desactivar($id_paciente);
             } catch (Exception $e) {
-                throw $e;
+                throw new Exception("Error al desactivar paciente como administrador: " . $e->getMessage());
             }
         }
     }
