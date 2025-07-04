@@ -139,28 +139,70 @@ if (isset($_GET['idHistoriaClinica'])) {
             localStorage.setItem('historiaClinicaForm', JSON.stringify(Object.fromEntries(new FormData(form).entries())));
             window.open(`${tipo}.php?seleccionar=true`, '_blank');
         }
-        
+
         function cargarSelecciones() {
-            actualizarVistaSeleccion('medicamento', JSON.parse(localStorage.getItem('selected_medicamentos')) || []);
-            actualizarVistaSeleccion('enfermedad', JSON.parse(localStorage.getItem('selected_enfermedades')) || []);
+            console.log('--- [HISTORIA CLINICA - cargarSelecciones] INICIA (desde evento focus) ---'); // Log 8
+            
+            const medicamentos = JSON.parse(localStorage.getItem('selected_medicamentos')) || [];
+            const enfermedades = JSON.parse(localStorage.getItem('selected_enfermedades')) || [];
+            
+            console.log('[HISTORIA CLINICA - cargarSelecciones] Recuperado de localStorage - Medicamentos:', JSON.stringify(medicamentos)); // Log 9
+            console.log('[HISTORIA CLINICA - cargarSelecciones] Recuperado de localStorage - Enfermedades:', JSON.stringify(enfermedades)); // Log 10
+
+            actualizarVistaSeleccion('medicamentos', medicamentos);
+            actualizarVistaSeleccion('enfermedades', enfermedades);
+
+            console.log('--- [HISTORIA CLINICA - cargarSelecciones] FINALIZA ---'); // Log 11
         }
-        
+
         function actualizarVistaSeleccion(tipo, items) {
-            const container = document.getElementById(`${tipo}s-seleccionados`);
-            const idsInput = document.getElementById(`${tipo}s-seleccionados_ids`);
-            container.innerHTML = '';
+            console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] INICIA para tipo: ${tipo}, Items recibidos:`, items); // Log 12
+
+            let containerId;
+            let idsInputId;
+
+            // ESTA PARTE DEBE SER LA CORRECCIÓN ANTERIOR QUE YA APLICASTE
+            if (tipo === 'medicamentos') {
+                containerId = 'medicamentos-seleccionados';
+                idsInputId = 'medicamentos_seleccionados_ids';
+            } else if (tipo === 'enfermedades') {
+                containerId = 'enfermedades-seleccionadas';
+                idsInputId = 'enfermedades_seleccionadas_ids';
+            } else {
+                console.error(`[HISTORIA CLINICA - actualizarVistaSeleccion] Tipo desconocido para actualizar vista: ${tipo}`); // Log 13
+                return;
+            }
+
+            const container = document.getElementById(containerId);
+            const idsInput = document.getElementById(idsInputId);
+
+            if (!container) {
+                console.error(`[HISTORIA CLINICA - actualizarVistaSeleccion] ERROR: Contenedor '${containerId}' NO ENCONTRADO.`); // Log 14
+                return;
+            }
+            if (!idsInput) {
+                console.error(`[HISTORIA CLINICA - actualizarVistaSeleccion] ERROR: Input oculto '${idsInputId}' NO ENCONTRADO.`); // Log 15
+                return;
+            }
+
+            container.innerHTML = ''; // Limpia el contenedor actual
             let ids = [];
-            if (items) {
+            if (Array.isArray(items)) {
                 items.forEach(item => {
                     ids.push(item.id);
                     const tag = document.createElement('span');
                     tag.className = 'selected-item';
-                    // CORRECCIÓN FINAL: Se pasa el 'tipo' en singular, tal como se recibe.
                     tag.innerHTML = `${item.nombre} <span class="remove-item" onclick="quitarItem('${tipo}', ${item.id})">×</span>`;
                     container.appendChild(tag);
+                    console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] Añadido item para ${tipo}: ${item.nombre}`); // Log 16
                 });
+            } else {
+                console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] No hay items válidos para ${tipo} o no es un array.`); // Log 17
             }
+            
             idsInput.value = ids.join(',');
+            console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] Input oculto ${idsInputId} actualizado a: ${idsInput.value}`); // Log 18
+            console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] Contenedor ${containerId} actualizado.`); // Log 19
         }
 
         function quitarItem(tipo, id) {

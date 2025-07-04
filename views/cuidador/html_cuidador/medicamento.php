@@ -74,7 +74,7 @@ if (isset($_GET['idEliminar'])) {
                                 <a href="medicamento.php?idEliminar=<?php echo $medicamento["id_medicamento"]; ?><?php echo $modoSeleccion ? '&seleccionar=true' : ''; ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
                                 
                                 <?php if ($modoSeleccion): ?>
-                                    <button type="button" class="btn btn-primary" onclick="seleccionarItem(<?php echo $medicamento['id_medicamento']; ?>, '<?php echo htmlspecialchars(addslashes($medicamento['nombre_medicamento'])); ?>', 'medicamento')">Seleccionar</button>
+                                    <button type="button" class="btn btn-primary" onclick="seleccionarItem(<?php echo $medicamento['id_medicamento']; ?>, '<?php echo htmlspecialchars(addslashes($medicamento['nombre_medicamento'])); ?>', 'medicamentos')">Seleccionar</button>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -89,7 +89,7 @@ if (isset($_GET['idEliminar'])) {
 
     <script>
         function seleccionarItem(id, nombre, tipo) {
-            const key = `selected_${tipo}s`;
+            const key = `selected_${tipo}`;
             let seleccionados = JSON.parse(localStorage.getItem(key)) || [];
             if (!seleccionados.some(item => item.id == id)) {
                 seleccionados.push({ id: id, nombre: nombre });

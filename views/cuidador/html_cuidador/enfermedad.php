@@ -70,7 +70,7 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                                 <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?><?php echo $modoSeleccion ? '&seleccionar=true' : ''; ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
                                 
                                 <?php if ($modoSeleccion): ?>
-                                    <button type="button" class="btn btn-primary" onclick="seleccionarItem(<?php echo $enfermedad['id_enfermedad']; ?>, '<?php echo htmlspecialchars(addslashes($enfermedad['nombre_enfermedad'])); ?>', 'enfermedad')">Seleccionar</button>
+                                    <button type="button" class="btn btn-primary" onclick="seleccionarItem(<?php echo $enfermedad['id_enfermedad']; ?>, '<?php echo htmlspecialchars(addslashes($enfermedad['nombre_enfermedad'])); ?>', 'enfermedades')">Seleccionar</button>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -85,41 +85,33 @@ if (isset($_GET['idEliminarEnfermedad'])) {
     
     <script>
         function seleccionarItem(id, nombre, tipo) {
-            const key = `selected_${tipo}s`;
-            let seleccionados = JSON.parse(localStorage.getItem(key)) || [];
+            console.log(`[ENFERMEDAD - seleccionarItem] INICIA - Tipo: ${tipo}, ID: ${id}, Nombre: ${nombre}`); // Log 1
+
+            const key = `selected_${tipo}`;
+            let seleccionados = [];
+
+            try {
+                seleccionados = JSON.parse(localStorage.getItem(key)) || [];
+                console.log(`[ENFERMEDAD - seleccionarItem] Contenido actual de localStorage (${key}):`, seleccionados); // Log 2
+            } catch (e) {
+                console.error(`[ENFERMEDAD - seleccionarItem] ERROR al parsear JSON de localStorage para ${key}:`, e); // Log 3
+            }
+
             if (!seleccionados.some(item => item.id == id)) {
                 seleccionados.push({ id: id, nombre: nombre });
-                localStorage.setItem(key, JSON.stringify(seleccionados));
+                try {
+                    localStorage.setItem(key, JSON.stringify(seleccionados));
+                    console.log(`[ENFERMEDAD - seleccionarItem] Guardado exitoso en localStorage (${key}):`, seleccionados); // Log 4
+                } catch (e) {
+                    console.error(`[ENFERMEDAD - seleccionarItem] ERROR al guardar en localStorage para ${key}:`, e); // Log 5
+                }
+            } else {
+                console.log(`[ENFERMEDAD - seleccionarItem] El item ya existe, no se añadió de nuevo.`); // Log 6
             }
+            
             window.close();
+            console.log(`[ENFERMEDAD - seleccionarItem] Ventana cerrada.`); // Log 7
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('enfermedad-form');
-            const formTitle = document.getElementById('form-title');
-            const idEnfermedadEditar = document.getElementById('id_enfermedad_editar');
-            const nombreEnfermedad = document.getElementById('nombre_enfermedad');
-            const descripcionEnfermedad = document.getElementById('descripcion_enfermedad');
-            const btnCancelar = document.getElementById('btn-cancelar');
-
-            document.querySelectorAll('.btn-editar').forEach(button => {
-                button.addEventListener('click', function() {
-                    formTitle.textContent = 'Editar Enfermedad';
-                    idEnfermedadEditar.value = this.getAttribute('data-id');
-                    nombreEnfermedad.value = this.getAttribute('data-nombre');
-                    descripcionEnfermedad.value = this.getAttribute('data-descripcion');
-                    btnCancelar.style.display = 'inline-block';
-                    window.scrollTo(0, 0);
-                });
-            });
-
-            btnCancelar.addEventListener('click', () => {
-                formTitle.textContent = 'Agregar Nueva Enfermedad';
-                form.reset();
-                idEnfermedadEditar.value = '';
-                btnCancelar.style.display = 'none';
-            });
-        });
     </script>
 </body>
 </html>
