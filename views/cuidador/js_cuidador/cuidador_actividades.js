@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const solicitudTipo = listItem.dataset.solicitudTipo;
 
             if (solicitudTipo === 'Ingreso') {
-                window.location.href = `agregar_paciente.html?solicitud_id=${solicitudId}`;
+                window.location.href = `agregar_paciente.php?solicitud_id=${solicitudId}`;
             } else {
                 alert(`Solicitud de tipo: ${solicitudTipo}\nID: ${solicitudId}\n\n${listItem.dataset.solicitudDescripcion}`);
                 // Aquí podrías implementar una forma más visual de mostrar los detalles,

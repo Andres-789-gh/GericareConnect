@@ -28,10 +28,10 @@ try {
     // Decidir que metodo llamar basado en lo que se desee eliminar
     if ($tipo_entidad === 'Usuario') {
         $admin->desactivarUsuario($id_entidad, $id_admin_actual);
-        $message = 'Usuario desactivado correctamente.';
+        $message = 'Usuario eliminado correctamente.';
     } elseif ($tipo_entidad === 'Paciente') {
         $admin->desactivarPaciente($id_entidad);
-        $message = 'Paciente desactivado correctamente.';
+        $message = 'Paciente eliminado correctamente.';
     } else {
         throw new Exception('Tipo de entidad no reconocido.');
     }
