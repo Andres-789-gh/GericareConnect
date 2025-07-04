@@ -132,7 +132,7 @@ begin
         join tb_rol as r on u.id_rol = r.id_rol
         where
             r.nombre_rol != 'Administrador'
-            and u.estado = 'Activo'
+            and u.estado = 'Activo' -- <<< CORRECCIÓN AÑADIDA
             and (
                 p_busqueda is null or p_busqueda = '' or
                 u.nombre like concat('%', p_busqueda, '%') or

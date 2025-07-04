@@ -6,9 +6,9 @@ drop procedure if exists actualizar_paciente;
 */
 delimiter //
 
--- crud de pacientes
+-- === procedimientos para el crud de pacientes (ajustados) ===
 
--- registrar (create) un paciente
+-- 1. procedimiento para registrar (create) un paciente
 create procedure registrar_paciente(
     in p_documento_identificacion int,
     in p_nombre varchar(50),
@@ -36,7 +36,7 @@ begin
     select last_insert_id() as id_paciente_creado;
 end //
 
--- consultar (read) pacientes
+-- 2. procedimiento para consultar (read) pacientes
 create procedure consultar_pacientes(
     in p_busqueda varchar(100)
 )
@@ -63,7 +63,7 @@ begin
            documento_identificacion like concat('%', p_busqueda, '%'));
 end //
 
--- actualizar un paciente
+-- 3. procedimiento para actualizar (update) un paciente
 create procedure actualizar_paciente(
     in p_id_paciente int,
     in p_documento_identificacion int,
@@ -94,17 +94,4 @@ begin
     where id_paciente = p_id_paciente;
 end //
 
-/* desactivar un paciente y sus relaciones
-desactiva al paciente y sus dependencias en cascada: historial clínico, tratamientos, actividades, asignaciones, solicitudes) */
-create procedure desactivar_paciente(
-    in p_id_paciente int
-)
-begin
-    update tb_paciente set estado = 'Inactivo' where id_paciente = p_id_paciente;
-    update tb_historia_clinica set estado = 'Inactivo' where id_paciente = p_id_paciente;
-    update tb_tratamiento set estado_tratamiento = 'Cancelado' where id_paciente = p_id_paciente and estado_tratamiento = 'Activo';
-    update tb_actividad set estado_actividad = 'Cancelada' where id_paciente = p_id_paciente and estado_actividad = 'Pendiente';
-    update tb_paciente_asignado set estado = 'Inactivo' where id_paciente = p_id_paciente;
-    update tb_solicitud set estado_solicitud = 'Cancelada' where id_paciente = p_id_paciente and estado_solicitud = 'Pendiente';
-end //
 delimiter ;

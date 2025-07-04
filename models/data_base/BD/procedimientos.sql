@@ -143,7 +143,7 @@ begin
 
     insert into tb_usuario (
         tipo_documento, documento_identificacion, nombre, apellido, direccion,
-        correo_electronico, contraseña,
+        correo_electronico, contraseña, -- <-- CORRECCIÓN APLICADA AQUÍ
         fecha_contratacion, tipo_contrato, contacto_emergencia, fecha_nacimiento,
         id_rol, parentesco
     ) values (
@@ -198,7 +198,7 @@ begin
 
     insert into tb_usuario (
         tipo_documento, documento_identificacion, nombre, apellido, direccion,
-        correo_electronico, contraseña,
+        correo_electronico, contraseña, -- <-- CORRECCIÓN APLICADA AQUÍ
         parentesco, id_rol,
         fecha_nacimiento, fecha_contratacion, tipo_contrato, contacto_emergencia
     ) values (
