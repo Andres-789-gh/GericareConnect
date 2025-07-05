@@ -10,6 +10,79 @@ session_start();
     <title>Administrar Pacientes - GeriCare Connect</title>
     <link rel="stylesheet" href="../css_admin/admin_pacientes.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    /* Contenedor de la tabla de resultados */
+    .table-container {
+        margin-top: 1.5rem;
+        overflow-x: auto;
+    }
+    /* Estilo general de la tabla */
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    /* Estilo de las celdas y cabeceras */
+    .results-table th, .results-table td {
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+    }
+    /* Cabecera de la tabla con color */
+    .results-table th {
+        background-color: #007bff;
+        color: white;
+        font-size: 0.9em;
+        text-transform: uppercase;
+    }
+    /* Efecto al pasar el mouse sobre una fila */
+    .results-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    /* Estilo de los botones de acción */
+    .actions a, .actions button {
+        color: #333;
+        margin: 0 8px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: transform 0.2s;
+    }
+    .actions a:hover { color: #007bff; transform: scale(1.2); }
+    .actions button:hover { color: #dc3545; transform: scale(1.2); }
+
+    /* Estilos para el género con iconos y colores */
+    .genero-masculino, .genero-femenino {
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px;
+        border-radius: 15px;
+        color: white;
+        font-size: 0.9em;
+    }
+    .genero-masculino { background-color: #0d6efd; }
+    .genero-femenino { background-color: #d63384; }
+
+    /* Estilos para la etiqueta de ROL */
+    .rol-tag {
+        padding: 4px 10px;
+        border-radius: 15px;
+        color: white;
+        font-size: 0.8em;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .rol-paciente { background-color: #198754; }
+    .rol-cuidador { background-color: #ffc107; color: black; }
+    .rol-familiar { background-color: #0dcaf0; }
+    .rol-administrador { background-color: #6c757d; }
+</style>
 </head>
 <body>
     <header class="admin-header">
