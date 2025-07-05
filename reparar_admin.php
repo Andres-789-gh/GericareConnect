@@ -10,7 +10,6 @@ $clave_cifrada = password_hash($clave_admin, PASSWORD_DEFAULT);
 echo "<h1>Reparando contraseña del Admin...</h1>";
 
 try {
-    $database = new Database();
     $conn = $database->conectar();
 
     // Actualizamos la contraseña en la base de datos
