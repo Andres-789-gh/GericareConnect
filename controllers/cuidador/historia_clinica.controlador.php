@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . "/../../models/clases/historia_clinica.modelo.php";
+
 class ControladorHistoriaClinica
 {
 
@@ -27,7 +29,6 @@ class ControladorHistoriaClinica
             $medicamentos_ids = $_POST["medicamentos_seleccionados_ids"] ?? "";
             $enfermedades_ids = $_POST["enfermedades_seleccionadas_ids"] ?? "";
             
-            // Usamos el ID del cuidador de la sesión
             $id_cuidador = $_SESSION["id_usuario"] ?? 0;
 
             if ($id_cuidador == 0) {
@@ -56,6 +57,8 @@ class ControladorHistoriaClinica
             if ($respuesta == "ok") {
                 echo '<script>
                     localStorage.removeItem("historiaClinicaForm");
+                    localStorage.removeItem("selected_medicamentos");
+                    localStorage.removeItem("selected_enfermedades");
                     alert("Historia Clínica creada correctamente.");
                     window.location = "historia_clinica.php";
                 </script>';
@@ -75,7 +78,7 @@ class ControladorHistoriaClinica
     {
         if (isset($_POST["id_historia_clinica_editar"])) {
 
-            // Recogemos TODOS los datos del formulario
+            // Recogemos TODOS los datos del formulario, incluyendo los IDs
             $datos = array(
                 "id_historia_clinica"   => $_POST["id_historia_clinica_editar"],
                 "estado_salud"          => $_POST["estado_salud"],
@@ -83,10 +86,12 @@ class ControladorHistoriaClinica
                 "antecedentes_medicos"  => $_POST["antecedentes_medicos"],
                 "alergias"              => $_POST["alergias"],
                 "dietas_especiales"     => $_POST["dietas_especiales"],
-                "observaciones"         => $_POST["observaciones"]
+                "observaciones"         => $_POST["observaciones"],
+                "medicamentos_ids"      => $_POST["medicamentos_seleccionados_ids"] ?? "",
+                "enfermedades_ids"      => $_POST["enfermedades_seleccionadas_ids"] ?? ""
             );
 
-            $respuesta = ModeloHistoriaClinica::mdlEditarHistoriaClinica("tb_historia_clinica", $datos);
+            $respuesta = ModeloHistoriaClinica::mdlEditarHistoriaClinica($datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
@@ -96,7 +101,7 @@ class ControladorHistoriaClinica
             } else {
                 echo '<script>
                     alert("Error al actualizar la historia clínica.");
-                    window.location = "historia_clinica.php";
+                    window.location = "historia_clinica.php?idHistoriaClinica=' . $_POST["id_historia_clinica_editar"] . '";
                 </script>';
             }
         }
@@ -124,4 +129,4 @@ class ControladorHistoriaClinica
             }
         }
     }
-} // <-- Fin de la clase ControladorHistoriaClinica
+}
