@@ -1,12 +1,6 @@
 -- Le decimos a MySQL que vamos a trabajar en esta base de datos
 USE gericare_connect;
 
--- SI LA COLUMNA 'alergias' EXISTE, LA ELIMINA. SI NO, NO HACE NADA.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'gericare_connect' AND TABLE_NAME = 'tb_paciente' AND COLUMN_NAME = 'alergias')
-THEN
-    ALTER TABLE `tb_paciente` DROP COLUMN `alergias`;
-END IF;
-
 -- Borramos los procedimientos viejos para instalar las nuevas versiones
 DROP PROCEDURE IF EXISTS registrar_paciente;
 DROP PROCEDURE IF EXISTS actualizar_paciente;
