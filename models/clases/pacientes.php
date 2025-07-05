@@ -1,22 +1,20 @@
 <?php
-// Clase que maneja todas las operaciones de la base de datos para los pacientes.
 class Paciente {
-    private $conn; // Variable para guardar la conexión a la BD.
+    private $conn;
 
+    // Se conecta a la BD usando el método original de tu proyecto.
     public function __construct() {
         require(__DIR__ . '/../data_base/database.php');
         $this->conn = $conn;
     }
 
     /**
-     * Consulta todos los pacientes activos en la base de datos.
-     * Puede recibir un término de búsqueda para filtrar los resultados.
+     * CORRECCIÓN FINAL: Consulta todos los pacientes activos.
+     * Ahora llama al procedimiento SIN enviar parámetros.
      */
-    public function consultar($busqueda = null) {
+    public function consultar() {
         try {
-            // Llama al procedimiento almacenado para obtener los pacientes.
-            $query = $this->conn->prepare("CALL consultar_pacientes(?)");
-            $query->bindParam(1, $busqueda, PDO::PARAM_STR);
+            $query = $this->conn->prepare("CALL consultar_pacientes()");
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -25,8 +23,7 @@ class Paciente {
     }
 
     /**
-     * Obtiene los datos de un único paciente por su ID.
-     * Se usa para rellenar el formulario en el modo de edición.
+     * Obtiene los datos de un único paciente por su ID para el modo de edición.
      */
     public function obtenerPorId($id_paciente) {
         try {
@@ -39,8 +36,7 @@ class Paciente {
     }
 
     /**
-     * Registra un nuevo paciente en la base de datos.
-     * Llama al procedimiento almacenado sin el campo 'alergias'.
+     * Registra un nuevo paciente en la base de datos (SIN alergias).
      */
     public function registrar($datos) {
         try {
@@ -58,8 +54,7 @@ class Paciente {
     }
 
     /**
-     * Actualiza los datos de un paciente existente.
-     * Llama al procedimiento almacenado sin el campo 'alergias'.
+     * Actualiza los datos de un paciente existente (SIN alergias).
      */
     public function actualizar($datos) {
         try {
@@ -78,7 +73,7 @@ class Paciente {
     }
 
     /**
-     * Desactiva un paciente en la base de datos (borrado lógico).
+     * Desactiva un paciente (borrado lógico).
      */
     public function desactivar($id_paciente) {
         try {
