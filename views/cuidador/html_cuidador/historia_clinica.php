@@ -121,13 +121,14 @@ if (isset($_GET['idHistoriaClinica'])) {
                         <th>ID</th>
                         <th>Paciente</th>
                         <th>Cuidador</th>
-                        <th>Fecha de Consulta</th>
-                        <th>Estado de Salud</th>
+                        <th>Medicamentos</th>
+                        <th>Enfermedades</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
+                    // Esta función ya obtiene los medicamentos y enfermedades desde el procedimiento almacenado
                     $historiasClinicas = ControladorHistoriaClinica::ctrMostrarHistoriasClinicas(null, null);
 
                     foreach ($historiasClinicas as $key => $value) {
@@ -135,8 +136,9 @@ if (isset($_GET['idHistoriaClinica'])) {
                         echo '<td>' . htmlspecialchars($value["id_historia_clinica"]) . '</td>';
                         echo '<td>' . htmlspecialchars($value["paciente_nombre_completo"]) . '</td>';
                         echo '<td>' . htmlspecialchars($value["cuidador_nombre_completo"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($value["fecha_formateada"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($value["estado_salud"]) . '</td>';
+                        // Mostramos los medicamentos y enfermedades
+                        echo '<td>' . htmlspecialchars($value["medicamentos"] ?? 'N/A') . '</td>';
+                        echo '<td>' . htmlspecialchars($value["enfermedades"] ?? 'N/A') . '</td>';
                         echo '<td>
                                 <a href="editar_historia_clinica.php?idHistoriaClinica=' . $value["id_historia_clinica"] . '" class="btn btn-warning">Editar</a>
                                 <a href="historia_clinica.php?idHistoriaClinica=' . $value["id_historia_clinica"] . '" class="btn btn-danger" onclick="return confirm(\'¿Estás seguro?\');">Eliminar</a>
@@ -225,7 +227,6 @@ if (isset($_GET['idHistoriaClinica'])) {
         }
 
         function quitarItem(tipo, id) {
-            // **LA CORRECCIÓN ESTÁ AQUÍ** // Se elimina la "s" extra para que la clave coincida.
             const key = `selected_${tipo}`; 
             let items = JSON.parse(localStorage.getItem(key)) || [];
             items = items.filter(item => item.id != id);
