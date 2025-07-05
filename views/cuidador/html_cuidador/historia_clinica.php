@@ -1,13 +1,17 @@
 <?php
+// views/cuidador/html_cuidador/historia_clinica.php
+session_start();
+
 // Incluimos los controladores y modelos necesarios para la página.
 require_once __DIR__ . "/../../../controllers/cuidador/historia_clinica.controlador.php";
 require_once __DIR__ . "/../../../models/clases/historia_clinica.modelo.php";
 require_once __DIR__ . "/../../../models/clases/medicamento.modelo.php";
 require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['id_historia_clinica_editar'])) {
     ControladorHistoriaClinica::ctrCrearHistoriaClinica();
 }
+
 if (isset($_GET['idHistoriaClinica'])) {
     ControladorHistoriaClinica::ctrEliminarHistoriaClinica();
 }
@@ -29,7 +33,7 @@ if (isset($_GET['idHistoriaClinica'])) {
         <h1>Gestión de Historias Clínicas</h1>
 
         <div class="form-container">
-            <form method="post" id="historiaClinicaForm">
+            <form method="post" id="historiaClinicaForm" action="historia_clinica.php">
                 <h2>Registrar Nueva Historia Clínica</h2>
                 
                 <div class="form-grid">
@@ -103,7 +107,38 @@ if (isset($_GET['idHistoriaClinica'])) {
 
         <div class="table-container">
             <h2>Historias Clínicas Registradas</h2>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paciente</th>
+                        <th>Cuidador</th>
+                        <th>Fecha de Consulta</th>
+                        <th>Estado de Salud</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $historiasClinicas = ControladorHistoriaClinica::ctrMostrarHistoriasClinicas(null, null);
+
+                    foreach ($historiasClinicas as $key => $value) {
+                        echo '<tr>';
+                        echo '<td>' . htmlspecialchars($value["id_historia_clinica"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($value["paciente_nombre_completo"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($value["cuidador_nombre_completo"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($value["fecha_formateada"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($value["estado_salud"]) . '</td>';
+                        echo '<td>
+                                <a href="editar_historia_clinica.php?idHistoriaClinica=' . $value["id_historia_clinica"] . '" class="btn btn-warning">Editar</a>
+                                <a href="historia_clinica.php?idHistoriaClinica=' . $value["id_historia_clinica"] . '" class="btn btn-danger" onclick="return confirm(\'¿Estás seguro?\');">Eliminar</a>
+                              </td>';
+                        echo '</tr>';
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
     
     <script>
@@ -141,27 +176,16 @@ if (isset($_GET['idHistoriaClinica'])) {
         }
 
         function cargarSelecciones() {
-            console.log('--- [HISTORIA CLINICA - cargarSelecciones] INICIA (desde evento focus) ---'); // Log 8
-            
             const medicamentos = JSON.parse(localStorage.getItem('selected_medicamentos')) || [];
             const enfermedades = JSON.parse(localStorage.getItem('selected_enfermedades')) || [];
             
-            console.log('[HISTORIA CLINICA - cargarSelecciones] Recuperado de localStorage - Medicamentos:', JSON.stringify(medicamentos)); // Log 9
-            console.log('[HISTORIA CLINICA - cargarSelecciones] Recuperado de localStorage - Enfermedades:', JSON.stringify(enfermedades)); // Log 10
-
             actualizarVistaSeleccion('medicamentos', medicamentos);
             actualizarVistaSeleccion('enfermedades', enfermedades);
-
-            console.log('--- [HISTORIA CLINICA - cargarSelecciones] FINALIZA ---'); // Log 11
         }
 
         function actualizarVistaSeleccion(tipo, items) {
-            console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] INICIA para tipo: ${tipo}, Items recibidos:`, items); // Log 12
+            let containerId, idsInputId;
 
-            let containerId;
-            let idsInputId;
-
-            // ESTA PARTE DEBE SER LA CORRECCIÓN ANTERIOR QUE YA APLICASTE
             if (tipo === 'medicamentos') {
                 containerId = 'medicamentos-seleccionados';
                 idsInputId = 'medicamentos_seleccionados_ids';
@@ -169,23 +193,15 @@ if (isset($_GET['idHistoriaClinica'])) {
                 containerId = 'enfermedades-seleccionadas';
                 idsInputId = 'enfermedades_seleccionadas_ids';
             } else {
-                console.error(`[HISTORIA CLINICA - actualizarVistaSeleccion] Tipo desconocido para actualizar vista: ${tipo}`); // Log 13
                 return;
             }
 
             const container = document.getElementById(containerId);
             const idsInput = document.getElementById(idsInputId);
 
-            if (!container) {
-                console.error(`[HISTORIA CLINICA - actualizarVistaSeleccion] ERROR: Contenedor '${containerId}' NO ENCONTRADO.`); // Log 14
-                return;
-            }
-            if (!idsInput) {
-                console.error(`[HISTORIA CLINICA - actualizarVistaSeleccion] ERROR: Input oculto '${idsInputId}' NO ENCONTRADO.`); // Log 15
-                return;
-            }
+            if (!container || !idsInput) return;
 
-            container.innerHTML = ''; // Limpia el contenedor actual
+            container.innerHTML = '';
             let ids = [];
             if (Array.isArray(items)) {
                 items.forEach(item => {
@@ -194,15 +210,10 @@ if (isset($_GET['idHistoriaClinica'])) {
                     tag.className = 'selected-item';
                     tag.innerHTML = `${item.nombre} <span class="remove-item" onclick="quitarItem('${tipo}', ${item.id})">×</span>`;
                     container.appendChild(tag);
-                    console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] Añadido item para ${tipo}: ${item.nombre}`); // Log 16
                 });
-            } else {
-                console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] No hay items válidos para ${tipo} o no es un array.`); // Log 17
             }
             
             idsInput.value = ids.join(',');
-            console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] Input oculto ${idsInputId} actualizado a: ${idsInput.value}`); // Log 18
-            console.log(`[HISTORIA CLINICA - actualizarVistaSeleccion] Contenedor ${containerId} actualizado.`); // Log 19
         }
 
         function quitarItem(tipo, id) {

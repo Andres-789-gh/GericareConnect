@@ -60,24 +60,24 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Procedimiento para leer las historias clínicas
+-- Procedimiento para leer las historias clínicas (CORREGIDO)
 DROP PROCEDURE IF EXISTS `mostrar_historias_clinicas`;
 DELIMITER $$
 CREATE PROCEDURE `mostrar_historias_clinicas`()
 BEGIN
     SELECT
         hc.id_historia_clinica,
-        hc.fecha_ultima_consulta,
-        p.nombre AS nombre_paciente,
-        p.apellido AS apellido_paciente,
-        u.nombre AS nombre_cuidador,
-        u.apellido AS apellido_cuidador,
+        DATE_FORMAT(hc.fecha_ultima_consulta, '%d/%m/%Y') AS fecha_formateada,
+        CONCAT(p.nombre, ' ', p.apellido) AS paciente_nombre_completo,
+        CONCAT(u.nombre, ' ', u.apellido) AS cuidador_nombre_completo,
+        hc.estado_salud,
         (SELECT GROUP_CONCAT(m.nombre_medicamento SEPARATOR ', ') FROM tb_historia_clinica_medicamento hcm JOIN tb_medicamento m ON hcm.id_medicamento = m.id_medicamento WHERE hcm.id_historia_clinica = hc.id_historia_clinica) AS medicamentos,
         (SELECT GROUP_CONCAT(e.nombre_enfermedad SEPARATOR ', ') FROM tb_historia_clinica_enfermedad hce JOIN tb_enfermedad e ON hce.id_enfermedad = e.id_enfermedad WHERE hce.id_historia_clinica = hc.id_historia_clinica) AS enfermedades
     FROM tb_historia_clinica hc
     JOIN tb_paciente p ON hc.id_paciente = p.id_paciente
     LEFT JOIN tb_usuario u ON hc.id_usuario_cuidador = u.id_usuario
-    WHERE hc.estado = 'Activo';
+    WHERE hc.estado = 'Activo'
+    ORDER BY hc.id_historia_clinica DESC;
 END$$
 DELIMITER ;
 

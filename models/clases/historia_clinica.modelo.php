@@ -32,10 +32,13 @@ class ModeloHistoriaClinica
         $stmt->bindParam(":id_usuario_cuidador", $datos["id_usuario_cuidador"], PDO::PARAM_INT);
         $stmt->bindParam(":estado_salud", $datos["estado_salud"], PDO::PARAM_STR);
         $stmt->bindParam(":condiciones", $datos["condiciones"], PDO::PARAM_STR);
-        // ... (resto de los bindParam se mantienen igual, excepto la fecha) ...
+        $stmt->bindParam(":antecedentes_medicos", $datos["antecedentes_medicos"], PDO::PARAM_STR);
+        $stmt->bindParam(":alergias", $datos["alergias"], PDO::PARAM_STR);
+        $stmt->bindParam(":dietas_especiales", $datos["dietas_especiales"], PDO::PARAM_STR);
         $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
         $stmt->bindParam(":medicamentos_ids", $datos["medicamentos_ids"], PDO::PARAM_STR);
         $stmt->bindParam(":enfermedades_ids", $datos["enfermedades_ids"], PDO::PARAM_STR);
+
 
         if ($stmt->execute()) {
             return "ok";
