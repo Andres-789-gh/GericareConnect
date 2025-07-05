@@ -65,33 +65,27 @@ class ModeloHistoriaClinica
     /*=============================================
     EDITAR HISTORIA CLINICA (COMPLETO)
     =============================================*/
-    static public function mdlEditarHistoriaClinica($tabla, $datos)
+    static public function mdlEditarHistoriaClinica($datos)
     {
-        // La consulta UPDATE ahora incluye todas las columnas que queremos modificar
+        // Llamada al nuevo procedimiento almacenado para la actualización completa
         $stmt = Conexion::conectar()->prepare(
-            "UPDATE $tabla SET 
-                estado_salud = :estado_salud, 
-                condiciones = :condiciones,
-                antecedentes_medicos = :antecedentes_medicos,
-                alergias = :alergias,
-                dietas_especiales = :dietas_especiales,
-                observaciones = :observaciones
-            WHERE id_historia_clinica = :id_historia_clinica"
+            "CALL actualizar_historia_clinica_completa(:id_historia_clinica, :estado_salud, :condiciones, :antecedentes_medicos, :alergias, :dietas_especiales, :observaciones, :medicamentos_ids, :enfermedades_ids)"
         );
 
-        // Enlazamos todos los parámetros
+        // Enlazamos todos los parámetros necesarios
+        $stmt->bindParam(":id_historia_clinica", $datos["id_historia_clinica"], PDO::PARAM_INT);
         $stmt->bindParam(":estado_salud", $datos["estado_salud"], PDO::PARAM_STR);
         $stmt->bindParam(":condiciones", $datos["condiciones"], PDO::PARAM_STR);
         $stmt->bindParam(":antecedentes_medicos", $datos["antecedentes_medicos"], PDO::PARAM_STR);
         $stmt->bindParam(":alergias", $datos["alergias"], PDO::PARAM_STR);
         $stmt->bindParam(":dietas_especiales", $datos["dietas_especiales"], PDO::PARAM_STR);
         $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
-        $stmt->bindParam(":id_historia_clinica", $datos["id_historia_clinica"], PDO::PARAM_INT);
+        $stmt->bindParam(":medicamentos_ids", $datos["medicamentos_ids"], PDO::PARAM_STR);
+        $stmt->bindParam(":enfermedades_ids", $datos["enfermedades_ids"], PDO::PARAM_STR);
 
         if ($stmt->execute()) {
             return "ok";
         } else {
-            // Esto es útil para depurar si algo sale mal en la base de datos
             error_log(print_r($stmt->errorInfo(), true));
             return "error";
         }
@@ -122,5 +116,30 @@ class ModeloHistoriaClinica
         $stmt = Conexion::conectar()->prepare("SELECT id_paciente, nombre, apellido FROM tb_paciente WHERE estado = 'Activo' ORDER BY nombre ASC");
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    // *** NUEVAS FUNCIONES PARA OBTENER DATOS PARA EDICIÓN ***
+    static public function mdlMostrarMedicamentosPorHistoria($id_historia_clinica) {
+        $stmt = Conexion::conectar()->prepare("
+            SELECT m.id_medicamento as id, m.nombre_medicamento as nombre
+            FROM tb_historia_clinica_medicamento hcm
+            JOIN tb_medicamento m ON hcm.id_medicamento = m.id_medicamento
+            WHERE hcm.id_historia_clinica = :id_historia_clinica AND hcm.estado = 'Activo'
+        ");
+        $stmt->bindParam(":id_historia_clinica", $id_historia_clinica, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    static public function mdlMostrarEnfermedadesPorHistoria($id_historia_clinica) {
+        $stmt = Conexion::conectar()->prepare("
+            SELECT e.id_enfermedad as id, e.nombre_enfermedad as nombre
+            FROM tb_historia_clinica_enfermedad hce
+            JOIN tb_enfermedad e ON hce.id_enfermedad = e.id_enfermedad
+            WHERE hce.id_historia_clinica = :id_historia_clinica AND hce.estado = 'Activo'
+        ");
+        $stmt->bindParam(":id_historia_clinica", $id_historia_clinica, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
