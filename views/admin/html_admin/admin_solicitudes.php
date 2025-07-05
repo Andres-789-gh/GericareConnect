@@ -46,7 +46,7 @@ verificarAcceso(['Administrador']);
         </div>
         <nav>
             <ul>
-                <li><a href="admin_pacientes.html"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+                <li><a href="admin_pacientes.php"><i class="fas fa-user-injured"></i> Pacientes</a></li>
                 <li><a href="admin_solicitudes.php" class="active"><i class="fas fa-envelope-open-text"></i> Solicitudes</a></li>
                 <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>

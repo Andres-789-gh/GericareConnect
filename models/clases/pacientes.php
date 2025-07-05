@@ -8,10 +8,6 @@ class Paciente {
         $this->conn = $conn;
     }
 
-    /**
-     * CORRECCIÓN FINAL: Consulta todos los pacientes activos.
-     * Ahora llama al procedimiento SIN enviar parámetros.
-     */
     public function consultar() {
         try {
             $query = $this->conn->prepare("CALL consultar_pacientes()");
@@ -23,7 +19,7 @@ class Paciente {
     }
 
     /**
-     * Obtiene los datos de un único paciente por su ID para el modo de edición.
+     * Obtiene los datos de un único paciente por su ID 
      */
     public function obtenerPorId($id_paciente) {
         try {
@@ -36,7 +32,7 @@ class Paciente {
     }
 
     /**
-     * Registra un nuevo paciente en la base de datos (SIN alergias).
+     * Registra un nuevo paciente en la base de datos
      */
     public function registrar($datos) {
         try {
@@ -54,7 +50,7 @@ class Paciente {
     }
 
     /**
-     * Actualiza los datos de un paciente existente (SIN alergias).
+     * Actualiza los datos de un paciente existente 
      */
     public function actualizar($datos) {
         try {
@@ -72,9 +68,6 @@ class Paciente {
         }
     }
 
-    /**
-     * Desactiva un paciente (borrado lógico).
-     */
     public function desactivar($id_paciente) {
         try {
             $query = $this->conn->prepare("CALL desactivar_paciente(?)");
