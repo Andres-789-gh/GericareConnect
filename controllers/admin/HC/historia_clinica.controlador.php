@@ -5,33 +5,32 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . "/../../models/clases/historia_clinica.modelo.php";
+// Se requiere el modelo para poder crear una instancia de él.
+require_once __DIR__ . "/../../../models/clases/historia_clinica_modelo.php";
 
 class ControladorHistoriaClinica
 {
 
-    /*=============================================
-    MOSTRAR HISTORIAS CLINICAS
-    =============================================*/
+    // MOSTRAR HISTORIAS CLINICAS
+    // El método del controlador puede seguir siendo estático por conveniencia.
     static public function ctrMostrarHistoriasClinicas($item, $valor)
     {
-        $tabla = "tb_historia_clinica";
-        $respuesta = ModeloHistoriaClinica::mdlMostrarHistoriasClinicas($tabla, $item, $valor);
+        // 1. Se crea una instancia del modelo.
+        $modelo = new ModeloHistoriaClinica();
+        // 2. Se llama al método desde el objeto instanciado.
+        $respuesta = $modelo->mdlMostrarHistoriasClinicas($item, $valor);
         return $respuesta;
     }
 
-    /*=============================================
-    CREAR HISTORIA CLINICA
-    =============================================*/
+    // CREAR HISTORIA CLINICA
     static public function ctrCrearHistoriaClinica()
     {
         if (isset($_POST["id_paciente"])) {
-            $medicamentos_ids = $_POST["medicamentos_seleccionados_ids"] ?? "";
-            $enfermedades_ids = $_POST["enfermedades_seleccionadas_ids"] ?? "";
             
-            $id_cuidador = $_SESSION["id_usuario"] ?? 0;
+            // quien crea la historia es el administrador logueado.
+            $id_admin = $_SESSION["id_usuario"] ?? 0;
 
-            if ($id_cuidador == 0) {
+            if ($id_admin == 0) {
                 echo '<script>
                     alert("Error: Sesión de usuario inválida. Por favor, inicie sesión de nuevo.");
                     window.location = "historia_clinica.php";
@@ -41,18 +40,21 @@ class ControladorHistoriaClinica
 
             $datos = array(
                 "id_paciente" => $_POST["id_paciente"],
-                "id_usuario_cuidador" => $id_cuidador,
+                "id_usuario_administrador" => $id_admin, // Se usa el ID del admin logueado
                 "estado_salud" => $_POST["estado_salud"],
                 "condiciones" => $_POST["condiciones"],
                 "antecedentes_medicos" => $_POST["antecedentes_medicos"],
                 "alergias" => $_POST["alergias"],
                 "dietas_especiales" => $_POST["dietas_especiales"],
                 "observaciones" => $_POST["observaciones"],
-                "medicamentos_ids" => $medicamentos_ids,
-                "enfermedades_ids" => $enfermedades_ids,
+                "medicamentos_ids" => $_POST["medicamentos_seleccionados_ids"] ?? "",
+                "enfermedades_ids" => $_POST["enfermedades_seleccionadas_ids"] ?? "",
             );
-
-            $respuesta = ModeloHistoriaClinica::mdlCrearHistoriaClinica($datos);
+            
+            // Se crea una instancia del modelo.
+            $modelo = new ModeloHistoriaClinica();
+            // Se llama al método desde el objeto instanciado.
+            $respuesta = $modelo->mdlCrearHistoriaClinica($datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
@@ -71,14 +73,11 @@ class ControladorHistoriaClinica
         }
     }
 
-    /*=============================================
-    EDITAR HISTORIA CLINICA (COMPLETO)
-    =============================================*/
+    // EDITAR HISTORIA CLINICA
     static public function ctrEditarHistoriaClinica()
     {
         if (isset($_POST["id_historia_clinica_editar"])) {
 
-            // Recogemos TODOS los datos del formulario, incluyendo los IDs
             $datos = array(
                 "id_historia_clinica"   => $_POST["id_historia_clinica_editar"],
                 "estado_salud"          => $_POST["estado_salud"],
@@ -91,7 +90,10 @@ class ControladorHistoriaClinica
                 "enfermedades_ids"      => $_POST["enfermedades_seleccionadas_ids"] ?? ""
             );
 
-            $respuesta = ModeloHistoriaClinica::mdlEditarHistoriaClinica($datos);
+            // Se crea una instancia del modelo.
+            $modelo = new ModeloHistoriaClinica();
+            // Se llama al método desde el objeto instanciado.
+            $respuesta = $modelo->mdlEditarHistoriaClinica($datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
@@ -107,14 +109,16 @@ class ControladorHistoriaClinica
         }
     }
 
-    /*=============================================
-    ELIMINAR HISTORIA CLINICA (BORRADO LÓGICO)
-    =============================================*/
+    // ELIMINAR HISTORIA CLINICA
     static public function ctrEliminarHistoriaClinica()
     {
         if (isset($_GET["idHistoriaClinica"])) {
             $idHistoria = $_GET["idHistoriaClinica"];
-            $respuesta = ModeloHistoriaClinica::mdlDesactivarHistoriaClinica($idHistoria);
+            
+            // Se crea una instancia del modelo.
+            $modelo = new ModeloHistoriaClinica();
+            // Se llama al método desde el objeto instanciado.
+            $respuesta = $modelo->mdlDesactivarHistoriaClinica($idHistoria);
 
             if ($respuesta == "ok") {
                 echo '<script>
