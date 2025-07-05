@@ -8,10 +8,18 @@ require_once __DIR__ . "/../../../models/clases/historia_clinica.modelo.php";
 require_once __DIR__ . "/../../../models/clases/medicamento.modelo.php";
 require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['id_historia_clinica_editar'])) {
-    ControladorHistoriaClinica::ctrCrearHistoriaClinica();
+// Lógica para manejar las acciones del formulario (POST) y de la URL (GET)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['id_historia_clinica_editar'])) {
+        // Llama a la función de editar si se envió el formulario de edición
+        ControladorHistoriaClinica::ctrEditarHistoriaClinica();
+    } else if (isset($_POST["id_paciente"])) {
+        // Llama a la función de crear si se envió el formulario de creación
+        ControladorHistoriaClinica::ctrCrearHistoriaClinica();
+    }
 }
 
+// Llama a la función de eliminar si se pasó el ID por la URL
 if (isset($_GET['idHistoriaClinica'])) {
     ControladorHistoriaClinica::ctrEliminarHistoriaClinica();
 }

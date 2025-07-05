@@ -1,22 +1,37 @@
 <?php
+// models/clases/historia_clinica.modelo.php
+
 require_once "conexion.php";
 
 class ModeloHistoriaClinica
 {
 
     /*=============================================
-    MOSTRAR HISTORIAS CLINICAS
+    MOSTRAR HISTORIAS CLINICAS (CORREGIDO Y UNIFICADO)
     =============================================*/
     static public function mdlMostrarHistoriasClinicas($tabla, $item, $valor)
     {
-        // Si se pide una historia específica, se usará en el futuro
+        // Si se pide un item específico (ej: 'id_historia_clinica' = 5)
         if ($item != null) {
-            // Lógica para mostrar una sola historia clínica (a implementar si es necesario)
-            return null;
+            $stmt = Conexion::conectar()->prepare("
+                SELECT 
+                    hc.*, 
+                    CONCAT(p.nombre, ' ', p.apellido) as paciente_nombre_completo 
+                FROM $tabla hc
+                JOIN tb_paciente p ON hc.id_paciente = p.id_paciente
+                WHERE hc.$item = :$item"
+            );
+
+            $stmt->bindParam(":" . $item, $valor, PDO::PARAM_INT);
+            $stmt->execute();
+            // fetch() devuelve una sola fila, perfecto para editar
+            return $stmt->fetch(); 
         } else {
+            // Si no se pide un item, se ejecuta el procedimiento para traer todo
             $stmt = Conexion::conectar()->prepare("CALL mostrar_historias_clinicas()");
             $stmt->execute();
-            return $stmt->fetchAll();
+            // fetchAll() devuelve todas las filas
+            return $stmt->fetchAll(); 
         }
         $stmt = null;
     }
@@ -39,7 +54,6 @@ class ModeloHistoriaClinica
         $stmt->bindParam(":medicamentos_ids", $datos["medicamentos_ids"], PDO::PARAM_STR);
         $stmt->bindParam(":enfermedades_ids", $datos["enfermedades_ids"], PDO::PARAM_STR);
 
-
         if ($stmt->execute()) {
             return "ok";
         } else {
@@ -48,6 +62,42 @@ class ModeloHistoriaClinica
         $stmt = null;
     }
     
+    /*=============================================
+    EDITAR HISTORIA CLINICA (COMPLETO)
+    =============================================*/
+    static public function mdlEditarHistoriaClinica($tabla, $datos)
+    {
+        // La consulta UPDATE ahora incluye todas las columnas que queremos modificar
+        $stmt = Conexion::conectar()->prepare(
+            "UPDATE $tabla SET 
+                estado_salud = :estado_salud, 
+                condiciones = :condiciones,
+                antecedentes_medicos = :antecedentes_medicos,
+                alergias = :alergias,
+                dietas_especiales = :dietas_especiales,
+                observaciones = :observaciones
+            WHERE id_historia_clinica = :id_historia_clinica"
+        );
+
+        // Enlazamos todos los parámetros
+        $stmt->bindParam(":estado_salud", $datos["estado_salud"], PDO::PARAM_STR);
+        $stmt->bindParam(":condiciones", $datos["condiciones"], PDO::PARAM_STR);
+        $stmt->bindParam(":antecedentes_medicos", $datos["antecedentes_medicos"], PDO::PARAM_STR);
+        $stmt->bindParam(":alergias", $datos["alergias"], PDO::PARAM_STR);
+        $stmt->bindParam(":dietas_especiales", $datos["dietas_especiales"], PDO::PARAM_STR);
+        $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
+        $stmt->bindParam(":id_historia_clinica", $datos["id_historia_clinica"], PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return "ok";
+        } else {
+            // Esto es útil para depurar si algo sale mal en la base de datos
+            error_log(print_r($stmt->errorInfo(), true));
+            return "error";
+        }
+        $stmt = null;
+    }
+
     /*=============================================
     DESACTIVAR HISTORIA CLINICA (BORRADO LÓGICO)
     =============================================*/
