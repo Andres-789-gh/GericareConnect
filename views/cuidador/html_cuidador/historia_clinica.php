@@ -225,7 +225,8 @@ if (isset($_GET['idHistoriaClinica'])) {
         }
 
         function quitarItem(tipo, id) {
-            const key = `selected_${tipo}s`;
+            // **LA CORRECCIÓN ESTÁ AQUÍ** // Se elimina la "s" extra para que la clave coincida.
+            const key = `selected_${tipo}`; 
             let items = JSON.parse(localStorage.getItem(key)) || [];
             items = items.filter(item => item.id != id);
             localStorage.setItem(key, JSON.stringify(items));

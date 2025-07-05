@@ -318,3 +318,29 @@ select * from tb_rol;
 select * from tb_telefono;
 select * from tb_paciente;
 
+--INSERTS MANUALES
+
+
+-- Insert sample medicamento
+INSERT INTO tb_medicamento (nombre_medicamento, descripcion_medicamento, estado) VALUES
+('Paracetamol', 'Analgésico y antipirético', 'Activo'),
+('Losartán', 'Medicamento para la presión arterial', 'Activo'),
+('Insulina Glargina', 'Para el control de la diabetes', 'Activo');
+
+-- Insert sample enefermedades
+INSERT INTO tb_enfermedad (nombre_enfermedad, descripcion_enfermedad, estado) VALUES
+('Diabetes Mellitus Tipo 2', 'Enfermedad crónica que afecta la forma en que el cuerpo procesa el azúcar en la sangre', 'Activo'),
+('Hipertensión Arterial', 'Condición crónica en la que la presión en las arterias es consistentemente alta', 'Activo'),
+('Artrosis de Rodilla', 'Enfermedad degenerativa de las articulaciones', 'Activo');
+
+-- Insert sample paciente
+
+INSERT INTO tb_paciente (
+    documento_identificacion, nombre, apellido, fecha_nacimiento, genero,
+    contacto_emergencia, estado_civil, tipo_sangre, seguro_medico,
+    numero_seguro, id_usuario_familiar, estado
+) VALUES (
+    123456789, 'Elena', 'Díaz', '1945-11-20', 'Femenino',
+    '3109876543', 'Viuda', 'O+', 'Seguros Vitality',
+    'SGV-789012', 3, 'Activo'
+);
