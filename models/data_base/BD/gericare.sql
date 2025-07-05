@@ -62,7 +62,7 @@ create table tb_entrada_salida_paciente (
 create table tb_historia_clinica (
     id_historia_clinica int primary key auto_increment,
     id_paciente int not null,
-    id_usuario_cuidador int null,
+    id_usuario_administrador int null,
     estado_salud text null,
     condiciones text null,
     antecedentes_medicos text null,
@@ -72,6 +72,7 @@ create table tb_historia_clinica (
     observaciones text null,
     estado enum('Activo','Inactivo') default 'Activo'
 );
+
 
 -- tabla cirugia
 create table tb_historia_clinica_cirugia (
@@ -201,8 +202,8 @@ alter table tb_historia_clinica
     foreign key (id_paciente) references tb_paciente(id_paciente);
 
 alter table tb_historia_clinica
-    add constraint fk_historia_clinica_usuario_cuidador
-    foreign key (id_usuario_cuidador) references tb_usuario(id_usuario);
+    add constraint fk_historia_clinica_usuario_administrador
+    foreign key (id_usuario_administrador) references tb_usuario(id_usuario);
 
 alter table tb_historia_clinica_medicamento
     add constraint fk_hc_medicamento_historia_clinica
@@ -317,8 +318,9 @@ select * from tb_usuario;
 select * from tb_rol;
 select * from tb_telefono;
 select * from tb_paciente;
+select * from tb_entrada_salida_paciente;
 
---INSERTS MANUALES
+-- INSERTS MANUALES
 
 
 -- Insert sample medicamento
