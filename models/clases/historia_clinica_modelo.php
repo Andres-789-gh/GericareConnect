@@ -15,7 +15,7 @@ class ModeloHistoriaClinica {
      */
     public function __construct() {
         // Se utiliza __DIR__ para asegurar que la ruta al archivo de la base de datos sea siempre la correcta.
-        require_once(__DIR__ . '/../data_base/database.php');
+        require(__DIR__ . '/../data_base/database.php');
         $this->conn = $conn;
     }
 
