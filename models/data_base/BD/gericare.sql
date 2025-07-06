@@ -319,6 +319,11 @@ select * from tb_rol;
 select * from tb_telefono;
 select * from tb_paciente;
 select * from tb_entrada_salida_paciente;
+select * from tb_historia_clinica;
+select * from tb_enfermedad;
+select * from tb_medicamento;
+select * from tb_historia_clinica_medicamento;
+select * from tb_historia_clinica_enfermedad;
 
 -- INSERTS MANUALES
 

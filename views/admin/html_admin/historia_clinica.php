@@ -75,6 +75,100 @@ $pacientes = $modelo->mdlObtenerPacientesActivos();
             </table>
         </div>
     </div>
-    <script>$(document).ready(function() { $('.select2-paciente').select2({ placeholder: "Escriba o seleccione un paciente", allowClear: true }); });</script>
+    
+    <script>
+        // Se ejecuta cuando la página se carga por completo
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Inicializa Select2 para la búsqueda de pacientes
+            $('.select2-paciente').select2({
+                placeholder: "Escribe o selecciona un paciente",
+                allowClear: true
+            });
+
+            // 2. Restaura el estado del formulario si existe en sessionStorage
+            restaurarEstadoFormulario();
+
+            // 3. Carga los medicamentos y enfermedades seleccionados desde localStorage
+            cargarSelecciones();
+
+            // Limpia el sessionStorage una vez que el formulario se envía con éxito para no restaurar datos viejos en un nuevo formulario.
+            document.getElementById('historiaClinicaForm').addEventListener('submit', () => {
+                sessionStorage.removeItem('historiaClinicaFormData');
+            });
+        });
+
+        /**
+         * Guarda el estado actual del formulario en sessionStorage y redirige
+         * a la página de gestión de items (medicamentos/enfermedades).
+         * @param {string} tipo - 'medicamento' o 'enfermedad'.
+         */
+        function gestionarItems(tipo) {
+            const form = document.getElementById('historiaClinicaForm');
+            const formData = new FormData(form);
+            const formObject = Object.fromEntries(formData.entries());
+            
+            // Guarda los datos del formulario en sessionStorage
+            sessionStorage.setItem('historiaClinicaFormData', JSON.stringify(formObject));
+
+            // Construye la URL de retorno para que la página de gestión sepa a dónde volver
+            const returnUrl = window.location.pathname + window.location.search;
+            window.location.href = `${tipo}.php?return_url=${encodeURIComponent(returnUrl)}`;
+        }
+
+        /**
+         * Lee los datos guardados en sessionStorage y rellena el formulario.
+         */
+        function restaurarEstadoFormulario() {
+            const savedData = sessionStorage.getItem('historiaClinicaFormData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                const form = document.getElementById('historiaClinicaForm');
+                for (const key in formData) {
+                    if (form.elements[key]) {
+                        // Para el select de paciente, necesitamos activar Select2
+                        if (key === 'id_paciente') {
+                            $(form.elements[key]).val(formData[key]).trigger('change');
+                        } else {
+                            form.elements[key].value = formData[key];
+                        }
+                    }
+                }
+            }
+        }
+
+        // --- Las funciones para manejar localStorage se mantienen muy similares ---
+
+        function cargarSelecciones() {
+            const medicamentos = JSON.parse(localStorage.getItem('selected_medicamentos')) || [];
+            const enfermedades = JSON.parse(localStorage.getItem('selected_enfermedades')) || [];
+            
+            actualizarVistaSeleccion('medicamentos', medicamentos);
+            actualizarVistaSeleccion('enfermedades', enfermedades);
+        }
+
+        function actualizarVistaSeleccion(tipo, items) {
+            const container = document.getElementById(`${tipo}-seleccionados`);
+            const idsInput = document.getElementById(`${tipo}_seleccionados_ids`);
+            if (!container || !idsInput) return;
+
+            container.innerHTML = '';
+            let ids = items.map(item => {
+                const tag = document.createElement('span');
+                tag.className = 'selected-item';
+                tag.innerHTML = `${item.nombre} <span class="remove-item" onclick="quitarItem('${tipo}', ${item.id})">×</span>`;
+                container.appendChild(tag);
+                return item.id;
+            });
+            idsInput.value = ids.join(',');
+        }
+
+        function quitarItem(tipo, id) {
+            const key = `selected_${tipo}`;
+            let items = JSON.parse(localStorage.getItem(key)) || [];
+            items = items.filter(item => item.id != id);
+            localStorage.setItem(key, JSON.stringify(items));
+            cargarSelecciones();
+        }
+    </script>
 </body>
 </html>

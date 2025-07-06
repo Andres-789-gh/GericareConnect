@@ -115,6 +115,30 @@ $enfermedadesActuales = $modelo->mdlMostrarEnfermedadesPorHistoria($idHistoriaCl
             localStorage.setItem(key, JSON.stringify(items));
             cargarSelecciones();
         }
+
+        // Este bloque se encarga de cargar los datos existentes en la página de edición.
+        (function() {
+            // Convertimos los datos de PHP a JavaScript de forma segura
+            const medicamentosGuardados = <?= json_encode($medicamentosActuales) ?>;
+            const enfermedadesGuardadas = <?= json_encode($enfermedadesActuales) ?>;
+
+            // Limpiamos el almacenamiento local para no mezclar con otras historias
+            localStorage.removeItem('selected_medicamentos');
+            localStorage.removeItem('selected_enfermedades');
+
+            // Si hay datos guardados, los ponemos en el formato que usa el script y los guardamos
+            if (medicamentosGuardados && medicamentosGuardados.length > 0) {
+                const medicamentosParaStorage = medicamentosGuardados.map(item => ({ id: item.id, nombre: item.nombre }));
+                localStorage.setItem('selected_medicamentos', JSON.stringify(medicamentosParaStorage));
+            }
+            if (enfermedadesGuardadas && enfermedadesGuardadas.length > 0) {
+                const enfermedadesParaStorage = enfermedadesGuardadas.map(item => ({ id: item.id, nombre: item.nombre }));
+                localStorage.setItem('selected_enfermedades', JSON.stringify(enfermedadesParaStorage));
+            }
+            
+            // Finalmente, llamamos a la función que dibuja los items en la pantalla
+            cargarSelecciones();
+        })();
     </script>
 </body>
 </html>
