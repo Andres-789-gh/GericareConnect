@@ -19,6 +19,23 @@ class ModeloHistoriaClinica {
         $this->conn = $conn;
     }
 
+    public function obtenerPorId($id_historia) {
+        try {
+            $sql = "SELECT hc.*, CONCAT(p.nombre, ' ', p.apellido) AS paciente_nombre_completo
+                    FROM tb_historia_clinica hc
+                    JOIN tb_paciente p ON hc.id_paciente = p.id_paciente
+                    WHERE hc.id_historia_clinica = :id_historia";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":id_historia", $id_historia, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve una sola fila
+        } catch (PDOException $e) {
+            error_log("Error en obtenerPorId de HistoriaClinica: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function mdlRegistrarHistoriaClinica($datos) {
         try {
             $stmt = $this->conn->prepare("CALL registrar_historia_clinica(:id_paciente, :id_usuario_administrador, :estado_salud, :condiciones, :antecedentes_medicos, :alergias, :dietas_especiales, :fecha_ultima_consulta, :observaciones)");
