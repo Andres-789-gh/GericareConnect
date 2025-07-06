@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../../controllers/admin/medicamento.controlador.php";
+require_once __DIR__ . "/../../../controllers/admin/HC/medicamento.controlador.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_medicamento_editar']) && !empty($_POST['id_medicamento_editar'])) {
@@ -86,9 +86,8 @@ if (isset($_GET['idEliminar'])) {
                     ?>
                 </tbody>
             </table>
-            <!-- Botón de exportación añadido -->
             <div class="export-button" style="margin-top: 20px; text-align: right;">
-                <a href="../../../controllers/admin/exportar_medicamentos.php" class="btn btn-success">
+                <a href="../../../controllers/admin/HC/exportar_medicamentos.php" class="btn btn-success">
                     <i class="fas fa-file-excel"></i> Exportar a Excel
                 </a>
             </div>

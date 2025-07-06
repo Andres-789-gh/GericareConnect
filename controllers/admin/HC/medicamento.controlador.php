@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../../models/clases/medicamento.modelo.php";
+require_once __DIR__ . "/../../../models/clases/medicamento.modelo.php";
 
 class ControladorMedicamentosAdmin {
 
@@ -17,7 +17,8 @@ class ControladorMedicamentosAdmin {
                 "estado" => "Activo"
             );
 
-            $respuesta = ModeloMedicamentos::mdlCrearMedicamento($tabla, $datos);
+            $modelo = new ModeloMedicamentos();
+            $respuesta = $modelo->mdlCrearMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
@@ -37,7 +38,8 @@ class ControladorMedicamentosAdmin {
      */
     static public function ctrMostrarMedicamentos($item, $valor) {
         $tabla = "tb_medicamento";
-        return ModeloMedicamentos::mdlMostrarMedicamentos($tabla, $item, $valor);
+        $modelo = new ModeloMedicamentos();
+        return $modelo->mdlMostrarMedicamentos($tabla, $item, $valor);
     }
 
     /**
@@ -53,7 +55,8 @@ class ControladorMedicamentosAdmin {
                 "descripcion_medicamento" => $_POST["descripcion_medicamento"]
             );
 
-            $respuesta = ModeloMedicamentos::mdlEditarMedicamento($tabla, $datos);
+            $modelo = new ModeloMedicamentos();
+            $respuesta = $modelo->mdlEditarMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
@@ -80,7 +83,8 @@ class ControladorMedicamentosAdmin {
                 "estado" => "Inactivo"
             );
 
-            $respuesta = ModeloMedicamentos::mdlActualizarEstadoMedicamento($tabla, $datos);
+            $modelo = new ModeloMedicamentos();
+            $respuesta = $modelo->mdlActualizarEstadoMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
