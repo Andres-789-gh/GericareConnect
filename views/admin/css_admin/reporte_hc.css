@@ -1,0 +1,129 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e9ecef;
+    color: #333;
+    margin: 0;
+    padding: 2rem;
+}
+
+.report-container {
+    max-width: 800px;
+    margin: auto;
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.report-header {
+    text-align: center;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+.report-header h1 {
+    color: #007bff;
+    margin: 0;
+}
+.header-info {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-around;
+    color: #555;
+}
+
+.report-section {
+    margin-bottom: 2rem;
+}
+.report-section h2 {
+    font-size: 1.4rem;
+    color: #343a40;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1rem;
+}
+.detail-block {
+    margin-top: 1rem;
+}
+.detail-block h4 {
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+    color: #495057;
+}
+.detail-block p {
+    margin: 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    white-space: pre-wrap;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+ul li {
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.medicamentos-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+.medicamento-item {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 1rem;
+}
+.medicamento-item h4 { margin: 0 0 0.5rem 0; color: #007bff; }
+.medicamento-item p { margin: 0.25rem 0; }
+
+.report-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-primary { background-color: #007bff; color: white; }
+.btn-secondary { background-color: #6c757d; color: white; }
+
+@media print {
+    body {
+        background-color: #fff;
+        padding: 0;
+    }
+    .report-container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+    }
+    .report-footer {
+        display: none;
+    }
+}
