@@ -1,28 +1,26 @@
 <?php
-// views/admin/html_admin/medicamento.php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Mantener la seguridad y carga de controladores
 require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
 verificarAcceso(['Administrador']);
 require_once __DIR__ . "/../../../controllers/admin/HC/medicamento.controlador.php";
 
-// Lógica para procesar formularios (sin cambios)
+// Se crea una instancia del controlador para usarla en toda la página
+$controlador = new ControladorMedicamentos();
+
+// Lógica para procesar formularios
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_medicamento_editar']) && !empty($_POST['id_medicamento_editar'])) {
-        ControladorMedicamentos::ctrEditarMedicamento();
+        $controlador->ctrEditarMedicamento();
     } else {
-        ControladorMedicamentos::ctrCrearMedicamento();
+        $controlador->ctrCrearMedicamento();
     }
 }
 if (isset($_GET['idEliminar'])) {
-    $controlador = new ControladorMedicamentos();
     $controlador->ctrEliminarMedicamento();
 }
 
-// Obtener la URL de retorno para el botón "Volver"
 $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
 ?>
 <!DOCTYPE html>
@@ -72,7 +70,8 @@ $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
                 </thead>
                 <tbody>
                     <?php
-                    $medicamentos = ControladorMedicamentos::ctrMostrarMedicamentos(null, null);
+                    // Se llama al método desde la instancia creada al inicio
+                    $medicamentos = $controlador->ctrMostrarMedicamentos(null, null);
                     if (is_array($medicamentos)):
                         foreach ($medicamentos as $medicamento):
                     ?>
@@ -130,7 +129,6 @@ $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
                 }
             });
 
-            // Lógica para el formulario de edición (sin cambios)
             document.querySelectorAll('.btn-editar').forEach(button => {
                 button.addEventListener('click', function() {
                     document.getElementById('form-title').textContent = 'Editar Medicamento';

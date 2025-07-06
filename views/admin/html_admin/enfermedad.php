@@ -1,6 +1,4 @@
 <?php
-// views/admin/html_admin/enfermedad.php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -8,20 +6,21 @@ require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
 verificarAcceso(['Administrador']);
 require_once __DIR__ . "/../../../controllers/admin/HC/enfermedad.controlador.php";
 
+// Se crea una instancia del controlador para usarla en toda la página
+$controlador = new ControladorEnfermedades();
+
 // Lógica para procesar formularios
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_enfermedad_editar']) && !empty($_POST['id_enfermedad_editar'])) {
-        ControladorEnfermedades::ctrEditarEnfermedad();
+        $controlador->ctrEditarEnfermedad();
     } else {
-        ControladorEnfermedades::ctrCrearEnfermedad();
+        $controlador->ctrCrearEnfermedad();
     }
 }
 if (isset($_GET['idEliminarEnfermedad'])) {
-    $controlador = new ControladorEnfermedades();
     $controlador->ctrEliminarEnfermedad();
 }
 
-// Obtener la URL de retorno
 $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
 ?>
 <!DOCTYPE html>
@@ -71,7 +70,8 @@ $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
                 </thead>
                 <tbody>
                     <?php
-                    $enfermedades = ControladorEnfermedades::ctrMostrarEnfermedades(null, null);
+                    // Se llama al método desde la instancia creada al inicio
+                    $enfermedades = $controlador->ctrMostrarEnfermedades(null, null);
                     if (is_array($enfermedades)):
                         foreach ($enfermedades as $enfermedad):
                     ?>
@@ -129,7 +129,6 @@ $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
                 }
             });
 
-            // Lógica para el formulario de edición
             document.querySelectorAll('.btn-editar').forEach(button => {
                 button.addEventListener('click', function() {
                     document.getElementById('form-title').textContent = 'Editar Enfermedad';
