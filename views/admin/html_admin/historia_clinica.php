@@ -1,6 +1,6 @@
 <?php
 // Incluir el controlador para acceder a las funciones de consulta
-require_once __DIR__ . '/../../../../controllers/admin/HC/historia_clinica_controlador.php';
+require_once __DIR__ . '/../../../controllers/admin/HC/historia_clinica_controlador.php';
 
 // Crear una instancia del controlador para poder usar sus métodos
 $controller = new HistoriaClinicaController();
@@ -96,7 +96,6 @@ $historias_clinicas = $controller->consultarHistoriasClinicas();
         </main>
     </div>
 
-    <!-- Incluir el nuevo archivo JavaScript -->
     <script src="../js_admin/historia_clinica.js"></script>
 </body>
 

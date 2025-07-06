@@ -77,5 +77,21 @@ class Paciente {
             throw new Exception("Error al desactivar paciente: " . $e->getMessage());
         }
     }
+
+    public function consultarPacientesActivos()
+    {
+        try {
+            // Llama al procedimiento almacenado usando PDO
+            $stmt = $this->conn->prepare("CALL ConsultarPacientesActivos()");
+            $stmt->execute();
+            // Devuelve un array con los pacientes activos
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Es una buena práctica manejar posibles excepciones.
+            // Aquí se podría registrar el error para depuración.
+            error_log("Error en consultarPacientesActivos: " . $e->getMessage());
+            return []; // Devuelve un array vacío en caso de error.
+        }
+    }
 }
 ?>
