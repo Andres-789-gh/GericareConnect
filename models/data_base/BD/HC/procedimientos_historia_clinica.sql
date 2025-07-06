@@ -3,6 +3,8 @@ drop procedure registrar_historia_clinica;
 drop procedure consultar_historia_clinica;
 drop procedure actualizar_historia_clinica;
 drop procedure eliminar_historia_clinica;
+drop procedure obtener_enfermedades_por_historia;
+drop procedure obtener_medicamentos_por_historia;
 */
 delimiter $$
 
@@ -107,6 +109,53 @@ begin
     update tb_historia_clinica
     set estado = 'Inactivo'
     where id_historia_clinica = p_id_historia_clinica;
+end$$
+
+delimiter ;
+
+delimiter $$
+
+create procedure obtener_medicamentos_por_historia(
+    in p_id_historia_clinica int
+)
+begin
+    select
+        m.id_medicamento,
+        m.nombre_medicamento,
+        m.descripcion_medicamento,
+        hcm.dosis,
+        hcm.frecuencia,
+        hcm.instrucciones
+    from
+        tb_historia_clinica_medicamento as hcm
+    join
+        tb_medicamento as m on hcm.id_medicamento = m.id_medicamento
+    where
+        hcm.id_historia_clinica = p_id_historia_clinica
+        and hcm.estado = 'Activo';
+end$$
+
+delimiter ;
+
+delimiter $$
+
+create procedure obtener_enfermedades_por_historia(
+    in p_id_historia_clinica int
+)
+begin
+    select
+        e.id_enfermedad,
+        e.nombre_enfermedad,
+        e.descripcion_enfermedad,
+        hce.fecha_diagnostico,
+        hce.observaciones
+    from
+        tb_historia_clinica_enfermedad as hce
+    join
+        tb_enfermedad as e on hce.id_enfermedad = e.id_enfermedad
+    where
+        hce.id_historia_clinica = p_id_historia_clinica
+        and hce.estado = 'Activo';
 end$$
 
 delimiter ;
