@@ -248,6 +248,11 @@ $pacientes = $modelo->mdlObtenerPacientesActivos();
             localStorage.setItem(key, JSON.stringify(items));
             cargarSelecciones();
         }
+
+        // Escucha eventos de la ventana para recargar las selecciones
+        window.addEventListener('pageshow', function(event) {
+            cargarSelecciones();
+        });
     </script>
 </body>
 </html>
