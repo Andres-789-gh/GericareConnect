@@ -1,127 +1,94 @@
 <?php
-/**
- * Modelo para gestionar las operaciones de la Historia Clínica en la base de datos.
- * Se conecta a la base de datos y utiliza los procedimientos almacenados definidos
- * en 'procedimientos_historia_clinica.sql'.
- */
-class ModeloHistoriaClinica {
+require_once __DIR__ . '/../../data_base/database.php';
 
-    // Propiedad para guardar la conexión a la BD
-    protected $conn;
+class HistoriaClinica
+{
+    // ... (propiedades existentes: id_historia_clinica, id_paciente, etc.)
+    private $id_historia_clinica;
+    private $id_paciente;
+    private $fecha_creacion;
+    private $fecha_actualizacion;
+    private $motivo_consulta;
+    private $antecedentes_medicos;
+    private $examen_fisico;
+    private $diagnostico;
+    private $plan_tratamiento;
+    private $db;
 
-    /**
-     * Constructor de la clase.
-     * Se ejecuta al crear un nuevo objeto e inicializa la conexión a la base de datos.
-     */
-    public function __construct() {
-        // Se utiliza __DIR__ para asegurar que la ruta al archivo de la base de datos sea siempre la correcta.
-        require(__DIR__ . '/../data_base/database.php');
-        $this->conn = $conn;
+    public function __construct()
+    {
+        $this->db = Database::getInstance()->getConn();
     }
 
-    public function obtenerPorId($id_historia) {
-        try {
-            $sql = "SELECT hc.*, CONCAT(p.nombre, ' ', p.apellido) AS paciente_nombre_completo
-                    FROM tb_historia_clinica hc
-                    JOIN tb_paciente p ON hc.id_paciente = p.id_paciente
-                    WHERE hc.id_historia_clinica = :id_historia";
-            
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":id_historia", $id_historia, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve una sola fila
-        } catch (PDOException $e) {
-            error_log("Error en obtenerPorId de HistoriaClinica: " . $e->getMessage());
-            return false;
-        }
+    // ... (setters y getters existentes)
+    public function setIdHistoriaClinica($id) { $this->id_historia_clinica = $id; }
+    public function setIdPaciente($id) { $this->id_paciente = $id; }
+    public function setFechaCreacion($fecha) { $this->fecha_creacion = $fecha; }
+    public function setFechaActualizacion($fecha) { $this->fecha_actualizacion = $fecha; }
+    public function setMotivoConsulta($motivo) { $this->motivo_consulta = $motivo; }
+    public function setAntecedentesMedicos($antecedentes) { $this->antecedentes_medicos = $antecedentes; }
+    public function setExamenFisico($examen) { $this->examen_fisico = $examen; }
+    public function setDiagnostico($diagnostico) { $this->diagnostico = $diagnostico; }
+    public function setPlanTratamiento($plan) { $this->plan_tratamiento = $plan; }
+
+
+    public function registrarHistoriaClinica()
+    {
+        $stmt = $this->db->prepare("CALL RegistrarHistoriaClinica(?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param(
+            "issssss",
+            $this->id_paciente,
+            $this->fecha_creacion,
+            $this->motivo_consulta,
+            $this->antecedentes_medicos,
+            $this->examen_fisico,
+            $this->diagnostico,
+            $this->plan_tratamiento
+        );
+        return $stmt->execute();
     }
 
-    public function mdlRegistrarHistoriaClinica($datos) {
-        try {
-            $stmt = $this->conn->prepare("CALL registrar_historia_clinica(:id_paciente, :id_usuario_administrador, :estado_salud, :condiciones, :antecedentes_medicos, :alergias, :dietas_especiales, :fecha_ultima_consulta, :observaciones)");
-
-            $stmt->bindParam(":id_paciente", $datos["id_paciente"], PDO::PARAM_INT);
-            $stmt->bindParam(":id_usuario_administrador", $datos["id_usuario_administrador"], PDO::PARAM_INT);
-            $stmt->bindParam(":estado_salud", $datos["estado_salud"], PDO::PARAM_STR);
-            $stmt->bindParam(":condiciones", $datos["condiciones"], PDO::PARAM_STR);
-            $stmt->bindParam(":antecedentes_medicos", $datos["antecedentes_medicos"], PDO::PARAM_STR);
-            $stmt->bindParam(":alergias", $datos["alergias"], PDO::PARAM_STR);
-            $stmt->bindParam(":dietas_especiales", $datos["dietas_especiales"], PDO::PARAM_STR);
-            $stmt->bindParam(":fecha_ultima_consulta", $datos["fecha_ultima_consulta"], PDO::PARAM_STR);
-            $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
-
-            if ($stmt->execute()) {
-                return "ok";
-            } else {
-                return "error";
-            }
-        } catch (PDOException $e) {
-            // Log del error para depuración
-            error_log("Error en mdlRegistrarHistoriaClinica: " . $e->getMessage());
-            return "error";
-        }
+    public function editarHistoriaClinica()
+    {
+        $stmt = $this->db->prepare("CALL EditarHistoriaClinica(?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param(
+            "issssss",
+            $this->id_historia_clinica,
+            $this->fecha_creacion,
+            $this->motivo_consulta,
+            $this->antecedentes_medicos,
+            $this->examen_fisico,
+            $this->diagnostico,
+            $this->plan_tratamiento
+        );
+        return $stmt->execute();
     }
 
-    public function mdlConsultarHistoriaClinica($item, $valor) {
-        try {
-            // Prepara los parámetros para el procedimiento almacenado
-            $id_historia_clinica = ($item === 'id_historia_clinica') ? $valor : null;
-            $busqueda = ($item === 'busqueda') ? $valor : null;
-
-            $stmt = $this->conn->prepare("CALL consultar_historia_clinica(:id_historia_clinica, :busqueda)");
-            
-            $stmt->bindParam(":id_historia_clinica", $id_historia_clinica, PDO::PARAM_INT);
-            $stmt->bindParam(":busqueda", $busqueda, PDO::PARAM_STR);
-            
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        } catch (PDOException $e) {
-            error_log("Error en mdlConsultarHistoriaClinica: " . $e->getMessage());
-            return false;
-        }
+    public function consultarHistoriasClinicas()
+    {
+        $stmt = $this->db->prepare("CALL ConsultarHistoriasClinicas()");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function mdlActualizarHistoriaClinica($datos) {
-        try {
-            $stmt = $this->conn->prepare("CALL actualizar_historia_clinica(:id_historia_clinica, :id_usuario_administrador, :estado_salud, :condiciones, :antecedentes_medicos, :alergias, :dietas_especiales, :fecha_ultima_consulta, :observaciones, :estado)");
-
-            $stmt->bindParam(":id_historia_clinica", $datos["id_historia_clinica"], PDO::PARAM_INT);
-            $stmt->bindParam(":id_usuario_administrador", $datos["id_usuario_administrador"], PDO::PARAM_INT);
-            $stmt->bindParam(":estado_salud", $datos["estado_salud"], PDO::PARAM_STR);
-            $stmt->bindParam(":condiciones", $datos["condiciones"], PDO::PARAM_STR);
-            $stmt->bindParam(":antecedentes_medicos", $datos["antecedentes_medicos"], PDO::PARAM_STR);
-            $stmt->bindParam(":alergias", $datos["alergias"], PDO::PARAM_STR);
-            $stmt->bindParam(":dietas_especiales", $datos["dietas_especiales"], PDO::PARAM_STR);
-            $stmt->bindParam(":fecha_ultima_consulta", $datos["fecha_ultima_consulta"], PDO::PARAM_STR);
-            $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
-            $stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_STR); // ej. 'Activo' o 'Inactivo'
-
-            if ($stmt->execute()) {
-                return "ok";
-            } else {
-                return "error";
-            }
-        } catch (PDOException $e) {
-            error_log("Error en mdlActualizarHistoriaClinica: " . $e->getMessage());
-            return "error";
-        }
+    public function obtenerHistoriaClinicaPorId($id)
+    {
+        $stmt = $this->db->prepare("CALL ObtenerHistoriaClinicaPorID(?)");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
-
-    public function mdlEliminarHistoriaClinica($idHistoria) {
-        try {
-            $stmt = $this->conn->prepare("CALL eliminar_historia_clinica(:id_historia_clinica)");
-            $stmt->bindParam(":id_historia_clinica", $idHistoria, PDO::PARAM_INT);
-
-            if ($stmt->execute()) {
-                return "ok";
-            } else {
-                return "error";
-            }
-        } catch (PDOException $e) {
-            error_log("Error en mdlEliminarHistoriaClinica: " . $e->getMessage());
-            return "error";
-        }
+    
+    // --- NUEVA FUNCIÓN ---
+    public function buscarHistoriasClinicas($term)
+    {
+        $stmt = $this->db->prepare("CALL BuscarHistoriasClinicas(?)");
+        $likeTerm = "%" . $term . "%";
+        $stmt->bind_param("s", $likeTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }
-?>
