@@ -96,5 +96,19 @@ class HistoriaClinica {
             return null;
         }
     }
+
+    /* funcion para ver si un paciente ya tiene una historia clinica activa */
+    public function verificarHcExistente($id_paciente) {
+        try {
+            $stmt = $this->conn->prepare("SELECT 1 FROM tb_historia_clinica WHERE id_paciente = ? AND estado = 'Activo' LIMIT 1");
+            $stmt->execute([$id_paciente]);
+            // fetchColumn() devuelve el valor de la columna o false si no hay fila.
+            return $stmt->fetchColumn() !== false;
+        } catch (Exception $e) {
+            // En caso de error, es más seguro asumir que podría existir para evitar duplicados.
+            error_log("Error en verificarHcExistente: " . $e->getMessage());
+            return true; 
+        }
+    }
 }
 ?>

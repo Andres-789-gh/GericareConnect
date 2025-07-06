@@ -182,5 +182,29 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         <?php endif; ?>
     </div>
     <script src="../js_admin/gestion_hc_detallada.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php if(isset($_SESSION['mensaje'])): ?>
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: '<?= addslashes($_SESSION['mensaje']) ?>',
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+                <?php unset($_SESSION['mensaje']); ?>
+            <?php endif; ?>
+
+            <?php if(isset($_SESSION['error'])): ?>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '<?= addslashes($_SESSION['error']) ?>'
+                });
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+        });
+    </script>
 </body>
 </html>

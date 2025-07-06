@@ -35,6 +35,11 @@ try {
     $modelo = new HistoriaClinica();
 
     if ($accion === 'registrar') {
+        // Verificar si el paciente ya tiene una historia clínica activa
+        if ($modelo->verificarHcExistente($datos['id_paciente'])) {
+            // Si ya existe, lanzar una excepción con el mensaje para el usuario
+            throw new Exception("Este paciente ya tiene una historia clínica activa. Puede buscarla y editarla si es necesario.");
+        }
         $modelo->registrarHistoria($datos);
         $_SESSION['mensaje'] = "Historia clínica registrada con éxito.";
     } elseif ($accion === 'actualizar') {
