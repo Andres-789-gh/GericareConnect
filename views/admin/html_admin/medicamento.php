@@ -116,19 +116,6 @@ $return_url = $_GET['return_url'] ?? 'historia_clinica.php';
             }
             localStorage.setItem(key, JSON.stringify(seleccionados));
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const seleccionados = JSON.parse(localStorage.getItem('selected_medicamentos')) || [];
-            seleccionados.forEach(item => {
-                const row = document.getElementById(`row-medicamento-${item.id}`);
-                if (row) {
-                    const button = row.querySelector('.btn-seleccionar');
-                    button.textContent = 'Quitar';
-                    button.classList.remove('btn-success');
-                    button.classList.add('btn-danger');
-                }
-            });
-
             document.querySelectorAll('.btn-editar').forEach(button => {
                 button.addEventListener('click', function() {
                     document.getElementById('form-title').textContent = 'Editar Medicamento';

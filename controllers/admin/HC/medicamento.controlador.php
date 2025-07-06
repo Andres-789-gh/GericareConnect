@@ -1,95 +1,96 @@
 <?php
 
-require_once __DIR__ . "/../../../models/clases/medicamento.modelo.php";
+require_once __DIR__ . "/../../models/clases/medicamento.modelo.php";
 
-class ControladorMedicamentos
-{
+class ControladorMedicamentosAdmin {
 
-    public function ctrCrearMedicamento()
-    {
+    /**
+     * Controlador para crear un nuevo medicamento.
+     */
+    static public function ctrCrearMedicamento() {
         if (isset($_POST["nombre_medicamento"])) {
             $tabla = "tb_medicamento";
+
             $datos = array(
                 "nombre_medicamento" => $_POST["nombre_medicamento"],
                 "descripcion_medicamento" => $_POST["descripcion_medicamento"],
                 "estado" => "Activo"
             );
 
-            // Se crea una instancia del modelo
-            $modelo = new ModeloMedicamentos();
-            $respuesta = $modelo->mdlCrearMedicamento($tabla, $datos);
+            $respuesta = ModeloMedicamentos::mdlCrearMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
-                // Redirección corregida a la vista de admin
                 echo '<script>
-                    window.location = "../../../views/admin/html_admin/medicamento.php";
+                    window.location = "gestion_medicamentos.php?status=success";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al crear el medicamento.");
-                    window.location = "../../../views/admin/html_admin/medicamento.php";
+                    window.location = "gestion_medicamentos.php";
                 </script>';
             }
         }
     }
 
-    public function ctrEditarMedicamento()
-    {
+    /**
+     * Controlador para mostrar los medicamentos.
+     */
+    static public function ctrMostrarMedicamentos($item, $valor) {
+        $tabla = "tb_medicamento";
+        return ModeloMedicamentos::mdlMostrarMedicamentos($tabla, $item, $valor);
+    }
+
+    /**
+     * Controlador para editar un medicamento existente.
+     */
+    static public function ctrEditarMedicamento() {
         if (isset($_POST["id_medicamento_editar"])) {
             $tabla = "tb_medicamento";
+
             $datos = array(
                 "id_medicamento" => $_POST["id_medicamento_editar"],
                 "nombre_medicamento" => $_POST["nombre_medicamento"],
                 "descripcion_medicamento" => $_POST["descripcion_medicamento"]
             );
-            
-            // Se crea una instancia del modelo
-            $modelo = new ModeloMedicamentos();
-            $respuesta = $modelo->mdlEditarMedicamento($tabla, $datos);
+
+            $respuesta = ModeloMedicamentos::mdlEditarMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../../../views/admin/html_admin/medicamento.php";
+                    window.location = "gestion_medicamentos.php?status=updated";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al editar el medicamento.");
-                    window.location = "../../../views/admin/html_admin/medicamento.php";
+                    window.location = "gestion_medicamentos.php";
                 </script>';
             }
         }
     }
 
-    public function ctrMostrarMedicamentos($item, $valor)
-    {
-        $tabla = "tb_medicamento";
-        // Se crea una instancia del modelo
-        $modelo = new ModeloMedicamentos();
-        return $modelo->mdlMostrarMedicamentos($tabla, $item, $valor);
-    }
-
-    public function ctrEliminarMedicamento()
-    {
+    /**
+     * Controlador para eliminar un medicamento (borrado lógico).
+     */
+    public function ctrEliminarMedicamento() {
         if (isset($_GET["idEliminar"])) {
             $tabla = "tb_medicamento";
+
             $datos = array(
                 "id_medicamento" => $_GET["idEliminar"],
                 "estado" => "Inactivo"
             );
 
-            // Se crea una instancia del modelo
-            $modelo = new ModeloMedicamentos();
-            $respuesta = $modelo->mdlActualizarEstadoMedicamento($tabla, $datos);
+            $respuesta = ModeloMedicamentos::mdlActualizarEstadoMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    alert("Medicamento eliminado correctamente.");
-                    window.location = "../../../views/admin/html_admin/medicamento.php";
+                    alert("Medicamento desactivado correctamente.");
+                    window.location = "gestion_medicamentos.php";
                 </script>';
             } else {
                 echo '<script>
-                    alert("Error al eliminar el medicamento.");
-                    window.location = "../../../views/admin/html_admin/medicamento.php";
+                    alert("Error al desactivar el medicamento.");
+                    window.location = "gestion_medicamentos.php";
                 </script>';
             }
         }

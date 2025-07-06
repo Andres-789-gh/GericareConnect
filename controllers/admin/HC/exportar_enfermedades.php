@@ -1,42 +1,39 @@
 <?php
-// Desactivar informes de errores para no interferir con la descarga del archivo
+// Desactiva la notificación de errores para no corromper el archivo Excel
 error_reporting(0);
 
-// Configuración de cabeceras para indicar que se descargará un archivo Excel
-header("Content-Type: application/vnd.ms-excel; charset=utf-8"); // Usar utf-8 para mejor compatibilidad con Excel
-header("Content-Disposition: attachment; filename=enfermedades_" . date('Ymd_His') . ".xls"); // Nombre de archivo dinámico con fecha y hora
+// Cabeceras para forzar la descarga del archivo como un .xls
+header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+header("Content-Disposition: attachment; filename=reporte_enfermedades_" . date('Y-m-d_His') . ".xls");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-// Iniciar el buffer de salida para capturar todo el contenido antes de enviarlo
+// Inicia el buffer de salida para capturar el HTML
 ob_start();
 
-// Incluir el controlador de enfermedades.
-// Como este archivo de exportación está ahora en la misma carpeta que el controlador,
-// la ruta relativa es simple. El controlador ya incluye el modelo.
+// Incluye el controlador de administrador que ya tiene acceso al modelo
 require_once __DIR__ . "/enfermedad.controlador.php";
 
-// Obtener los datos de las enfermedades usando tu controlador existente
-$enfermedades = ControladorEnfermedades::ctrMostrarEnfermedades(null, null);
+// Obtén los datos de las enfermedades
+$enfermedades = ControladorEnfermedadesAdmin::ctrMostrarEnfermedades(null, null);
 
-// Meta charset para la tabla HTML, importante para caracteres especiales en Excel
+// Genera la tabla HTML que se convertirá en el Excel
 echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
-echo "<table>
+echo "<table border='1'>
         <thead>
-            <tr>
-                <th style='background-color:#E0E0E0; font-weight:bold;'>ID</th>
-                <th style='background-color:#E0E0E0; font-weight:bold;'>NOMBRE ENFERMEDAD</th>
-                <th style='background-color:#E0E0E0; font-weight:bold;'>DESCRIPCIÓN</th>
-                <th style='background-color:#E0E0E0; font-weight:bold;'>ESTADO</th>
+            <tr style='background-color:#E0E0E0; font-weight:bold;'>
+                <th>ID</th>
+                <th>NOMBRE ENFERMEDAD</th>
+                <th>DESCRIPCIÓN</th>
+                <th>ESTADO</th>
             </tr>
         </thead>
         <tbody>";
 
-// Iterar sobre los datos y mostrarlos en filas de tabla
 if (is_array($enfermedades) && count($enfermedades) > 0) {
     foreach ($enfermedades as $fila) {
         echo "<tr>";
-        // utf8_decode se usa para asegurar que los caracteres especiales se muestren bien en Excel
+        // La función utf8_decode asegura la compatibilidad de caracteres especiales
         echo "<td>" . utf8_decode($fila["id_enfermedad"]) . "</td>";
         echo "<td>" . utf8_decode($fila["nombre_enfermedad"]) . "</td>";
         echo "<td>" . utf8_decode($fila["descripcion_enfermedad"]) . "</td>";
@@ -47,10 +44,9 @@ if (is_array($enfermedades) && count($enfermedades) > 0) {
     echo "<tr><td colspan='4'>No hay datos de enfermedades para exportar.</td></tr>";
 }
 
-echo "</tbody>
-    </table>";
+echo "</tbody></table>";
 
-// Limpiar el buffer de salida y enviarlo al navegador como parte del archivo Excel
+// Envía el contenido del buffer al navegador y finaliza el script
 ob_end_flush();
-exit; // Finaliza la ejecución del script para asegurar que solo se envíe el archivo
+exit;
 ?>
