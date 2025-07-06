@@ -48,7 +48,8 @@ BEGIN
         WHERE hc.estado = 'Activo'
             AND (p_busqueda IS NULL OR p_busqueda = '' OR
                  p.nombre LIKE CONCAT('%', p_busqueda, '%') OR
-                 p.apellido LIKE CONCAT('%', p_busqueda, '%'))
+                 p.apellido LIKE CONCAT('%', p_busqueda, '%') or
+                 p.documento_identificacion LIKE CONCAT('%', p_busqueda, '%'))
         ORDER BY hc.id_historia_clinica DESC;
     END IF;
 END$$
