@@ -1,27 +1,31 @@
-/*
-drop procedure registrar_historia_clinica;
-drop procedure consultar_historia_clinica;
-drop procedure actualizar_historia_clinica;
-drop procedure eliminar_historia_clinica;
-*/
-delimiter $$
+-- Usar la base de datos correcta
+USE gericare_connect;
+
+-- Eliminar procedimientos antiguos si existen para asegurar una instalación limpia
+DROP PROCEDURE IF EXISTS registrar_historia_clinica;
+DROP PROCEDURE IF EXISTS consultar_historia_clinica;
+DROP PROCEDURE IF EXISTS actualizar_historia_clinica;
+DROP PROCEDURE IF EXISTS eliminar_historia_clinica;
+
+-- Cambiar el delimitador para poder escribir los procedimientos
+DELIMITER $$
 
 -- =============================================
--- procedimiento para registrar una historia clínica
+-- PROCEDIMIENTO PARA REGISTRAR (CREATE) UNA HISTORIA CLÍNICA
 -- =============================================
-create procedure registrar_historia_clinica(
-    in p_id_paciente int,
-    in p_id_usuario_administrador int,
-    in p_estado_salud text,
-    in p_condiciones text,
-    in p_antecedentes_medicos text,
-    in p_alergias text,
-    in p_dietas_especiales text,
-    in p_fecha_ultima_consulta date,
-    in p_observaciones text
+CREATE PROCEDURE `registrar_historia_clinica`(
+    IN p_id_paciente INT,
+    IN p_id_usuario_administrador INT,
+    IN p_estado_salud TEXT,
+    IN p_condiciones TEXT,
+    IN p_antecedentes_medicos TEXT,
+    IN p_alergias TEXT,
+    IN p_dietas_especiales TEXT,
+    IN p_fecha_ultima_consulta DATE,
+    IN p_observaciones TEXT
 )
-begin
-    insert into tb_historia_clinica (
+BEGIN
+    INSERT INTO tb_historia_clinica (
         id_paciente,
         id_usuario_administrador,
         estado_salud,
@@ -33,7 +37,7 @@ begin
         observaciones,
         estado
     )
-    values (
+    VALUES (
         p_id_paciente,
         p_id_usuario_administrador,
         p_estado_salud,
@@ -43,34 +47,23 @@ begin
         p_dietas_especiales,
         p_fecha_ultima_consulta,
         p_observaciones,
-        'Activo' -- por defecto, se crea como Activo
+        'Activo' -- Por defecto, se crea como 'Activo'
     );
-end$$
+END$$
 
 -- =============================================
--- procedimiento para consultar historias clínicas
--- se puede consultar por id de historia o por id de paciente
+-- PROCEDIMIENTO PARA CONSULTAR (READ) HISTORIAS CLÍNICAS
+-- Permite buscar por ID específico o por texto en general.
 -- =============================================
--- Elimina el procedimiento antiguo si existe
-DROP PROCEDURE IF EXISTS consultar_historia_clinica;
-
--- Cambia el delimitador para crear el nuevo procedimiento
--- Primero, eliminamos el procedimiento anterior para evitar conflictos.
-DROP PROCEDURE IF EXISTS consultar_historia_clinica;
-
--- Cambiamos el delimitador para poder escribir el procedimiento.
-DELIMITER $$
-
--- Creamos el nuevo procedimiento, más limpio y eficiente.
 CREATE PROCEDURE `consultar_historia_clinica`(
     IN p_id_historia_clinica INT,
     IN p_busqueda VARCHAR(100)
 )
 BEGIN
-    -- CASO 1: Si se pide un ID específico (para la página de edición).
+    -- Si se provee un ID, se devuelve una sola historia para el formulario de edición.
     IF p_id_historia_clinica IS NOT NULL THEN
         SELECT
-            hc.*, -- Trae todos los campos de la historia clínica para el formulario
+            hc.*, -- Trae todos los campos de la historia clínica
             CONCAT(p.nombre, ' ', p.apellido) AS paciente_nombre_completo
         FROM
             tb_historia_clinica AS hc
@@ -79,7 +72,7 @@ BEGIN
         WHERE
             hc.id_historia_clinica = p_id_historia_clinica;
 
-    -- CASO 2: Si no se pide un ID, se busca por texto (para la tabla principal).
+    -- Si no se provee un ID, se devuelve una lista para la tabla principal.
     ELSE
         SELECT
             hc.id_historia_clinica,
@@ -101,28 +94,23 @@ BEGIN
     END IF;
 END$$
 
--- Se restablece el delimitador.
-DELIMITER ;
-
-
 -- =============================================
--- procedimiento para actualizar una historia clínica
+-- PROCEDIMIENTO PARA ACTUALIZAR (UPDATE) UNA HISTORIA CLÍNICA
 -- =============================================
-create procedure actualizar_historia_clinica(
-    in p_id_historia_clinica int,
-    in p_id_usuario_administrador int,
-    in p_estado_salud text,
-    in p_condiciones text,
-    in p_antecedentes_medicos text,
-    in p_alergias text,
-    in p_dietas_especiales text,
-    in p_fecha_ultima_consulta date,
-    in p_observaciones text,
-    in p_estado enum('Activo','Inactivo')
+CREATE PROCEDURE `actualizar_historia_clinica`(
+    IN p_id_historia_clinica INT,
+    IN p_id_usuario_administrador INT,
+    IN p_estado_salud TEXT,
+    IN p_condiciones TEXT,
+    IN p_antecedentes_medicos TEXT,
+    IN p_alergias TEXT,
+    IN p_dietas_especiales TEXT,
+    IN p_fecha_ultima_consulta DATE,
+    IN p_observaciones TEXT
 )
-begin
-    update tb_historia_clinica
-    set
+BEGIN
+    UPDATE tb_historia_clinica
+    SET
         id_usuario_administrador = p_id_usuario_administrador,
         estado_salud = p_estado_salud,
         condiciones = p_condiciones,
@@ -130,23 +118,23 @@ begin
         alergias = p_alergias,
         dietas_especiales = p_dietas_especiales,
         fecha_ultima_consulta = p_fecha_ultima_consulta,
-        observaciones = p_observaciones,
-        estado = p_estado
-    where
+        observaciones = p_observaciones
+    WHERE
         id_historia_clinica = p_id_historia_clinica;
-end$$
+END$$
 
 -- =============================================
--- procedimiento para eliminar (lógicamente) una historia clínica
+-- PROCEDIMIENTO PARA ELIMINAR (DESACTIVAR) UNA HISTORIA CLÍNICA
 -- =============================================
-create procedure eliminar_historia_clinica(
-    in p_id_historia_clinica int
+CREATE PROCEDURE `eliminar_historia_clinica`(
+    IN p_id_historia_clinica INT
 )
-begin
-    -- se realiza una eliminación lógica cambiando el estado a 'Inactivo'
-    update tb_historia_clinica
-    set estado = 'Inactivo'
-    where id_historia_clinica = p_id_historia_clinica;
-end$$
+BEGIN
+    -- Se realiza una eliminación lógica cambiando el estado a 'Inactivo'
+    UPDATE tb_historia_clinica
+    SET estado = 'Inactivo'
+    WHERE id_historia_clinica = p_id_historia_clinica;
+END$$
 
-delimiter ;
+-- Devolver el delimitador a la normalidad
+DELIMITER ;
