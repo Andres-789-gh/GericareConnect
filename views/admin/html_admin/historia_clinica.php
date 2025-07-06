@@ -1,37 +1,43 @@
 <?php
-// views/cuidador/html_cuidador/historia_clinica.php
-session_start();
+// views/admin/html_admin/historia_clinica.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Incluimos los controladores y modelos necesarios para la página.
-require_once __DIR__ . "/../../../controllers/cuidador/historia_clinica.controlador.php";
-require_once __DIR__ . "/../../../models/clases/historia_clinica.modelo.php";
-require_once __DIR__ . "/../../../models/clases/medicamento.modelo.php";
-require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php";
+// Verificar acceso de administrador
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Administrador']);
 
-// Lógica para manejar las acciones del formulario (POST) y de la URL (GET)
+// Incluir los archivos necesarios
+require_once __DIR__ . "/../../../controllers/admin/HC/historia_clinica.controlador.php";
+require_once __DIR__ . "/../../../models/clases/historia_clinica_modelo.php"; // Para los métodos auxiliares
+
+// Procesar el formulario si se envía una petición POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['id_historia_clinica_editar'])) {
-        // Llama a la función de editar si se envió el formulario de edición
-        ControladorHistoriaClinica::ctrEditarHistoriaClinica();
-    } else if (isset($_POST["id_paciente"])) {
-        // Llama a la función de crear si se envió el formulario de creación
+    if (isset($_POST["id_paciente"])) {
         ControladorHistoriaClinica::ctrCrearHistoriaClinica();
     }
 }
 
-// Llama a la función de eliminar si se pasó el ID por la URL
-if (isset($_GET['idHistoriaClinica'])) {
+// Procesar una petición de borrado si se envía por GET
+if (isset($_GET['idHistoriaClinicaEliminar'])) {
+    // Se renombra el parámetro para evitar conflictos
+    $_GET['idHistoriaClinica'] = $_GET['idHistoriaClinicaEliminar'];
     ControladorHistoriaClinica::ctrEliminarHistoriaClinica();
 }
+
+// Crear una instancia del modelo para usar sus métodos auxiliares
+$modelo = new ModeloHistoriaClinica();
+$pacientes = $modelo->mdlObtenerPacientesActivos();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Historias Clínicas</title>
     <link rel="stylesheet" href="../../css/styles.css">
-    <link rel="stylesheet" href="../css_cuidador/historia_clinica.css">
+    <link rel="stylesheet" href="../css_admin/admin_pacientes.css"> <link rel="stylesheet" href="../../cuidador/css_cuidador/historia_clinica.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -44,57 +50,57 @@ if (isset($_GET['idHistoriaClinica'])) {
             <form method="post" id="historiaClinicaForm" action="historia_clinica.php">
                 <h2>Registrar Nueva Historia Clínica</h2>
                 
+                <div class="form-group">
+                    <label for="id_paciente">Paciente:</label>
+                    <select name="id_paciente" id="id_paciente" class="select2-paciente" required style="width: 100%;">
+                        <option value="">Buscar y seleccionar un paciente</option>
+                        <?php foreach ($pacientes as $paciente): ?>
+                            <option value="<?= htmlspecialchars($paciente['id_paciente']) ?>">
+                                <?= htmlspecialchars($paciente['nombre'] . ' ' . $paciente['apellido']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
                 <div class="form-grid">
                     <div class="form-column">
                         <div class="form-group">
-                            <label for="id_paciente">Paciente:</label>
-                            <select name="id_paciente" id="id_paciente" class="select2-paciente" required>
-                                <option value="">Buscar y seleccionar un paciente</option>
-                                <?php
-                                $pacientes = ModeloHistoriaClinica::mdlObtenerPacientesActivos();
-                                foreach ($pacientes as $paciente) {
-                                    echo '<option value="' . htmlspecialchars($paciente['id_paciente']) . '">' . htmlspecialchars($paciente['nombre'] . ' ' . $paciente['apellido']) . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="estado_salud">Estado de Salud General:</label>
+                            <label>Estado de Salud General:</label>
                             <textarea name="estado_salud" rows="3"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="antecedentes_medicos">Antecedentes Médicos:</label>
+                            <label>Antecedentes Médicos:</label>
                             <textarea name="antecedentes_medicos" rows="2"></textarea>
                         </div>
                     </div>
                     <div class="form-column">
                         <div class="form-group">
-                            <label for="condiciones">Condiciones Crónicas:</label>
+                            <label>Condiciones Crónicas:</label>
                             <textarea name="condiciones" rows="3"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="alergias">Alergias Conocidas:</label>
+                         <div class="form-group">
+                            <label>Alergias Conocidas:</label>
                             <textarea name="alergias" rows="2"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="dietas_especiales">Dietas Especiales:</label>
-                            <textarea name="dietas_especiales" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="observaciones">Observaciones Adicionales:</label>
+                    <label>Dietas Especiales:</label>
+                    <textarea name="dietas_especiales" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Observaciones Adicionales:</label>
                     <textarea name="observaciones" rows="4"></textarea>
                 </div>
 
-                <div class="form-grid" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <div class="form-grid">
                     <div class="form-column">
                         <div class="form-group">
                             <label>Medicamentos Asignados:</label>
                             <div id="medicamentos-seleccionados" class="selection-box"></div>
                             <input type="hidden" name="medicamentos_seleccionados_ids" id="medicamentos_seleccionados_ids">
-                            <button type="button" class="btn btn-add" onclick="abrirVentanaSeleccion('medicamento')">Seleccionar / Crear Medicamento</button>
+                            <button type="button" class="btn btn-add" onclick="abrirVentanaSeleccion('medicamento')">Gestionar Medicamentos</button>
                         </div>
                     </div>
                     <div class="form-column">
@@ -102,7 +108,7 @@ if (isset($_GET['idHistoriaClinica'])) {
                             <label>Enfermedades Diagnosticadas:</label>
                             <div id="enfermedades-seleccionadas" class="selection-box"></div>
                             <input type="hidden" name="enfermedades_seleccionadas_ids" id="enfermedades_seleccionadas_ids">
-                            <button type="button" class="btn btn-add" onclick="abrirVentanaSeleccion('enfermedad')">Seleccionar / Crear Enfermedad</button>
+                            <button type="button" class="btn btn-add" onclick="abrirVentanaSeleccion('enfermedad')">Gestionar Enfermedades</button>
                         </div>
                     </div>
                 </div>
@@ -120,7 +126,7 @@ if (isset($_GET['idHistoriaClinica'])) {
                     <tr>
                         <th>ID</th>
                         <th>Paciente</th>
-                        <th>Cuidador</th>
+                        <th>Administrador</th>
                         <th>Medicamentos</th>
                         <th>Enfermedades</th>
                         <th>Acciones</th>
@@ -128,23 +134,21 @@ if (isset($_GET['idHistoriaClinica'])) {
                 </thead>
                 <tbody>
                     <?php
-                    // Esta función ya obtiene los medicamentos y enfermedades desde el procedimiento almacenado
                     $historiasClinicas = ControladorHistoriaClinica::ctrMostrarHistoriasClinicas(null, null);
 
-                    foreach ($historiasClinicas as $key => $value) {
+                    foreach ($historiasClinicas as $historia):
                         echo '<tr>';
-                        echo '<td>' . htmlspecialchars($value["id_historia_clinica"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($value["paciente_nombre_completo"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($value["cuidador_nombre_completo"]) . '</td>';
-                        // Mostramos los medicamentos y enfermedades
-                        echo '<td>' . htmlspecialchars($value["medicamentos"] ?? 'N/A') . '</td>';
-                        echo '<td>' . htmlspecialchars($value["enfermedades"] ?? 'N/A') . '</td>';
+                        echo '<td>' . htmlspecialchars($historia["id_historia_clinica"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($historia["paciente_nombre_completo"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($historia["administrador_nombre_completo"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($historia["medicamentos"] ?? 'N/A') . '</td>';
+                        echo '<td>' . htmlspecialchars($historia["enfermedades"] ?? 'N/A') . '</td>';
                         echo '<td>
-                                <a href="editar_historia_clinica.php?idHistoriaClinica=' . $value["id_historia_clinica"] . '" class="btn btn-warning">Editar</a>
-                                <a href="historia_clinica.php?idHistoriaClinica=' . $value["id_historia_clinica"] . '" class="btn btn-danger" onclick="return confirm(\'¿Estás seguro?\');">Eliminar</a>
+                                <a href="editar_historia_clinica.php?idHistoriaClinica=' . $historia["id_historia_clinica"] . '" class="btn btn-warning">Editar</a>
+                                <a href="historia_clinica.php?idHistoriaClinicaEliminar=' . $historia["id_historia_clinica"] . '" class="btn btn-danger" onclick="return confirm(\'¿Estás seguro?\');">Eliminar</a>
                               </td>';
                         echo '</tr>';
-                    }
+                    endforeach;
                     ?>
                 </tbody>
             </table>
@@ -152,38 +156,66 @@ if (isset($_GET['idHistoriaClinica'])) {
     </div>
     
     <script>
-        $(document).ready(function() {
+        // Se ejecuta cuando la página se carga por completo
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Inicializa Select2 para la búsqueda de pacientes
             $('.select2-paciente').select2({
                 placeholder: "Escribe o selecciona un paciente",
                 allowClear: true
             });
-        });
-    
-        const form = document.getElementById('historiaClinicaForm');
 
-        form.addEventListener('change', () => {
+            // 2. Restaura el estado del formulario si existe en sessionStorage
+            restaurarEstadoFormulario();
+
+            // 3. Carga los medicamentos y enfermedades seleccionados desde localStorage
+            cargarSelecciones();
+
+            // Limpia el sessionStorage una vez que el formulario se envía con éxito para no restaurar datos viejos en un nuevo formulario.
+            document.getElementById('historiaClinicaForm').addEventListener('submit', () => {
+                sessionStorage.removeItem('historiaClinicaFormData');
+            });
+        });
+
+        /**
+         * Guarda el estado actual del formulario en sessionStorage y redirige
+         * a la página de gestión de items (medicamentos/enfermedades).
+         * @param {string} tipo - 'medicamento' o 'enfermedad'.
+         */
+        function gestionarItems(tipo) {
+            const form = document.getElementById('historiaClinicaForm');
             const formData = new FormData(form);
-            localStorage.setItem('historiaClinicaForm', JSON.stringify(Object.fromEntries(formData.entries())));
-        });
+            const formObject = Object.fromEntries(formData.entries());
+            
+            // Guarda los datos del formulario en sessionStorage
+            sessionStorage.setItem('historiaClinicaFormData', JSON.stringify(formObject));
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedData = JSON.parse(localStorage.getItem('historiaClinicaForm'));
+            // Construye la URL de retorno para que la página de gestión sepa a dónde volver
+            const returnUrl = window.location.pathname + window.location.search;
+            window.location.href = `${tipo}.php?return_url=${encodeURIComponent(returnUrl)}`;
+        }
+
+        /**
+         * Lee los datos guardados en sessionStorage y rellena el formulario.
+         */
+        function restaurarEstadoFormulario() {
+            const savedData = sessionStorage.getItem('historiaClinicaFormData');
             if (savedData) {
-                for (const key in savedData) {
-                    if (key === 'id_paciente' && savedData[key]) {
-                        $('#id_paciente').val(savedData[key]).trigger('change');
-                    } else if (form.elements[key]) {
-                        form.elements[key].value = savedData[key];
+                const formData = JSON.parse(savedData);
+                const form = document.getElementById('historiaClinicaForm');
+                for (const key in formData) {
+                    if (form.elements[key]) {
+                        // Para el select de paciente, necesitamos activar Select2
+                        if (key === 'id_paciente') {
+                            $(form.elements[key]).val(formData[key]).trigger('change');
+                        } else {
+                            form.elements[key].value = formData[key];
+                        }
                     }
                 }
             }
-            cargarSelecciones();
-        });
-
-        function abrirVentanaSeleccion(tipo) {
-            localStorage.setItem('historiaClinicaForm', JSON.stringify(Object.fromEntries(new FormData(form).entries())));
-            window.open(`${tipo}.php?seleccionar=true`, '_blank');
         }
+
+        // --- Las funciones para manejar localStorage se mantienen muy similares ---
 
         function cargarSelecciones() {
             const medicamentos = JSON.parse(localStorage.getItem('selected_medicamentos')) || [];
@@ -194,47 +226,28 @@ if (isset($_GET['idHistoriaClinica'])) {
         }
 
         function actualizarVistaSeleccion(tipo, items) {
-            let containerId, idsInputId;
-
-            if (tipo === 'medicamentos') {
-                containerId = 'medicamentos-seleccionados';
-                idsInputId = 'medicamentos_seleccionados_ids';
-            } else if (tipo === 'enfermedades') {
-                containerId = 'enfermedades-seleccionadas';
-                idsInputId = 'enfermedades_seleccionadas_ids';
-            } else {
-                return;
-            }
-
-            const container = document.getElementById(containerId);
-            const idsInput = document.getElementById(idsInputId);
-
+            const container = document.getElementById(`${tipo}-seleccionados`);
+            const idsInput = document.getElementById(`${tipo}_seleccionados_ids`);
             if (!container || !idsInput) return;
 
             container.innerHTML = '';
-            let ids = [];
-            if (Array.isArray(items)) {
-                items.forEach(item => {
-                    ids.push(item.id);
-                    const tag = document.createElement('span');
-                    tag.className = 'selected-item';
-                    tag.innerHTML = `${item.nombre} <span class="remove-item" onclick="quitarItem('${tipo}', ${item.id})">×</span>`;
-                    container.appendChild(tag);
-                });
-            }
-            
+            let ids = items.map(item => {
+                const tag = document.createElement('span');
+                tag.className = 'selected-item';
+                tag.innerHTML = `${item.nombre} <span class="remove-item" onclick="quitarItem('${tipo}', ${item.id})">×</span>`;
+                container.appendChild(tag);
+                return item.id;
+            });
             idsInput.value = ids.join(',');
         }
 
         function quitarItem(tipo, id) {
-            const key = `selected_${tipo}`; 
+            const key = `selected_${tipo}`;
             let items = JSON.parse(localStorage.getItem(key)) || [];
             items = items.filter(item => item.id != id);
             localStorage.setItem(key, JSON.stringify(items));
             cargarSelecciones();
         }
-
-        window.addEventListener('focus', cargarSelecciones);
     </script>
 </body>
 </html>

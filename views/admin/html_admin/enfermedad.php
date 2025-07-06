@@ -1,9 +1,14 @@
 <?php
-require_once __DIR__ . "/../../../controllers/cuidador/enfermedad.controlador.php";
-require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php";
+// views/admin/html_admin/enfermedad.php
 
-$modoSeleccion = isset($_GET['seleccionar']) && $_GET['seleccionar'] === 'true';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Administrador']);
+require_once __DIR__ . "/../../../controllers/admin/HC/enfermedad.controlador.php";
 
+// Lógica para procesar formularios
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id_enfermedad_editar']) && !empty($_POST['id_enfermedad_editar'])) {
         ControladorEnfermedades::ctrEditarEnfermedad();
@@ -15,23 +20,31 @@ if (isset($_GET['idEliminarEnfermedad'])) {
     $controlador = new ControladorEnfermedades();
     $controlador->ctrEliminarEnfermedad();
 }
+
+// Obtener la URL de retorno
+$return_url = $_GET['return_url'] ?? 'historia_clinica.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $modoSeleccion ? 'Seleccionar Enfermedad' : 'Gestión de Enfermedades'; ?></title>
+    <title>Gestión de Enfermedades</title>
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1><?php echo $modoSeleccion ? 'Seleccione o Cree Enfermedades' : 'Gestión de Enfermedades'; ?></h1>
+        <div style="margin-bottom: 20px;">
+            <a href="<?= htmlspecialchars(urldecode($return_url)) ?>" class="btn btn-secondary">← Volver al Formulario</a>
+        </div>
+        
+        <h1>Gestión de Enfermedades</h1>
+
         <div class="form-container">
-            <form method="post" id="enfermedad-form" action="enfermedad.php<?php echo $modoSeleccion ? '?seleccionar=true' : ''; ?>">
+            <form method="post" id="enfermedad-form" action="enfermedad.php?return_url=<?= urlencode($return_url) ?>">
                 <h2 id="form-title">Agregar Nueva Enfermedad</h2>
                 <input type="hidden" id="id_enfermedad_editar" name="id_enfermedad_editar">
                 <div class="form-group">
-                    <label for="nombre_enfermedad">Nombre de la Enfermedad:</label>
+                    <label for="nombre_enfermedad">Nombre:</label>
                     <input type="text" id="nombre_enfermedad" name="nombre_enfermedad" required>
                 </div>
                 <div class="form-group">
@@ -40,10 +53,11 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button type="button" class="btn btn-secondary" id="btn-cancelar" style="display: none;">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" id="btn-cancelar" style="display: none;">Cancelar Edición</button>
                 </div>
             </form>
         </div>
+
         <div class="table-container">
             <h2>Listado de Enfermedades</h2>
             <table>
@@ -58,25 +72,25 @@ if (isset($_GET['idEliminarEnfermedad'])) {
                 <tbody>
                     <?php
                     $enfermedades = ControladorEnfermedades::ctrMostrarEnfermedades(null, null);
-                    if (is_array($enfermedades) && count($enfermedades) > 0) {
+                    if (is_array($enfermedades)):
                         foreach ($enfermedades as $enfermedad):
-                        ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($enfermedad["id_enfermedad"]); ?></td>
-                            <td><?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?></td>
-                            <td><?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?></td>
+                    ?>
+                        <tr id="row-enfermedad-<?= $enfermedad['id_enfermedad'] ?>">
+                            <td><?= htmlspecialchars($enfermedad["id_enfermedad"]); ?></td>
+                            <td><?= htmlspecialchars($enfermedad["nombre_enfermedad"]); ?></td>
+                            <td><?= htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?></td>
                             <td>
-                                <button class="btn btn-warning btn-editar" data-id="<?php echo $enfermedad["id_enfermedad"]; ?>" data-nombre="<?php echo htmlspecialchars($enfermedad["nombre_enfermedad"]); ?>" data-descripcion="<?php echo htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>">Editar</button>
-                                <a href="enfermedad.php?idEliminarEnfermedad=<?php echo $enfermedad["id_enfermedad"]; ?><?php echo $modoSeleccion ? '&seleccionar=true' : ''; ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
-                                
-                                <?php if ($modoSeleccion): ?>
-                                    <button type="button" class="btn btn-primary" onclick="seleccionarItem(<?php echo $enfermedad['id_enfermedad']; ?>, '<?php echo htmlspecialchars(addslashes($enfermedad['nombre_enfermedad'])); ?>', 'enfermedades')">Seleccionar</button>
-                                <?php endif; ?>
+                                <button class="btn btn-warning btn-editar" data-id="<?= $enfermedad["id_enfermedad"]; ?>" data-nombre="<?= htmlspecialchars($enfermedad["nombre_enfermedad"]); ?>" data-descripcion="<?= htmlspecialchars($enfermedad["descripcion_enfermedad"]); ?>">Editar</button>
+                                <a href="enfermedad.php?idEliminarEnfermedad=<?= $enfermedad["id_enfermedad"]; ?>&return_url=<?= urlencode($return_url) ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                                <button type="button" class="btn btn-success btn-seleccionar" 
+                                        onclick="toggleSeleccion(this, <?= $enfermedad['id_enfermedad']; ?>, '<?= htmlspecialchars(addslashes($enfermedad['nombre_enfermedad'])); ?>', 'enfermedades')">
+                                    Seleccionar
+                                </button>
                             </td>
                         </tr>
-                        <?php
+                    <?php
                         endforeach;
-                    }
+                    endif;
                     ?>
                 </tbody>
             </table>
@@ -84,34 +98,55 @@ if (isset($_GET['idEliminarEnfermedad'])) {
     </div>
     
     <script>
-        function seleccionarItem(id, nombre, tipo) {
-            console.log(`[ENFERMEDAD - seleccionarItem] INICIA - Tipo: ${tipo}, ID: ${id}, Nombre: ${nombre}`); // Log 1
-
+        function toggleSeleccion(button, id, nombre, tipo) {
             const key = `selected_${tipo}`;
-            let seleccionados = [];
+            let seleccionados = JSON.parse(localStorage.getItem(key)) || [];
+            const itemIndex = seleccionados.findIndex(item => item.id == id);
 
-            try {
-                seleccionados = JSON.parse(localStorage.getItem(key)) || [];
-                console.log(`[ENFERMEDAD - seleccionarItem] Contenido actual de localStorage (${key}):`, seleccionados); // Log 2
-            } catch (e) {
-                console.error(`[ENFERMEDAD - seleccionarItem] ERROR al parsear JSON de localStorage para ${key}:`, e); // Log 3
-            }
-
-            if (!seleccionados.some(item => item.id == id)) {
-                seleccionados.push({ id: id, nombre: nombre });
-                try {
-                    localStorage.setItem(key, JSON.stringify(seleccionados));
-                    console.log(`[ENFERMEDAD - seleccionarItem] Guardado exitoso en localStorage (${key}):`, seleccionados); // Log 4
-                } catch (e) {
-                    console.error(`[ENFERMEDAD - seleccionarItem] ERROR al guardar en localStorage para ${key}:`, e); // Log 5
-                }
+            if (itemIndex > -1) {
+                seleccionados.splice(itemIndex, 1);
+                button.textContent = 'Seleccionar';
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-success');
             } else {
-                console.log(`[ENFERMEDAD - seleccionarItem] El item ya existe, no se añadió de nuevo.`); // Log 6
+                seleccionados.push({ id: id, nombre: nombre });
+                button.textContent = 'Quitar';
+                button.classList.remove('btn-success');
+                button.classList.add('btn-danger');
             }
-            
-            window.close();
-            console.log(`[ENFERMEDAD - seleccionarItem] Ventana cerrada.`); // Log 7
+            localStorage.setItem(key, JSON.stringify(seleccionados));
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const seleccionados = JSON.parse(localStorage.getItem('selected_enfermedades')) || [];
+            seleccionados.forEach(item => {
+                const row = document.getElementById(`row-enfermedad-${item.id}`);
+                if (row) {
+                    const button = row.querySelector('.btn-seleccionar');
+                    button.textContent = 'Quitar';
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-danger');
+                }
+            });
+
+            // Lógica para el formulario de edición
+            document.querySelectorAll('.btn-editar').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('form-title').textContent = 'Editar Enfermedad';
+                    document.getElementById('id_enfermedad_editar').value = this.dataset.id;
+                    document.getElementById('nombre_enfermedad').value = this.dataset.nombre;
+                    document.getElementById('descripcion_enfermedad').value = this.dataset.descripcion;
+                    document.getElementById('btn-cancelar').style.display = 'inline-block';
+                    window.scrollTo(0, 0);
+                });
+            });
+            document.getElementById('btn-cancelar').addEventListener('click', () => {
+                document.getElementById('form-title').textContent = 'Agregar Nueva Enfermedad';
+                document.getElementById('enfermedad-form').reset();
+                document.getElementById('id_enfermedad_editar').value = '';
+                document.getElementById('btn-cancelar').style.display = 'none';
+            });
+        });
     </script>
 </body>
 </html>
