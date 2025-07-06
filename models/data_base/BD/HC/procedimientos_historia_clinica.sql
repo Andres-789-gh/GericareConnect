@@ -137,3 +137,33 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+/*buscar desde el view de cuidador*/
+DELIMITER $$
+
+CREATE PROCEDURE `consultar_historias_cuidador`(IN p_id_cuidador INT, IN p_busqueda VARCHAR(100))
+BEGIN
+    SELECT
+        hc.id_historia_clinica,
+        CONCAT(p.nombre, ' ', p.apellido) AS paciente_nombre_completo,
+        DATE_FORMAT(hc.fecha_ultima_consulta, '%d/%m/%Y') AS fecha_formateada,
+        hc.estado_salud,
+        (SELECT COUNT(*) FROM tb_historia_clinica_medicamento WHERE id_historia_clinica = hc.id_historia_clinica AND estado = 'Activo') AS med_count,
+        (SELECT COUNT(*) FROM tb_historia_clinica_enfermedad WHERE id_historia_clinica = hc.id_historia_clinica AND estado = 'Activo') AS enf_count
+    FROM
+        tb_paciente_asignado pa
+    JOIN
+        tb_historia_clinica hc ON pa.id_paciente = hc.id_paciente
+    JOIN
+        tb_paciente p ON pa.id_paciente = p.id_paciente
+    WHERE
+        pa.id_usuario_cuidador = p_id_cuidador
+        AND pa.estado = 'Activo'
+        AND hc.estado = 'Activo'
+        AND (p_busqueda IS NULL OR p_busqueda = '' OR
+             p.nombre LIKE CONCAT('%', p_busqueda, '%') OR
+             p.apellido LIKE CONCAT('%', p_busqueda, '%') OR
+             p.documento_identificacion LIKE CONCAT('%', p_busqueda, '%'));
+END$$
+
+DELIMITER ;

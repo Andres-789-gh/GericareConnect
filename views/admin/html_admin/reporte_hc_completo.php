@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
 require_once __DIR__ . '/../../../models/clases/historia_clinica.php';
 
-verificarAcceso(['Administrador']);
+verificarAcceso(['Administrador', 'Cuidador']);
 
 // Validar que se reciba un ID
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -13,6 +13,19 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $id_historia_clinica = $_GET['id'];
 $modelo_hc = new HistoriaClinica();
+
+// Si el usuario es un Cuidador, verificar que tenga permiso para ver esta HC.
+if ($_SESSION['nombre_rol'] === 'Cuidador') {
+    $historias_permitidas = $modelo_hc->consultarHistoriasPorCuidador($_SESSION['id_usuario']);
+    $ids_permitidos = array_column($historias_permitidas, 'id_historia_clinica');
+    
+    if (!in_array($id_historia_clinica, $ids_permitidos)) {
+        $_SESSION['error'] = "No tiene permiso para ver esta historia clínica.";
+        // Redirigir al cuidador a su propia lista de historias
+        header("Location: ../../cuidador/html_cuidador/historia_clinica.php");
+        exit();
+    }
+}
 
 // Obtener todos los datos para el reporte
 $datos_hc = $modelo_hc->obtenerReporteCompleto($id_historia_clinica);

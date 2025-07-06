@@ -110,5 +110,17 @@ class HistoriaClinica {
             return true; 
         }
     }
+
+    /* llamar al Procedimiento almacenado del cuidador para consultar las HC */
+    public function consultarHistoriasPorCuidador($id_cuidador, $busqueda = null) {
+        try {
+            $stmt = $this->conn->prepare("CALL consultar_historias_cuidador(?, ?)");
+            $stmt->execute([$id_cuidador, $busqueda]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en consultarHistoriasPorCuidador: " . $e->getMessage());
+            return [];
+        }
+    }
 }
 ?>
