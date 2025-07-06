@@ -15,9 +15,9 @@ class ControladorHistoriaClinica
     // El método del controlador puede seguir siendo estático por conveniencia.
     static public function ctrMostrarHistoriasClinicas($item, $valor)
     {
-        // 1. Se crea una instancia del modelo.
+        // Se crea una instancia del modelo.
         $modelo = new ModeloHistoriaClinica();
-        // 2. Se llama al método desde el objeto instanciado.
+        // Se llama al método desde el objeto instanciado.
         $respuesta = $modelo->mdlMostrarHistoriasClinicas($item, $valor);
         return $respuesta;
     }

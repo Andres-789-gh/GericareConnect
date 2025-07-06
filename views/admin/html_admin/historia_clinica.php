@@ -100,7 +100,7 @@ $pacientes = $modelo->mdlObtenerPacientesActivos();
                             <label>Medicamentos Asignados:</label>
                             <div id="medicamentos-seleccionados" class="selection-box"></div>
                             <input type="hidden" name="medicamentos_seleccionados_ids" id="medicamentos_seleccionados_ids">
-                            <button type="button" class="btn btn-add" onclick="abrirVentanaSeleccion('medicamento')">Gestionar Medicamentos</button>
+                            <button type="button" class="btn btn-add" onclick="gestionarItems('medicamento')">Gestionar Medicamentos</button>
                         </div>
                     </div>
                     <div class="form-column">
@@ -108,7 +108,7 @@ $pacientes = $modelo->mdlObtenerPacientesActivos();
                             <label>Enfermedades Diagnosticadas:</label>
                             <div id="enfermedades-seleccionadas" class="selection-box"></div>
                             <input type="hidden" name="enfermedades_seleccionadas_ids" id="enfermedades_seleccionadas_ids">
-                            <button type="button" class="btn btn-add" onclick="abrirVentanaSeleccion('enfermedad')">Gestionar Enfermedades</button>
+                            <button type="button" class="btn btn-add" onclick="gestionarItems('enfermedad')">Gestionar Enfermedades</button>
                         </div>
                     </div>
                 </div>

@@ -1,124 +1,94 @@
 <?php
 
-require_once __DIR__ . "/../../models/clases/enfermedad.modelo.php";
+require_once __DIR__ . "/../../../models/clases/enfermedad.modelo.php";
 
-class ControladorEnfermedades {
+class ControladorEnfermedades
+{
 
-    /*=============================================
-    Controlador para Crear una Enfermedad
-    =============================================*/
-    static public function ctrCrearEnfermedad() {
+    public function ctrCrearEnfermedad()
+    {
         if (isset($_POST["nombre_enfermedad"])) {
             $tabla = "tb_enfermedad";
-
             $datos = array(
                 "nombre_enfermedad" => $_POST["nombre_enfermedad"],
                 "descripcion_enfermedad" => $_POST["descripcion_enfermedad"],
                 "estado" => "Activo"
             );
 
-            $respuesta = ModeloEnfermedades::mdlCrearEnfermedad($tabla, $datos);
+            // Se crea una instancia del modelo
+            $modelo = new ModeloEnfermedades();
+            $respuesta = $modelo->mdlCrearEnfermedad($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
+                    window.location = "../../../views/admin/html_admin/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al crear la enfermedad.");
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
+                    window.location = "../../../views/admin/html_admin/enfermedad.php";
                 </script>';
             }
         }
     }
 
-    /*=============================================
-    Controlador para Mostrar Enfermedades
-    =============================================*/
-    static public function ctrMostrarEnfermedades($item, $valor) {
+    public function ctrMostrarEnfermedades($item, $valor)
+    {
         $tabla = "tb_enfermedad";
-        $respuesta = ModeloEnfermedades::mdlMostrarEnfermedades($tabla, $item, $valor);
-        return $respuesta;
+        // Se crea una instancia del modelo
+        $modelo = new ModeloEnfermedades();
+        return $modelo->mdlMostrarEnfermedades($tabla, $item, $valor);
     }
 
-    /*================================================
-    Controlador para Editar una Enfermedad
-    ================================================*/
-    static public function ctrEditarEnfermedad() {
+    public function ctrEditarEnfermedad()
+    {
         if (isset($_POST["id_enfermedad_editar"])) {
             $tabla = "tb_enfermedad";
-
             $datos = array(
                 "id_enfermedad" => $_POST["id_enfermedad_editar"],
                 "nombre_enfermedad" => $_POST["nombre_enfermedad"],
                 "descripcion_enfermedad" => $_POST["descripcion_enfermedad"]
             );
 
-            $respuesta = ModeloEnfermedades::mdlEditarEnfermedad($tabla, $datos);
+            // Se crea una instancia del modelo
+            $modelo = new ModeloEnfermedades();
+            $respuesta = $modelo->mdlEditarEnfermedad($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
+                    window.location = "../../../views/admin/html_admin/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
                     alert("Error al editar la enfermedad.");
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
+                    window.location = "../../../views/admin/html_admin/enfermedad.php";
                 </script>';
             }
         }
     }
 
-    /*================================================
-    Controlador para Cambiar el Estado de una Enfermedad (Usado para borrado lógico)
-    ================================================*/
-    public function ctrCambiarEstadoEnfermedad() {
-        if (isset($_GET["idCambiarEstadoEnfermedad"]) && isset($_GET["nuevoEstadoEnfermedad"])) {
-            $tabla = "tb_enfermedad";
-
-            $datos = array(
-                "id_enfermedad" => $_GET["idCambiarEstadoEnfermedad"],
-                "estado" => $_GET["nuevoEstadoEnfermedad"]
-            );
-
-            $respuesta = ModeloEnfermedades::mdlActualizarEstadoEnfermedad($tabla, $datos);
-
-            if ($respuesta == "ok") {
-                echo '<script>
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
-                </script>';
-            } else {
-                echo '<script>
-                    alert("Error al cambiar el estado de la enfermedad.");
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
-                </script>';
-            }
-        }
-    }
-
-    /*=============================================
-    Controlador para Eliminar una Enfermedad (Borrado Lógico)
-    =============================================*/
-    public function ctrEliminarEnfermedad() {
+    public function ctrEliminarEnfermedad()
+    {
         if (isset($_GET["idEliminarEnfermedad"])) {
             $tabla = "tb_enfermedad";
-
             $datos = array(
                 "id_enfermedad" => $_GET["idEliminarEnfermedad"],
                 "estado" => "Inactivo"
             );
 
-            $respuesta = ModeloEnfermedades::mdlActualizarEstadoEnfermedad($tabla, $datos);
+            // Se crea una instancia del modelo
+            $modelo = new ModeloEnfermedades();
+            $respuesta = $modelo->mdlActualizarEstadoEnfermedad($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>
-                    alert("Enfermedad eliminada lógicamente (estado cambiado a Inactivo).");
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
+                    alert("Enfermedad eliminada correctamente.");
+                    window.location = "../../../views/admin/html_admin/enfermedad.php";
                 </script>';
             } else {
                 echo '<script>
-                    alert("Error al intentar eliminar lógicamente la enfermedad.");
-                    window.location = "../../../views/cuidador/html_cuidador/enfermedad.php"; // <<-- CORREGIDO
+                    alert("Error al eliminar la enfermedad.");
+                    window.location = "../../../views/admin/html_admin/enfermedad.php";
                 </script>';
             }
         }
