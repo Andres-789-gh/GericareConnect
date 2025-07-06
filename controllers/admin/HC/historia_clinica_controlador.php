@@ -61,7 +61,7 @@ class ControladorHistoriaClinica {
             } else {
                 $_SESSION['error'] = "Error al crear la historia clínica. Inténtelo de nuevo.";
             }
-            header("Location: ../../views/admin/html_admin/historia_clinica.php");
+            header("Location: ../../../views/admin/html_admin/historia_clinica.php");
             exit();
         }
     }

@@ -64,18 +64,10 @@ DELIMITER ;
 -- Le decimos a MySQL que vamos a trabajar en esta base de datos para evitar errores.
 USE gericare_connect;
 
--- 1. LIMPIEZA DE LA TABLA PACIENTE: Si la columna 'alergias' existe, la elimina.
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'gericare_connect' AND TABLE_NAME = 'tb_paciente' AND COLUMN_NAME = 'alergias')
-THEN
-    ALTER TABLE `tb_paciente` DROP COLUMN `alergias`;
-END IF;
-
 -- 2. BORRADO DE PROCEDIMIENTOS ANTERIORES: Eliminamos las versiones viejas para instalar las nuevas.
 DROP PROCEDURE IF EXISTS registrar_paciente;
 DROP PROCEDURE IF EXISTS actualizar_paciente;
 DROP PROCEDURE IF EXISTS consultar_pacientes;
-DROP PROCEDURE IF EXISTS desactivar_paciente;
-DROP PROCEDURE IF EXISTS admin_consulta_global;
 
 -- Cambiamos el delimitador para poder escribir los procedimientos complejos.
 DELIMITER //
@@ -131,27 +123,7 @@ BEGIN
     WHERE estado = 'Activo' ORDER BY apellido, nombre;
 END//
 
--- DESACTIVAR un paciente (borrado lógico).
-CREATE PROCEDURE `desactivar_paciente`(IN p_id_paciente INT)
-BEGIN
-    UPDATE tb_paciente SET estado = 'Inactivo' WHERE id_paciente = p_id_paciente;
-END//
 
-
--- PROCEDIMIENTO PARA LA BÚSQUEDA GLOBAL DEL ADMIN
-CREATE PROCEDURE `admin_consulta_global`(IN p_filtro_tipo VARCHAR(50), IN p_busqueda VARCHAR(100), IN p_id_admin_actual INT)
-BEGIN
-    -- Lógica de búsqueda que ya tenías, pero verificada y limpia.
-    IF p_filtro_tipo IN ('Familiar', 'Cuidador', 'Administrador') THEN
-        SELECT u.id_usuario AS id, 'Usuario' AS tipo_entidad, u.documento_identificacion AS documento, u.fecha_nacimiento, CONCAT(u.nombre, ' ', u.apellido) AS nombre_completo, r.nombre_rol AS rol, u.correo_electronico AS contacto, '' as genero FROM tb_usuario AS u JOIN tb_rol AS r ON u.id_rol = r.id_rol WHERE r.nombre_rol = p_filtro_tipo AND u.estado = 'Activo' AND u.id_usuario != p_id_admin_actual AND (p_busqueda IS NULL OR p_busqueda = '' OR u.nombre LIKE CONCAT('%', p_busqueda, '%') OR u.apellido LIKE CONCAT('%', p_busqueda, '%') OR u.documento_identificacion LIKE CONCAT('%', p_busqueda, '%'));
-    ELSEIF p_filtro_tipo = 'Paciente' THEN
-        SELECT p.id_paciente AS id, 'Paciente' AS tipo_entidad, p.documento_identificacion AS documento, p.fecha_nacimiento, CONCAT(p.nombre, ' ', p.apellido) AS nombre_completo, 'Paciente' AS rol, p.contacto_emergencia AS contacto, p.genero FROM tb_paciente AS p WHERE p.estado = 'Activo' AND (p_busqueda IS NULL OR p_busqueda = '' OR p.nombre LIKE CONCAT('%', p_busqueda, '%') OR p.apellido LIKE CONCAT('%', p_busqueda, '%') OR p.documento_identificacion LIKE CONCAT('%', p_busqueda, '%'));
-    ELSE
-        (SELECT u.id_usuario AS id, 'Usuario' AS tipo_entidad, u.documento_identificacion AS documento, u.fecha_nacimiento, CONCAT(u.nombre, ' ', u.apellido) AS nombre_completo, r.nombre_rol AS rol, u.correo_electronico AS contacto, '' as genero FROM tb_usuario AS u JOIN tb_rol AS r ON u.id_rol = r.id_rol WHERE u.estado = 'Activo' AND u.id_usuario != p_id_admin_actual AND (p_busqueda IS NULL OR p_busqueda = '' OR u.nombre LIKE CONCAT('%', p_busqueda, '%') OR u.apellido LIKE CONCAT('%', p_busqueda, '%') OR u.documento_identificacion LIKE CONCAT('%', p_busqueda, '%')))
-        UNION ALL
-        (SELECT p.id_paciente AS id, 'Paciente' AS tipo_entidad, p.documento_identificacion AS documento, p.fecha_nacimiento, CONCAT(p.nombre, ' ', p.apellido) AS nombre_completo, 'Paciente' AS rol, p.contacto_emergencia AS contacto, p.genero FROM tb_paciente AS p WHERE p.estado = 'Activo' AND (p_busqueda IS NULL OR p_busqueda = '' OR p.nombre LIKE CONCAT('%', p_busqueda, '%') OR p.apellido LIKE CONCAT('%', p_busqueda, '%') OR p.documento_identificacion LIKE CONCAT('%', p_busqueda, '%')));
-    END IF;
-END//
 
 -- Devolvemos el delimitador a la normalidad.
 DELIMITER ;
