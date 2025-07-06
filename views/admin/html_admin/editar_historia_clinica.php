@@ -1,35 +1,56 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+// --- Inicia la sesión y verifica los permisos de administrador ---
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
 verificarAcceso(['Administrador']);
-require_once __DIR__ . "/../../../controllers/admin/HC/historia_clinica.controlador.php";
 
-$idHistoriaClinica = isset($_GET['idHistoriaClinica']) ? (int)$_GET['idHistoriaClinica'] : 0;
-if ($idHistoriaClinica === 0) die("Error: ID de historia clínica no especificado.");
+// --- Incluye el controlador ---
+require_once __DIR__ . "/../../../controllers/admin/HC/historia_clinica_controlador.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_historia_clinica_editar'])) {
-    ControladorHistoriaClinica::ctrEditarHistoriaClinica();
+// --- Instancia el controlador ---
+$controlador = new ControladorHistoriaClinica();
+
+// --- Procesa la actualización si el formulario se envía con POST ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] == 'actualizar') {
+    $controlador->actualizar();
 }
 
-$historiaClinica = ControladorHistoriaClinica::ctrMostrarHistoriasClinicas('id_historia_clinica', $idHistoriaClinica);
-if (!$historiaClinica) die("<h1>Error: Historia clínica con ID {$idHistoriaClinica} no encontrada.</h1>");
+// --- Obtiene el ID de la URL y busca los datos para rellenar el formulario ---
+$idHistoriaClinica = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($idHistoriaClinica === 0) {
+    $_SESSION['error'] = "ID de historia clínica no especificado.";
+    header("Location: historia_clinica.php");
+    exit();
+}
 
-$modelo = new ModeloHistoriaClinica();
-$medicamentosActuales = $modelo->mdlMostrarMedicamentosPorHistoria($idHistoriaClinica);
-$enfermedadesActuales = $modelo->mdlMostrarEnfermedadesPorHistoria($idHistoriaClinica);
+// Obtiene los datos de la historia clínica a editar
+$historiaArray = $controlador->mostrar('id_historia_clinica', $idHistoriaClinica);
+$historiaClinica = $historiaArray[0] ?? null; // El SP puede devolver un array
+
+if (!$historiaClinica) {
+    $_SESSION['error'] = "No se encontró la historia clínica con ID {$idHistoriaClinica}.";
+    header("Location: historia_clinica.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><title>Editar Historia Clínica</title>
-    <link rel="stylesheet" href="../../css/styles.css"><link rel="stylesheet" href="../../cuidador/css_cuidador/historia_clinica.css">
-</head>
+    <meta charset="UTF-8">
+    <title>Editar Historia Clínica #<?= htmlspecialchars($idHistoriaClinica) ?></title>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../cuidador/css_cuidador/historia_clinica.css"> </head>
 <body>
     <div class="container">
-        <h1>Editar Historia #<?= htmlspecialchars($idHistoriaClinica) ?> de "<?= htmlspecialchars($historiaClinica['paciente_nombre_completo']); ?>"</h1>
+        <h1>Editar Historia Clínica de "<?= htmlspecialchars($historiaClinica['paciente_nombre_completo']); ?>"</h1>
+        
         <div class="form-container">
-            <form method="post" id="editForm" action="editar_historia_clinica.php?idHistoriaClinica=<?= $idHistoriaClinica ?>">
-                <input type="hidden" name="id_historia_clinica_editar" value="<?= $idHistoriaClinica ?>">
+            <form method="post" action="editar_historia_clinica.php?id=<?= $idHistoriaClinica ?>">
+                <input type="hidden" name="accion" value="actualizar">
+                <input type="hidden" name="id_historia_clinica" value="<?= $idHistoriaClinica ?>">
+
                 <div class="form-grid">
                     <div class="form-column">
                         <div class="form-group"><label>Estado de Salud:</label><textarea name="estado_salud" rows="3"><?= htmlspecialchars($historiaClinica['estado_salud'] ?? '') ?></textarea></div>
@@ -40,27 +61,10 @@ $enfermedadesActuales = $modelo->mdlMostrarEnfermedadesPorHistoria($idHistoriaCl
                         <div class="form-group"><label>Alergias Conocidas:</label><textarea name="alergias" rows="2"><?= htmlspecialchars($historiaClinica['alergias'] ?? '') ?></textarea></div>
                     </div>
                 </div>
+
                 <div class="form-group"><label>Dietas Especiales:</label><textarea name="dietas_especiales" rows="2"><?= htmlspecialchars($historiaClinica['dietas_especiales'] ?? '') ?></textarea></div>
                 <div class="form-group"><label>Observaciones Adicionales:</label><textarea name="observaciones" rows="4"><?= htmlspecialchars($historiaClinica['observaciones'] ?? '') ?></textarea></div>
-                <hr>
-                <div class="form-grid">
-                    <div class="form-column">
-                        <div class="form-group">
-                            <label>Medicamentos Asignados:</label>
-                            <div id="medicamentos-seleccionados" class="selection-box"></div>
-                            <input type="hidden" name="medicamentos_seleccionados_ids" id="medicamentos_seleccionados_ids">
-                            <button type="button" class="btn btn-add" onclick="gestionarItems('medicamento')">Gestionar Medicamentos</button>
-                        </div>
-                    </div>
-                    <div class="form-column">
-                        <div class="form-group">
-                            <label>Enfermedades Diagnosticadas:</label>
-                            <div id="enfermedades-seleccionadas" class="selection-box"></div>
-                            <input type="hidden" name="enfermedades_seleccionadas_ids" id="enfermedades_seleccionadas_ids">
-                            <button type="button" class="btn btn-add" onclick="gestionarItems('enfermedad')">Gestionar Enfermedades</button>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="form-actions">
                     <a href="historia_clinica.php" class="btn btn-secondary">Volver al Listado</a>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -68,77 +72,5 @@ $enfermedadesActuales = $modelo->mdlMostrarEnfermedadesPorHistoria($idHistoriaCl
             </form>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const idHistoria = <?= $idHistoriaClinica ?>;
-            const claveSession = `edit_page_loaded_${idHistoria}`;
-            if (!sessionStorage.getItem(claveSession)) {
-                localStorage.setItem('selected_medicamentos', JSON.stringify(<?= json_encode($medicamentosActuales) ?>));
-                localStorage.setItem('selected_enfermedades', JSON.stringify(<?= json_encode($enfermedadesActuales) ?>));
-                sessionStorage.setItem(claveSession, 'true');
-            }
-            cargarSelecciones();
-            document.getElementById('editForm').addEventListener('submit', () => limpiarAlmacenamiento(idHistoria));
-            window.addEventListener('beforeunload', (event) => {
-                 if (!event.persisted) limpiarAlmacenamiento(idHistoria);
-            });
-        });
-        function limpiarAlmacenamiento(id) {
-            localStorage.removeItem('selected_medicamentos');
-            localStorage.removeItem('selected_enfermedades');
-            sessionStorage.removeItem(`edit_page_loaded_${id}`);
-        }
-        function gestionarItems(tipo) {
-            window.location.href = `${tipo}.php?return_url=${encodeURIComponent(window.location.href)}`;
-        }
-        function cargarSelecciones() {
-            actualizarVistaSeleccion('medicamentos', JSON.parse(localStorage.getItem('selected_medicamentos')) || []);
-            actualizarVistaSeleccion('enfermedades', JSON.parse(localStorage.getItem('selected_enfermedades')) || []);
-        }
-        function actualizarVistaSeleccion(tipo, items) {
-            const container = document.getElementById(`${tipo}-seleccionados`);
-            const idsInput = document.getElementById(`${tipo}_seleccionados_ids`);
-            if (!container || !idsInput) return;
-            container.innerHTML = '';
-            idsInput.value = items.map(item => {
-                const tag = document.createElement('span');
-                tag.className = 'selected-item';
-                tag.innerHTML = `${item.nombre} <span class="remove-item" onclick="quitarItem('${tipo}', ${item.id})">×</span>`;
-                container.appendChild(tag);
-                return item.id;
-            }).join(',');
-        }
-        function quitarItem(tipo, id) {
-            const key = `selected_${tipo}`;
-            let items = JSON.parse(localStorage.getItem(key)) || [];
-            items = items.filter(item => item.id != id);
-            localStorage.setItem(key, JSON.stringify(items));
-            cargarSelecciones();
-        }
-
-        // Este bloque se encarga de cargar los datos existentes en la página de edición.
-        (function() {
-            // Convertimos los datos de PHP a JavaScript de forma segura
-            const medicamentosGuardados = <?= json_encode($medicamentosActuales) ?>;
-            const enfermedadesGuardadas = <?= json_encode($enfermedadesActuales) ?>;
-
-            // Limpiamos el almacenamiento local para no mezclar con otras historias
-            localStorage.removeItem('selected_medicamentos');
-            localStorage.removeItem('selected_enfermedades');
-
-            // Si hay datos guardados, los ponemos en el formato que usa el script y los guardamos
-            if (medicamentosGuardados && medicamentosGuardados.length > 0) {
-                const medicamentosParaStorage = medicamentosGuardados.map(item => ({ id: item.id, nombre: item.nombre }));
-                localStorage.setItem('selected_medicamentos', JSON.stringify(medicamentosParaStorage));
-            }
-            if (enfermedadesGuardadas && enfermedadesGuardadas.length > 0) {
-                const enfermedadesParaStorage = enfermedadesGuardadas.map(item => ({ id: item.id, nombre: item.nombre }));
-                localStorage.setItem('selected_enfermedades', JSON.stringify(enfermedadesParaStorage));
-            }
-            
-            // Finalmente, llamamos a la función que dibuja los items en la pantalla
-            cargarSelecciones();
-        })();
-    </script>
 </body>
 </html>

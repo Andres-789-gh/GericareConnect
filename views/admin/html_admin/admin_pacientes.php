@@ -44,7 +44,7 @@ session_start();
             <ul>
                 <li><a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>"><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
                 <li><a href="admin_pacientes.php" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
-                <li><a href="admin_solicitudes.php"><i class="fas fa-envelope-open-text"></i> Solicitudes</a></li>
+                <li><a href="historia_clinica.php"><i class="fas fa-envelope-open-text"></i> Historias Clinicas</a></li>
                 <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </nav>
