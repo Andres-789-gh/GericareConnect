@@ -1,51 +1,157 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
-require_once __DIR__ . "/../../../models/clases/historia_clinica_modelo.php";
+/*
+  Controlador para la gestión de Historias Clínicas.
+ */
+
+// Inicia la sesión si no está activa, para poder manejar mensajes de feedback al usuario.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Requiere el modelo de historia clínica para interactuar con la base de datos.
+require_once(__DIR__ . '/../../../models/clases/historia_clinica_modelo.php');
 
 class ControladorHistoriaClinica {
-    static public function ctrMostrarHistoriasClinicas($item, $valor) {
-        $modelo = new ModeloHistoriaClinica();
-        return $modelo->mdlMostrarHistoriasClinicas($item, $valor);
+
+    // Propiedad para almacenar la instancia del modelo.
+    private $modelo;
+
+    /**
+     * Constructor de la clase.
+     * Al crear un objeto ControladorHistoriaClinica, también se crea una instancia del ModeloHistoriaClinica.
+     */
+    public function __construct() {
+        $this->modelo = new ModeloHistoriaClinica();
     }
 
-    static public function ctrCrearHistoriaClinica() {
-        if (isset($_POST["id_paciente"])) {
-            $id_admin = $_SESSION["id_usuario"] ?? 0;
-            if ($id_admin == 0) {
-                echo '<script>alert("Error: Sesión de administrador inválida."); window.history.back();</script>'; return;
+    /*
+      Procesa la solicitud para crear una nueva historia clínica.
+      Valida los datos recibidos por POST y llama al modelo.
+     */
+    public function registrar() {
+        // Verifica que se hayan enviado los datos necesarios desde un formulario.
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["id_paciente"])) {
+
+            // Se asegura de que el administrador esté logueado.
+            if (!isset($_SESSION["id_usuario"])) {
+                $_SESSION['error'] = "Error: Sesión de administrador inválida o expirada.";
+                header("Location: ../../views/admin/html_admin/historia_clinica.php");
+                exit();
             }
-            $datos = ["id_paciente" => $_POST["id_paciente"], "id_usuario_administrador" => $id_admin, "estado_salud" => trim($_POST["estado_salud"]), "condiciones" => trim($_POST["condiciones"]), "antecedentes_medicos" => trim($_POST["antecedentes_medicos"]), "alergias" => trim($_POST["alergias"]), "dietas_especiales" => trim($_POST["dietas_especiales"]), "observaciones" => trim($_POST["observaciones"])];
-            $modelo = new ModeloHistoriaClinica();
-            $respuesta = $modelo->mdlCrearHistoriaBase($datos);
-            if ($respuesta && isset($respuesta['id_historia_clinica_creada'])) {
-                $id_creado = $respuesta['id_historia_clinica_creada'];
-                echo "<script>alert('Historia Clínica creada. Ahora puede asignar medicamentos y enfermedades.'); window.location = 'editar_historia_clinica.php?idHistoriaClinica={$id_creado}';</script>";
+
+            // Recopila los datos del formulario.
+            $datos = [
+                "id_paciente" => $_POST["id_paciente"],
+                "id_usuario_administrador" => $_SESSION["id_usuario"],
+                "estado_salud" => trim($_POST["estado_salud"]),
+                "condiciones" => trim($_POST["condiciones"]),
+                "antecedentes_medicos" => trim($_POST["antecedentes_medicos"]),
+                "alergias" => trim($_POST["alergias"]),
+                "dietas_especiales" => trim($_POST["dietas_especiales"]),
+                "fecha_ultima_consulta" => date('Y-m-d'), // Fecha actual
+                "observaciones" => trim($_POST["observaciones"])
+            ];
+
+            // Llama al método del modelo para registrar la historia.
+            $respuesta = $this->modelo->mdlRegistrarHistoriaClinica($datos);
+
+            // Redirige al usuario con un mensaje de éxito o error.
+            if ($respuesta == "ok") {
+                $_SESSION['mensaje'] = "¡Historia Clínica creada con éxito!";
             } else {
-                echo '<script>alert("Error al crear la historia clínica."); window.history.back();</script>';
+                $_SESSION['error'] = "Error al crear la historia clínica. Inténtelo de nuevo.";
             }
+            header("Location: ../../views/admin/html_admin/historia_clinica.php");
+            exit();
+        }
+    }
+    
+    /*
+      Procesa la solicitud para actualizar una historia clínica existente.
+     */
+    public function actualizar() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["id_historia_clinica"])) {
+            
+            $datos = [
+                "id_historia_clinica" => $_POST["id_historia_clinica"],
+                "id_usuario_administrador" => $_SESSION["id_usuario"], // El admin que realiza el cambio
+                "estado_salud" => trim($_POST["estado_salud"]),
+                "condiciones" => trim($_POST["condiciones"]),
+                "antecedentes_medicos" => trim($_POST["antecedentes_medicos"]),
+                "alergias" => trim($_POST["alergias"]),
+                "dietas_especiales" => trim($_POST["dietas_especiales"]),
+                "fecha_ultima_consulta" => date('Y-m-d'),
+                "observaciones" => trim($_POST["observaciones"]),
+                "estado" => "Activo"
+            ];
+            
+            $respuesta = $this->modelo->mdlActualizarHistoriaClinica($datos);
+
+            if ($respuesta == "ok") {
+                $_SESSION['mensaje'] = "Historia Clínica actualizada correctamente.";
+            } else {
+                $_SESSION['error'] = "Error al actualizar la historia clínica.";
+            }
+            // Redirige de vuelta a la lista principal
+            header("Location: ../../views/admin/html_admin/historia_clinica.php");
+            exit();
         }
     }
 
-    static public function ctrEditarHistoriaClinica() {
-        if (isset($_POST["id_historia_clinica_editar"])) {
-            $datos = ["id_historia_clinica" => $_POST["id_historia_clinica_editar"], "estado_salud" => trim($_POST["estado_salud"]), "condiciones" => trim($_POST["condiciones"]), "antecedentes_medicos" => trim($_POST["antecedentes_medicos"]), "alergias" => trim($_POST["alergias"]), "dietas_especiales" => trim($_POST["dietas_especiales"]), "observaciones" => trim($_POST["observaciones"]), "medicamentos_ids" => $_POST["medicamentos_seleccionados_ids"] ?? "", "enfermedades_ids" => $_POST["enfermedades_seleccionados_ids"] ?? ""];
-            $modelo = new ModeloHistoriaClinica();
-            if ($modelo->mdlEditarHistoriaClinica($datos) == "ok") {
-                echo '<script>alert("Historia Clínica actualizada correctamente."); window.location = "historia_clinica.php";</script>';
+    /*
+     Procesa la solicitud para eliminar (desactivar)
+     */
+    public function eliminar() {
+        if (isset($_GET["idHistoriaEliminar"])) {
+            $idHistoria = $_GET["idHistoriaEliminar"];
+            $respuesta = $this->modelo->mdlEliminarHistoriaClinica($idHistoria);
+
+            if ($respuesta == "ok") {
+                $_SESSION['mensaje'] = "Historia clínica eliminada correctamente.";
             } else {
-                echo '<script>alert("Error al actualizar la historia clínica."); window.location = "editar_historia_clinica.php?idHistoriaClinica=' . $_POST["id_historia_clinica_editar"] . '";</script>';
+                $_SESSION['error'] = "Error al eliminar la historia clínica.";
             }
+            header("Location: ../../views/admin/html_admin/historia_clinica.php");
+            exit();
         }
     }
-
-    static public function ctrEliminarHistoriaClinica() {
-        if (isset($_GET["idHistoriaClinica"])) {
-            $modelo = new ModeloHistoriaClinica();
-            if ($modelo->mdlDesactivarHistoriaClinica($_GET["idHistoriaClinica"]) == "ok") {
-                echo '<script>alert("Historia clínica eliminada."); window.location = "historia_clinica.php";</script>';
-            } else {
-                echo '<script>alert("Error al eliminar."); window.location = "historia_clinica.php";</script>';
-            }
-        }
+    
+    /**
+     * Obtiene y devuelve las historias clínicas para ser mostradas en la vista.
+     * @param string|null $item El campo por el cual filtrar.
+     * @param mixed|null $valor El valor a buscar.
+     * @return array Lista de historias clínicas.
+     */
+    public function mostrar($item = null, $valor = null) {
+        return $this->modelo->mdlConsultarHistoriaClinica($item, $valor);
     }
 }
+
+
+/*
+Lógica de Enrutamiento
+----------------------------------------------------------------------------
+Esta sección se encarga de decidir qué método del controlador llamar
+basándose en los datos recibidos por POST o GET.
+ */
+
+$controlador = new ControladorHistoriaClinica();
+
+// Si se está intentando registrar una nueva historia:
+if (isset($_POST['accion']) && $_POST['accion'] == 'registrar') {
+    $controlador->registrar();
+}
+
+// Si se está intentando actualizar una historia existente:
+if (isset($_POST['accion']) && $_POST['accion'] == 'actualizar') {
+    $controlador->actualizar();
+}
+
+// Si se está intentando eliminar una historia desde la URL:
+if (isset($_GET['idHistoriaEliminar'])) {
+    $controlador->eliminar();
+}
+
+// La función 'mostrar' se llamaría directamente desde el archivo de la vista (la página PHP que muestra la tabla).
+
+?>
