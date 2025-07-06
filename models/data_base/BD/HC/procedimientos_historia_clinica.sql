@@ -1,13 +1,10 @@
-USE gericare_connect;
-
--- Borrado seguro de procedimientos para una instalación limpia
-DROP PROCEDURE IF EXISTS `crear_historia_clinica_simple`;
-DROP PROCEDURE IF EXISTS `mostrar_historias_clinicas_simple`;
-DROP PROCEDURE IF EXISTS `obtener_historia_clinica_por_id_simple`;
-DROP PROCEDURE IF EXISTS `actualizar_historia_clinica_simple`;
-DROP PROCEDURE IF EXISTS `desactivar_historia_clinica_simple`;
-
-DELIMITER $$
+/*
+drop procedure registrar_historia_clinica;
+drop procedure consultar_historia_clinica;
+drop procedure actualizar_historia_clinica;
+drop procedure eliminar_historia_clinica;
+*/
+delimiter $$
 
 -- 1. CREAR una historia clínica (solo datos principales)
 CREATE PROCEDURE `crear_historia_clinica_simple`(
@@ -89,10 +86,17 @@ BEGIN
     WHERE id_historia_clinica = p_id_historia_clinica;
 END$$
 
--- 5. DESACTIVAR (borrado lógico) una historia clínica
-CREATE PROCEDURE `desactivar_historia_clinica_simple`(IN p_id_historia_clinica INT)
-BEGIN
-    UPDATE tb_historia_clinica SET estado = 'Inactivo' WHERE id_historia_clinica = p_id_historia_clinica;
-END$$
+-- =============================================
+-- procedimiento para eliminar (lógicamente) una historia clínica
+-- =============================================
+create procedure eliminar_historia_clinica(
+    in p_id_historia_clinica int
+)
+begin
+    -- se realiza una eliminación lógica cambiando el estado a 'Inactivo'
+    update tb_historia_clinica
+    set estado = 'Inactivo'
+    where id_historia_clinica = p_id_historia_clinica;
+end$$
 
 DELIMITER ;
