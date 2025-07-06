@@ -1,33 +1,44 @@
 <?php
-// --- Inicia la sesión y verifica los permisos de administrador ---
+// --- INICIO DE LÓGICA PHP ---
+
+// Se inician las dependencias y la sesión
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
-verificarAcceso(['Administrador']); // Solo administradores pueden acceder
+require_once __DIR__ . '/../../../controllers/admin/HC/historia_clinica_controlador.php';
+require_once __DIR__ . '/../../../models/clases/pacientes.php';
 
-// --- Incluye el controlador y el modelo necesarios ---
-require_once __DIR__ . "/../../../controllers/admin/HC/historia_clinica_controlador.php";
-require_once __DIR__ . "/../../../models/clases/pacientes.php"; // Para obtener la lista de pacientes
+// Si la página es llamada por el JavaScript con ?accion=buscar
+if (isset($_GET['accion']) && $_GET['accion'] == 'buscar') {
+    verificarAcceso(['Administrador']); // Seguridad para el endpoint
+    header('Content-Type: application/json'); // Indicamos que la respuesta es JSON
 
-// --- Instancia el controlador para usarlo en la vista ---
+    $controlador = new ControladorHistoriaClinica();
+    $busqueda = $_GET['busqueda'] ?? '';
+    $resultados = $controlador->mostrar('busqueda', $busqueda);
+    
+    // Si la consulta falla, el modelo devuelve 'false'. Nos aseguramos de devolver un array vacío.
+    echo json_encode($resultados ?: []); 
+    exit(); // Detenemos el script para no enviar el HTML
+}
+
+
+verificarAcceso(['Administrador']); // Seguridad para la vista
 $controlador = new ControladorHistoriaClinica();
 
-// --- Lógica para procesar las acciones del formulario ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["accion"])) {
-    if ($_POST['accion'] == 'registrar') {
-        $controlador->registrar();
-    }
+// Procesa el formulario de registro si se envía
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["accion"]) && $_POST['accion'] == 'registrar') {
+    $controlador->registrar();
 }
-// Procesa la eliminación si se pasa el ID por GET
+// Procesa la eliminación si se recibe el ID
 if (isset($_GET['idHistoriaEliminar'])) {
     $controlador->eliminar();
 }
 
-// --- Obtiene los datos necesarios para la vista ---
-$historias_clinicas = $controlador->mostrar(); // Llama al método del controlador para obtener todas las historias
+// Obtiene la lista de pacientes para el dropdown del formulario
 $paciente_model = new Paciente();
-$pacientes_activos = $paciente_model->consultar(); // Obtiene pacientes para el dropdown
+$pacientes_activos = $paciente_model->consultar();
 
 ?>
 <!DOCTYPE html>
@@ -89,6 +100,11 @@ $pacientes_activos = $paciente_model->consultar(); // Obtiene pacientes para el 
 
         <div class="table-container">
             <h2>Historias Clínicas Registradas</h2>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <input type="search" id="buscador-historias" placeholder="Buscar por nombre o cédula del paciente..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+            </div>
+
             <table>
                 <thead>
                     <tr>
@@ -99,33 +115,66 @@ $pacientes_activos = $paciente_model->consultar(); // Obtiene pacientes para el 
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php if (!empty($historias_clinicas)): ?>
-                        <?php foreach ($historias_clinicas as $historia): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($historia["id_historia_clinica"]) ?></td>
-                                <td><?= htmlspecialchars($historia["paciente_nombre_completo"]) ?></td>
-                                <td><?= htmlspecialchars($historia["fecha_formateada"]) ?></td>
-                                <td title="<?= htmlspecialchars($historia["estado_salud"]) ?>"><?= htmlspecialchars(substr($historia["estado_salud"], 0, 50)) . '...' ?></td>
-                                <td>
-                                    <a href="editar_historia_clinica.php?id=<?= $historia['id_historia_clinica'] ?>" class="btn btn-warning">Editar/Ver</a>
-                                    <a href="historia_clinica.php?idHistoriaEliminar=<?= $historia['id_historia_clinica'] ?>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta historia?');">Eliminar</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" style="text-align: center;">No hay historias clínicas registradas.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
+                <tbody id="tabla-historias-body">
+                    </tbody>
             </table>
         </div>
     </div>
     
     <script>
-        // Inicializa el buscador de pacientes con Select2
-        $(document).ready(function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const buscador = document.getElementById('buscador-historias');
+            const tablaBody = document.getElementById('tabla-historias-body');
+            let searchTimeout;
+
+            function cargarHistorias(busqueda = '') {
+                tablaBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
+                
+                // La URL del fetch apunta a este mismo archivo
+                const fetchUrl = `historia_clinica.php?accion=buscar&busqueda=${encodeURIComponent(busqueda)}`;
+                
+                fetch(fetchUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error HTTP ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        tablaBody.innerHTML = ''; 
+                        if (data && data.length > 0) {
+                            data.forEach(historia => {
+                                const estadoSalud = historia.estado_salud || '';
+                                const fila = `
+                                    <tr>
+                                        <td>${historia.id_historia_clinica}</td>
+                                        <td>${historia.paciente_nombre_completo}</td>
+                                        <td>${historia.fecha_formateada}</td>
+                                        <td title="${estadoSalud}">${estadoSalud.substring(0, 50)}...</td>
+                                        <td>
+                                            <a href="editar_historia_clinica.php?id=${historia.id_historia_clinica}" class="btn btn-warning">Editar/Ver</a>
+                                            <a href="historia_clinica.php?idHistoriaEliminar=${historia.id_historia_clinica}" class="btn btn-danger" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                                        </td>
+                                    </tr>
+                                `;
+                                tablaBody.innerHTML += fila;
+                            });
+                        } else {
+                            tablaBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No se encontraron historias clínicas.</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en fetch:', error);
+                        tablaBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Error al cargar los datos. Verifique la consola para más detalles.</td></tr>';
+                    });
+            }
+
+            cargarHistorias();
+            buscador.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => cargarHistorias(buscador.value), 400);
+            });
+            
             $('.select2-paciente').select2({
                 placeholder: "Escribe o selecciona un paciente",
                 allowClear: true

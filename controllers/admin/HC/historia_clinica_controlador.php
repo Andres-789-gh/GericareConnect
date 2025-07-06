@@ -93,7 +93,7 @@ class ControladorHistoriaClinica {
                 $_SESSION['error'] = "Error al actualizar la historia clínica.";
             }
             // Redirige de vuelta a la lista principal
-            header("Location: ../../views/admin/html_admin/historia_clinica.php");
+            header("Location: ../../../views/admin/html_admin/historia_clinica.php");
             exit();
         }
     }
@@ -111,7 +111,7 @@ class ControladorHistoriaClinica {
             } else {
                 $_SESSION['error'] = "Error al eliminar la historia clínica.";
             }
-            header("Location: ../../views/admin/html_admin/historia_clinica.php");
+            header("Location: ../../../views/admin/html_admin/historia_clinica.php");
             exit();
         }
     }

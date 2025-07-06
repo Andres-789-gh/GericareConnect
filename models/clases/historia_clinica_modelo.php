@@ -47,18 +47,14 @@ class ModeloHistoriaClinica {
 
     public function mdlConsultarHistoriaClinica($item, $valor) {
         try {
-            if ($item != null) {
-                // Prepara la llamada para buscar por un item específico
-                $stmt = $this->conn->prepare("CALL consultar_historia_clinica(:" . $item . ", NULL)");
-                if ($item == "id_historia_clinica") {
-                    $stmt->bindParam(":id_historia_clinica", $valor, PDO::PARAM_INT);
-                } elseif ($item == "id_paciente") {
-                    $stmt = $this->conn->prepare("CALL consultar_historia_clinica(NULL, :id_paciente)");
-                    $stmt->bindParam(":id_paciente", $valor, PDO::PARAM_INT);
-                }
-            } else {
-                return [];
-            }
+            // Prepara los parámetros para el procedimiento almacenado
+            $id_historia_clinica = ($item === 'id_historia_clinica') ? $valor : null;
+            $busqueda = ($item === 'busqueda') ? $valor : null;
+
+            $stmt = $this->conn->prepare("CALL consultar_historia_clinica(:id_historia_clinica, :busqueda)");
+            
+            $stmt->bindParam(":id_historia_clinica", $id_historia_clinica, PDO::PARAM_INT);
+            $stmt->bindParam(":busqueda", $busqueda, PDO::PARAM_STR);
             
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
