@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Llama al método del modelo
         $usuario->registrarEmpleado($datos); 
 
-        // $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado correctamente. Se ha enviado la contraseña al correo electrónico del usuario.";
-        $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado. Contraseña temporal: " . $clave_temporal;
+        $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado correctamente. Se ha enviado la contraseña al correo electrónico del usuario.";
+        // $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado. Contraseña temporal: " . $clave_temporal;
 
         // cod para envira el correo con la contraseña
         $correo_destinatario = $datos['correo_electronico'];

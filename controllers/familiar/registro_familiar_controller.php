@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $usuario->registrar($datos);
 
-        $_SESSION['mensaje'] = 'Familiar registrado correctamente. Contraseña temporal: ' . $clave_temporal;
-        // $_SESSION['mensaje'] = 'Familiar registrado correctamente. Se ha enviado la contraseña al correo electrónico del usuario.';
+        // $_SESSION['mensaje'] = 'Familiar registrado correctamente. Contraseña temporal: ' . $clave_temporal;
+        $_SESSION['mensaje'] = 'Familiar registrado correctamente. Se ha enviado la contraseña al correo electrónico del usuario.';
 
         // cod para envira el correo con la contraseña
         $correo_destinatario = $datos['correo_electronico'];
