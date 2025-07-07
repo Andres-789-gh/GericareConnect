@@ -144,7 +144,7 @@ create table tb_actividad (
     fecha_actividad date not null,
     hora_inicio time null,
     hora_fin time null,
-    estado_actividad enum('Pendiente','Completada','Cancelada') default 'Pendiente'
+    estado_actividad enum('Pendiente','Completada','Inactivo') default 'Pendiente'
 );
 
 -- tabla turno
@@ -319,3 +319,4 @@ select * from tb_medicamento;
 select * from tb_historia_clinica_medicamento;
 select * from tb_historia_clinica_enfermedad;
 select * from tb_paciente_asignado;
+select * from tb_actividad;

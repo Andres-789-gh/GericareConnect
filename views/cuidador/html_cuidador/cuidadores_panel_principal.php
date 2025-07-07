@@ -63,7 +63,7 @@ if (!isset($_SESSION['id_usuario'])) {
                 <li><a href="cuidadores_panel_principal.php" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
                 <li><a href="gestion_entradas_salidas.php"><i class="fas fa-calendar-plus"></i> Entradas y Salidas</a></li>
                 <li><a href="historia_clinica.php"><i class="fas fa-calendar-plus"></i> Historias Clinicas</a></li>
-                <li><a href="cuidador_agregar_actividad.html"><i class="fas fa-calendar-plus"></i> Agregar Actividad</a></li>
+                <li><a href="cuidador_actividades.php"><i class="fas fa-calendar-plus"></i> Actividades </a></li>
                 <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </nav>
