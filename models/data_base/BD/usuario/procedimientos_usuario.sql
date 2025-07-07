@@ -170,6 +170,7 @@ begin
 end //
 
 /* familiar */
+delimiter //
 create procedure registrar_familiar(
     in p_tipo_documento enum('CC','CE','PA'),
     in p_documento_identificacion int,
@@ -185,14 +186,15 @@ begin
     declare v_id_usuario int;
     declare v_id_rol int;
 
+    -- Validaciones
     if exists (select 1 from tb_usuario where documento_identificacion = p_documento_identificacion) then
         signal sqlstate '45000' set message_text = 'Error: Ya existe un usuario con ese número de documento.';
     end if;
-
     if exists (select 1 from tb_usuario where correo_electronico = p_correo_electronico) then
         signal sqlstate '45000' set message_text = 'Error: Ya existe un usuario con ese correo electrónico.';
     end if;
 
+    -- Obtener rol 'Familiar'
     select id_rol into v_id_rol from tb_rol where nombre_rol = 'Familiar';
     if v_id_rol is null then
         signal sqlstate '45000' set message_text = 'Error: El rol "Familiar" no se encuentra en la base de datos.';
@@ -200,28 +202,25 @@ begin
 
     start transaction;
 
+    -- Solo se insertan los campos relevantes para un familiar
+    -- La bd se encarga de poner NULL en los demás campos por defecto
     insert into tb_usuario (
         tipo_documento, documento_identificacion, nombre, apellido, direccion,
-        correo_electronico, contraseña, -- <-- CORRECCIÓN APLICADA AQUÍ
-        parentesco, id_rol,
-        fecha_nacimiento, fecha_contratacion, tipo_contrato, contacto_emergencia
+        correo_electronico, contraseña, parentesco, id_rol
     ) values (
         p_tipo_documento, p_documento_identificacion, p_nombre, p_apellido, p_direccion,
-        p_correo_electronico, p_contraseña_hash,
-        p_parentesco, v_id_rol,
-        null, null, null, null
+        p_correo_electronico, p_contraseña_hash, p_parentesco, v_id_rol
     );
 
     set v_id_usuario = last_insert_id();
 
+    -- Inserción de teléfono
     if p_numero_telefono is not null and p_numero_telefono != '' then
         insert into tb_telefono (id_usuario, numero_telefono)
         values (v_id_usuario, p_numero_telefono);
     end if;
 
     commit;
-
     select v_id_usuario as id_usuario_creado;
 end //
-
 delimiter ;
