@@ -37,6 +37,14 @@ if (!$datos_hc) {
     header("Location: historia_clinica.php");
     exit();
 }
+
+// Se define la URL de retorno por defecto para el Administrador
+$url_volver = 'historia_clinica.php'; 
+// Si el rol en la sesión es 'Cuidador', se cambia la URL
+if (isset($_SESSION['nombre_rol']) && $_SESSION['nombre_rol'] === 'Cuidador') {
+    $url_volver = '../../cuidador/html_cuidador/historia_clinica.php';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -130,7 +138,7 @@ if (!$datos_hc) {
 
         <div class="report-footer">
             <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Imprimir Reporte</button>
-            <a href="historia_clinica.php" class="btn btn-secondary">Volver a la Lista</a>
+            <a href="<?= $url_volver ?>" class="btn btn-secondary">Volver a la Lista</a>
         </div>
     </div>
 </body>
