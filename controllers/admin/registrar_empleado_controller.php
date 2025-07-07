@@ -40,8 +40,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Llama al método del modelo
         $usuario->registrarEmpleado($datos); 
 
-        // Muestra la contraseña temporal al administrador
+        // $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado correctamente. Se ha enviado la contraseña al correo electrónico del usuario.";
         $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado. Contraseña temporal: " . $clave_temporal;
+
+        // cod para envira el correo con la contraseña
+        $correo_destinatario = $datos['correo_electronico'];
+        $nombre_destinatario = $datos['nombre'];
+        $asunto = "Bienvenido a GeriCare Connect - Su Contraseña Temporal";
+
+        // Cuerpo del correo en formato HTML
+        $cuerpo_correo = "
+        <html>
+        <body style='font-family: Arial, sans-serif; color: #333;'>
+            <h2>¡Hola, " . htmlspecialchars($nombre_destinatario) . "!</h2>
+            <p>Te damos la bienvenida a <strong>GeriCare Connect</strong>. Tu cuenta de empleado ha sido creada exitosamente.</p>
+            <p>Puedes iniciar sesión con tu documento de identificación y la siguiente contraseña:</p>
+            <p style='background-color: #f2f2f2; border: 1px solid #ddd; padding: 10px; font-size: 18px; font-weight: bold; text-align: center;'>
+                " . htmlspecialchars($clave_temporal) . "
+            </p>
+            <p>Te recomendamos cambiar tu contraseña después de iniciar sesión por primera vez.</p>
+            <p>Gracias,<br>El equipo de GeriCare Connect</p>
+        </body>
+        </html>
+        ";
+
+        // Cabeceras para que el correo se envíe en formato HTML
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        // Correo que aparecera como remitente
+        $headers .= 'From: GeriCare Connect <gericareconnect@gmail.com>' . "\r\n";
+
+        // Se envía el correo (el @ suprime los errores en pantalla si el servidor no está configurado)
+        @mail($correo_destinatario, $asunto, $cuerpo_correo, $headers);
 
     } catch (Exception $e) {
         $_SESSION['error'] = "Error al registrar: " . $e->getMessage();

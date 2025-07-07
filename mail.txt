@@ -1,0 +1,22 @@
+XAMMP Control Panel -> Apache -> Config -> PHP (php.ini)
+Poner este cod en "[mail function]" (si el xammp se instalo en otro path hay que cambiar el path "sendmail_path"):
+
+[mail function]
+SMTP = smtp.gmail.com
+smtp_port = 587
+sendmail_from = gericareconnect@gmail.com
+sendmail_path = "\"C:\xampp\sendmail\sendmail.exe\" -t"
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Carpeta XAMPP (en el explorador de archivos) -> carpeta "sendmail" -> archivo "sendmail.ini"
+Poner este cod en "[sendmail]" (Contraseña de app: ycnsyqrkyiscayxh): 
+
+[sendmail]
+smtp_server=smtp.gmail.com
+smtp_port=587
+error_logfile=error.log
+debug_logfile=debug.log
+auth_username=gericareconnect@gmail.com
+auth_password=ycnsyqrkyiscayxh
+force_sender=gericareconnect@gmail.com
