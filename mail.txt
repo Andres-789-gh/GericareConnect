@@ -10,7 +10,7 @@ sendmail_path = "\"C:\xampp\sendmail\sendmail.exe\" -t"
 -------------------------------------------------------------------------------------------------------------------------
 
 Carpeta XAMPP (en el explorador de archivos) -> carpeta "sendmail" -> archivo "sendmail.ini"
-Poner este cod en "[sendmail]" (Contraseña de app: ycnsyqrkyiscayxh): 
+Poner este cod en "[sendmail]" (Contraseña de app: voyibwjqznskfkio): 
 
 [sendmail]
 smtp_server=smtp.gmail.com
@@ -18,5 +18,5 @@ smtp_port=587
 error_logfile=error.log
 debug_logfile=debug.log
 auth_username=gericareconnect@gmail.com
-auth_password=ycnsyqrkyiscayxh
+auth_password=voyibwjqznskfkio
 force_sender=gericareconnect@gmail.com
