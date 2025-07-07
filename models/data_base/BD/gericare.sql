@@ -138,7 +138,7 @@ create table tb_tratamiento (
 create table tb_actividad (
     id_actividad int primary key auto_increment,
     id_paciente int not null,
-    id_usuario_cuidador int not null,
+    id_usuario_administrador int not null,
     tipo_actividad varchar(100) not null,
     descripcion_actividad text null,
     fecha_actividad date not null,
@@ -242,8 +242,8 @@ alter table tb_actividad
     foreign key (id_paciente) references tb_paciente(id_paciente);
 
 alter table tb_actividad
-    add constraint fk_actividad_usuario_cuidador
-    foreign key (id_usuario_cuidador) references tb_usuario(id_usuario);
+    add constraint fk_actividad_usuario_administrador
+    foreign key (id_usuario_administrador) references tb_usuario(id_usuario);
 
 alter table tb_entrada_salida_paciente
     add constraint fk_entrada_salida_paciente
@@ -296,21 +296,13 @@ insert into tb_rol (nombre_rol, descripcion_rol) values
 ('Cuidador', 'Gestiona actividades, tratamientos e historias clínicas'),
 ('Familiar', 'Realiza solicitudes y ve la información de su paciente');
 
-insert into tb_usuario (
-    tipo_documento, documento_identificacion, nombre, apellido, fecha_nacimiento,
-    direccion, correo_electronico, contraseña, estado,
-    fecha_contratacion, tipo_contrato, contacto_emergencia, parentesco, id_rol
-)
-values
+insert into tb_usuario (tipo_documento, documento_identificacion, nombre, apellido, fecha_nacimiento, direccion, correo_electronico, contraseña, estado, fecha_contratacion, tipo_contrato, contacto_emergencia, parentesco, id_rol) values
 -- Administrador (contraseña: admin123)
-('CC', 1001, 'Ana', 'Gómez', '1980-05-10', 'Calle 1 #23-45', 'ana.admin@gmail.com', 'contraseña1', 'Activo',
- '2020-01-01', 'Término indefinido', '3123456789', null, 1),
+('CC', 1001, 'Ana', 'Gómez', '1980-05-10', 'Calle 1 #23-45', 'ana.admin@gmail.com', 'contraseña1', 'Activo', '2020-01-01', 'Término indefinido', '3123456789', null, 1),
 -- Cuidador (contraseña: cuidador123)
-('CC', 1002, 'Luis', 'Pérez', '1990-07-15', 'Carrera 7 #89-12', 'luis.cuidador@gmail.com', 'contraseña2', 'Activo',
- '2021-03-20', 'Por prestación', '3009876543', null, 2),
+('CC', 1002, 'Luis', 'Pérez', '1990-07-15', 'Carrera 7 #89-12', 'luis.cuidador@gmail.com', 'contraseña2', 'Activo', '2021-03-20', 'Por prestación', '3009876543', null, 2),
 -- Familiar (contraseña: familiar123)
-('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@gmail.com', 'contraseña3', 'Activo',
- null, null, null, 'Madre', 3);
+('CC', 1003, 'Marta', 'Ramírez', '1975-03-22', 'Transversal 45 #67-89', 'marta.familiar@gmail.com', 'contraseña3', 'Activo', null, null, null, 'Madre', 3);
  
 /*  */
 use gericare_connect;
@@ -324,30 +316,3 @@ select * from tb_enfermedad;
 select * from tb_medicamento;
 select * from tb_historia_clinica_medicamento;
 select * from tb_historia_clinica_enfermedad;
-
--- INSERTS MANUALES
-
-
--- Insert sample medicamento
-INSERT INTO tb_medicamento (nombre_medicamento, descripcion_medicamento, estado) VALUES
-('Paracetamol', 'Analgésico y antipirético', 'Activo'),
-('Losartán', 'Medicamento para la presión arterial', 'Activo'),
-('Insulina Glargina', 'Para el control de la diabetes', 'Activo');
-
--- Insert sample enefermedades
-INSERT INTO tb_enfermedad (nombre_enfermedad, descripcion_enfermedad, estado) VALUES
-('Diabetes Mellitus Tipo 2', 'Enfermedad crónica que afecta la forma en que el cuerpo procesa el azúcar en la sangre', 'Activo'),
-('Hipertensión Arterial', 'Condición crónica en la que la presión en las arterias es consistentemente alta', 'Activo'),
-('Artrosis de Rodilla', 'Enfermedad degenerativa de las articulaciones', 'Activo');
-
--- Insert sample paciente
-
-INSERT INTO tb_paciente (
-    documento_identificacion, nombre, apellido, fecha_nacimiento, genero,
-    contacto_emergencia, estado_civil, tipo_sangre, seguro_medico,
-    numero_seguro, id_usuario_familiar, estado
-) VALUES (
-    123456789, 'Elena', 'Díaz', '1945-11-20', 'Femenino',
-    '3109876543', 'Viuda', 'O+', 'Seguros Vitality',
-    'SGV-789012', 3, 'Activo'
-);

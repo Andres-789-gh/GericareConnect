@@ -59,12 +59,4 @@ begin
     update tb_solicitud set estado_solicitud = 'Cancelada' where id_paciente = p_id_paciente_a_desactivar AND estado_solicitud = 'Pendiente';
 
 end //
-/*create procedure desactivar_paciente(
-    in p_id_paciente_a_desactivar int
-)
-begin
-    update tb_paciente set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
-    -- desactivar asignaciones, etc
-    update tb_paciente_asignado set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
-end //*/
 delimiter ;
