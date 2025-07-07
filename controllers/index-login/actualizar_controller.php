@@ -59,12 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Limpiar campos dependiendo del rol
     $rol = $_POST['rol'] ?? '';
+    $fecha_nacimiento = $_POST['fecha_nacimiento'] ?? null;
     $fecha_contratacion = $_POST['fecha_contratacion'] ?? null;
     $tipo_contrato = $_POST['tipo_contrato'] ?? null;
     $contacto_emergencia = $_POST['contacto_emergencia'] ?? null;
     $parentesco = $_POST['parentesco'] ?? null;
 
     if ($rol === 'Familiar') {
+        $fecha_nacimiento = null;
         $fecha_contratacion = null;
         $tipo_contrato = null;
         $contacto_emergencia = null;
@@ -85,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'fecha_contratacion'       => $fecha_contratacion,
         'tipo_contrato'            => $tipo_contrato,
         'contacto_emergencia'      => $contacto_emergencia,
-        'fecha_nacimiento'         => $_POST['fecha_nacimiento'],
+        'fecha_nacimiento'         => $fecha_nacimiento,
         'parentesco'               => $parentesco,
         'nombre_rol'               => $rol,
     ];

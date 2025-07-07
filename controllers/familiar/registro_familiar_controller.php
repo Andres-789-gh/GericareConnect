@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $usuario = new familiar(); // Se usa la clase específica
 
-        // Eliminar campo 'rol' antes de pasarlo si no se usa en el SP
+        // Eliminar campo 'rol' antes de pasarlo
         unset($datos['rol']); 
 
         $usuario->registrar($datos);

@@ -29,13 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
             isValid = false;
         }
 
-        // Fecha de Nacimiento
-        const fechaNacimiento = document.getElementById('fecha_nacimiento');
-        if (fechaNacimiento.value === '') {
-            document.getElementById('error-fecha_nacimiento').textContent = 'La fecha de nacimiento es obligatoria.';
-            isValid = false;
-        }
-
         // Dirección
         const direccion = document.getElementById('direccion');
         if (direccion.value.trim() === '') {
@@ -71,6 +64,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Si está visible validar sus campos
         if (camposCuidadorAdmin && camposCuidadorAdmin.style.display !== 'none') {
+
+            // Fecha de Nacimiento
+            const fechaNacimiento = document.getElementById('fecha_nacimiento');
+            if (fechaNacimiento.value === '') {
+                document.getElementById('error-fecha_nacimiento').textContent = 'La fecha de nacimiento es obligatoria.';
+                isValid = false;
+            }
 
             // Fecha de Contratación
             const fechaContratacion = document.getElementById('fecha_contratacion');

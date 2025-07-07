@@ -316,3 +316,4 @@ select * from tb_enfermedad;
 select * from tb_medicamento;
 select * from tb_historia_clinica_medicamento;
 select * from tb_historia_clinica_enfermedad;
+select * from tb_paciente_asignado;

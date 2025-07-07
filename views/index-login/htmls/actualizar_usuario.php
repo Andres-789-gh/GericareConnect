@@ -47,10 +47,6 @@ $esFamiliar = $rol === 'Familiar';
             <input type="text" name="apellido" id="apellido" value="<?= htmlspecialchars($datosUsuario['apellido']) ?>">
             <small id="error-apellido" class="mensaje-error-campo"></small>
 
-            <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
-            <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>">
-            <small id="error-fecha_nacimiento" class="mensaje-error-campo"></small>
-
             <label for="direccion" class="form-label">Dirección</label>
             <input type="text" name="direccion" id="direccion" value="<?= htmlspecialchars($datosUsuario['direccion']) ?>">
             <small id="error-direccion" class="mensaje-error-campo"></small>
@@ -65,6 +61,10 @@ $esFamiliar = $rol === 'Familiar';
 
             <!-- Campos para Cuidador y Administrador -->
             <div id="campos-cuidador-admin" class="campos-rol form-grid" style="<?= $esFamiliar ? 'display:none;' : '' ?>">
+
+                <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>">
+                <small id="error-fecha_nacimiento" class="mensaje-error-campo"></small>
 
                 <label for="fecha_contratacion" class="form-label">Fecha de contratación</label>
                 <input type="date" name="fecha_contratacion" id="fecha_contratacion" value="<?= htmlspecialchars($datosUsuario['fecha_contratacion'] ?? '') ?>">

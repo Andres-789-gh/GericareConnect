@@ -53,13 +53,17 @@ begin
 
     if lower(p_nombre_rol) = 'familiar' then
         /* Para un familiar solo se valida que los campos de empleado estén vacíos. */
-        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null then
+        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null or p_fecha_nacimiento is not null then
             signal sqlstate '45000' set message_text = 'error: un familiar no debe tener datos de empleado.';
         end if;
     else
         /* Para un empleado (Cuidador/Admin) se valida que los campos de empleado no estén vacíos. */
-        if p_fecha_contratacion is null or p_tipo_contrato is null or p_contacto_emergencia is null then
+        if p_fecha_contratacion is null or p_tipo_contrato is null or p_contacto_emergencia is null or p_fecha_nacimiento is null then
             signal sqlstate '45000' set message_text = 'error: datos de empleado incompletos.';
+        end if;
+        /* un empleado no debe tener parentesco. */
+        if p_parentesco is not null then
+            signal sqlstate '45000' set message_text = 'error: un empleado no puede tener un parentesco.';
         end if;
     end if;
 
