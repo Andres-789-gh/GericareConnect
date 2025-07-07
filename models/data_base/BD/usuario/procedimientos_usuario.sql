@@ -1,3 +1,5 @@
+use gericare_connect;
+
 delimiter //
 create procedure actualizar_usuario(
     in p_id_usuario int,
@@ -17,60 +19,38 @@ create procedure actualizar_usuario(
 )
 begin
     declare v_id_rol int;
-    declare v_error_msg varchar(255);
-    declare v_telefono_count int;
 
-    if exists (
-        select 1 from tb_usuario
-        where documento_identificacion = p_documento_identificacion
-        and id_usuario != p_id_usuario
-    ) then
+    -- validaciones
+    if exists (select 1 from tb_usuario where documento_identificacion = p_documento_identificacion and id_usuario != p_id_usuario) then
         signal sqlstate '45000' set message_text = 'error: el documento ya está registrado por otro usuario.';
     end if;
-
-    if exists (
-        select 1 from tb_usuario
-        where correo_electronico = p_correo_electronico
-        and id_usuario != p_id_usuario
-    ) then
+    if exists (select 1 from tb_usuario where correo_electronico = p_correo_electronico and id_usuario != p_id_usuario) then
         signal sqlstate '45000' set message_text = 'error: el correo ya está registrado por otro usuario.';
     end if;
-
-    if not exists (
-        select 1 from tb_rol where lower(nombre_rol) = lower(trim(p_nombre_rol))
-    ) then
-        if p_nombre_rol is null then
-            set v_error_msg = 'error: el rol es nulo o no fue proporcionado.';
-        else
-            set v_error_msg = concat('error: el rol "', coalesce(trim(p_nombre_rol), ''), '" no es válido.');
-        end if;
-        signal sqlstate '45000' set message_text = v_error_msg;
+    select id_rol into v_id_rol from tb_rol where lower(nombre_rol) = lower(trim(p_nombre_rol));
+    if v_id_rol is null then
+        signal sqlstate '45000' set message_text = 'error: el rol proporcionado no es válido.';
     end if;
 
-    select id_rol into v_id_rol
-    from tb_rol
-    where lower(nombre_rol) = lower(trim(p_nombre_rol));
-
+    -- lógica de limpieza y validación
     if lower(p_nombre_rol) = 'familiar' then
-        /* Para un familiar solo se valida que los campos de empleado estén vacíos. */
-        if p_fecha_contratacion is not null or p_tipo_contrato is not null or p_contacto_emergencia is not null or p_fecha_nacimiento is not null then
-            signal sqlstate '45000' set message_text = 'error: un familiar no debe tener datos de empleado.';
+        set p_fecha_contratacion = null;
+        set p_tipo_contrato = null;
+        set p_contacto_emergencia = null;
+        set p_fecha_nacimiento = null;
+        if p_parentesco is null or trim(p_parentesco) = '' then
+             signal sqlstate '45000' set message_text = 'error: un familiar debe tener un parentesco.';
         end if;
     else
-        /* Para un empleado (Cuidador/Admin) se valida que los campos de empleado no estén vacíos. */
+        set p_parentesco = null;
         if p_fecha_contratacion is null or p_tipo_contrato is null or p_contacto_emergencia is null or p_fecha_nacimiento is null then
-            signal sqlstate '45000' set message_text = 'error: datos de empleado incompletos.';
-        end if;
-        /* un empleado no debe tener parentesco. */
-        if p_parentesco is not null then
-            signal sqlstate '45000' set message_text = 'error: un empleado no puede tener un parentesco.';
+            signal sqlstate '45000' set message_text = 'error: los datos de empleado son obligatorios.';
         end if;
     end if;
 
     start transaction;
 
-    update tb_usuario
-    set
+    update tb_usuario set
         tipo_documento = p_tipo_documento,
         documento_identificacion = p_documento_identificacion,
         nombre = p_nombre,
@@ -85,25 +65,16 @@ begin
         id_rol = v_id_rol
     where id_usuario = p_id_usuario;
 
-    if p_numero_telefono is not null then
-        /* Contar cuántos telefonos activos tiene el usuario */
-        select count(*) into v_telefono_count from tb_telefono where id_usuario = p_id_usuario and estado = 'Activo';
-
-        if v_telefono_count > 0 then
-            /* Si ya tiene al menos un teléfono actualizar el primero que encontremos */
-            update tb_telefono
-            set numero_telefono = p_numero_telefono
-            where id_usuario = p_id_usuario AND estado = 'Activo'
-            limit 1; /* limitar a 1 para no actualizar varios si los tiene */
+    if p_numero_telefono is not null and p_numero_telefono != '' then
+        if (select count(*) from tb_telefono where id_usuario = p_id_usuario and estado = 'activo') > 0 then
+            update tb_telefono set numero_telefono = p_numero_telefono where id_usuario = p_id_usuario and estado = 'activo' limit 1;
         else
-            /* Si no tiene ningún teléfono insertar uno nuevo */
-            insert into tb_telefono (id_usuario, numero_telefono, estado)
-            values (p_id_usuario, p_numero_telefono, 'Activo');
+            insert into tb_telefono (id_usuario, numero_telefono, estado) values (p_id_usuario, p_numero_telefono, 'activo');
         end if;
     end if;
 
     commit;
-end //
+end//
 delimiter ;
 
 /* Registrar */
