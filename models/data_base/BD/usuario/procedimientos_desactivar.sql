@@ -40,23 +40,51 @@ create procedure desactivar_paciente(
     in p_id_paciente_a_desactivar int
 )
 begin
-    -- 1. Eliminar el paciente
-    update tb_paciente set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
+    declare v_id_historia_clinica int;
 
-    -- 2. Eliminar las asignaciones del paciente
-    update tb_paciente_asignado set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
+    -- iniciar una transacción para asegurar que todas las operaciones se completen o ninguna lo haga
+    start transaction;
 
-    -- 3. Eliminar la HC del paciente
-    update tb_historia_clinica set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
+    -- obtener el id de la historia clínica del paciente si existe
+    select id_historia_clinica into v_id_historia_clinica
+    from tb_historia_clinica
+    where id_paciente = p_id_paciente_a_desactivar and estado = 'activo'
+    limit 1;
 
-    -- 4. Eliminar tratamientos
-    update tb_tratamiento set estado_tratamiento = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar and estado_tratamiento = 'Activo';
+    -- 1. desactivar el paciente
+    update tb_paciente set estado = 'inactivo' where id_paciente = p_id_paciente_a_desactivar;
 
-    -- 5. Eliminar actividades 
-    update tb_actividad set estado_actividad = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar and estado_actividad = 'Pendiente';
+    -- 2. desactivar todas las asignaciones del paciente a cuidadores
+    update tb_paciente_asignado set estado = 'inactivo' where id_paciente = p_id_paciente_a_desactivar;
 
-    -- 6. Eliminar solicitudes 
-    update tb_solicitud set estado_solicitud = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar and estado_solicitud = 'Pendiente';
+    -- 3. desactivar actividades del paciente
+    update tb_actividad set estado_actividad = 'inactivo'
+    where id_paciente = p_id_paciente_a_desactivar and estado_actividad = 'pendiente';
+    
+    -- 4. desactivar tratamientos del paciente
+    update tb_tratamiento set estado_tratamiento = 'inactivo'
+    where id_paciente = p_id_paciente_a_desactivar and estado_tratamiento = 'activo';
 
-end //
+    -- 5. desactivar solicitudes relacionadas al paciente
+    update tb_solicitud set estado_solicitud = 'inactivo'
+    where id_paciente = p_id_paciente_a_desactivar and estado_solicitud = 'pendiente';
+
+    -- 6. si el paciente tiene una historia clínica junto con sus detalles
+    if v_id_historia_clinica is not null then
+        -- desactivar la historia clínica principal
+        update tb_historia_clinica set estado = 'inactivo' where id_historia_clinica = v_id_historia_clinica;
+
+        -- desactivar medicamentos asignados en esa historia
+        update tb_historia_clinica_medicamento set estado = 'inactivo' where id_historia_clinica = v_id_historia_clinica;
+
+        -- desactivar enfermedades asignadas en esa historia
+        update tb_historia_clinica_enfermedad set estado = 'inactivo' where id_historia_clinica = v_id_historia_clinica;
+
+        -- desactivar cirugías registradas en esa historia
+        update tb_historia_clinica_cirugia set estado = 'inactivo' where id_historia_clinica = v_id_historia_clinica;
+    end if;
+
+    -- confirmar todos los cambios si no hubo errores
+    commit;
+end//
 delimiter ;
