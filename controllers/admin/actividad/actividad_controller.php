@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../../models/clases/actividad.php';
 verificarAcceso(['Administrador']);
 
 $redirect_location = '/GericareConnect/views/admin/html_admin/admin_actividades.php';
-$form_location = '/GericareConnect/views/admin/html_admin/form_actividad.php';
+$form_location = '/GericareConnect/views/admin/html_admin/form_actividades.php';
 
 if (!isset($_POST['accion'])) {
     header("Location: $redirect_location");
