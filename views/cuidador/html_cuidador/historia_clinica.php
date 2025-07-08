@@ -25,7 +25,7 @@ $historias = $modelo->consultarHistoriasPorCuidador($_SESSION['id_usuario'], $bu
         </div>
         <nav>
             <ul>
-                <li><a href="cuidadores_panel_principal.php"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+                <li><a href="cuidadores_panel_principal.php"><i class="fas fa-chevron-left"></i> Volver Al Panel Principal</a></li>
                 <li><a href="historia_clinica.php" class="active"><i class="fas fa-file-medical"></i> Historias Clínicas</a></li>
                 <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>

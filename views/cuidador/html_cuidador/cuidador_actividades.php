@@ -100,7 +100,7 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
 
         function confirmarCompletar(id, nombreActividad, nombrePaciente) {
             Swal.fire({
-                title: 'Confirmar Acción',
+                title: '¿Estas Seguro?',
                 html: `¿Deseas marcar la actividad "<b>${nombreActividad}</b>" asignada a <b>${nombrePaciente}</b> como completada?`,
                 icon: 'question',
                 showCancelButton: true,

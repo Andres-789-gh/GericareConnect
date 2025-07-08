@@ -581,18 +581,18 @@ delimiter ;
 
 
 delimiter //
-
 create procedure admin_consulta_global(
     in p_filtro_tipo varchar(50),
     in p_busqueda varchar(100),
     in p_id_admin_actual int
 )
 begin
-    -- si se filtra por un rol de usuario
+    -- lógica para buscar usuarios
     if p_filtro_tipo in ('Familiar', 'Cuidador', 'Administrador') then
         select
             u.id_usuario as id, 'Usuario' as tipo_entidad, u.documento_identificacion as documento,
-            concat(u.nombre, ' ', u.apellido) as nombre_completo, r.nombre_rol as rol, u.correo_electronico as contacto
+            concat(u.nombre, ' ', u.apellido) as nombre_completo, r.nombre_rol as rol, u.correo_electronico as contacto,
+            u.fecha_nacimiento, null as genero
         from tb_usuario as u
         join tb_rol as r on u.id_rol = r.id_rol
         where
@@ -600,58 +600,65 @@ begin
             and u.estado = 'Activo'
             and u.id_usuario != p_id_admin_actual
             and (
-                p_busqueda is null or p_busqueda = '' or
-                u.nombre like concat('%', p_busqueda, '%') or
-                u.apellido like concat('%', p_busqueda, '%') or
+                p_busqueda is null or p_busqueda = '' or 
+                u.nombre like concat('%', p_busqueda, '%') or 
+                u.apellido like concat('%', p_busqueda, '%') or 
                 u.documento_identificacion like concat('%', p_busqueda, '%')
             );
-    -- si se filtra por paciente
+    
+    -- lógica para buscar pacientes
     elseif p_filtro_tipo = 'Paciente' then
         select
             p.id_paciente as id, 'Paciente' as tipo_entidad, p.documento_identificacion as documento,
-            concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto
+            concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto,
+            p.fecha_nacimiento, p.genero
         from tb_paciente as p
         where
             p.estado = 'Activo'
             and (
-                p_busqueda is null or p_busqueda = '' or
-                p.nombre like concat('%', p_busqueda, '%') or
-                p.apellido like concat('%', p_busqueda, '%') or
+                p_busqueda is null or p_busqueda = '' or 
+                p.nombre like concat('%', p_busqueda, '%') or 
+                p.apellido like concat('%', p_busqueda, '%') or 
                 p.documento_identificacion like concat('%', p_busqueda, '%')
             );
-    -- si no hay filtro de tipo, busca en todos los activos
+
+    -- lógica para buscar en todos
     else
-        (select
-            u.id_usuario as id, 'Usuario' as tipo_entidad, u.documento_identificacion as documento,
-            concat(u.nombre, ' ', u.apellido) as nombre_completo, r.nombre_rol as rol, u.correo_electronico as contacto
-        from tb_usuario as u
-        join tb_rol as r on u.id_rol = r.id_rol
-        where
-            r.nombre_rol != 'Administrador'
-            and u.estado = 'Activo'
-            and (
-                p_busqueda is null or p_busqueda = '' or
-                u.nombre like concat('%', p_busqueda, '%') or
-                u.apellido like concat('%', p_busqueda, '%') or
-                u.documento_identificacion like concat('%', p_busqueda, '%')
-            )
+        (
+            select
+                u.id_usuario as id, 'Usuario' as tipo_entidad, u.documento_identificacion as documento,
+                concat(u.nombre, ' ', u.apellido) as nombre_completo, r.nombre_rol as rol, u.correo_electronico as contacto,
+                u.fecha_nacimiento, null as genero
+            from tb_usuario as u
+            join tb_rol as r on u.id_rol = r.id_rol
+            where 
+                r.nombre_rol != 'Administrador'
+                and u.estado = 'Activo'
+                and (
+                    p_busqueda is null or p_busqueda = '' or 
+                    u.nombre like concat('%', p_busqueda, '%') or 
+                    u.apellido like concat('%', p_busqueda, '%') or 
+                    u.documento_identificacion like concat('%', p_busqueda, '%')
+                )
         )
         union all
-        (select
-            p.id_paciente as id, 'Paciente' as tipo_entidad, p.documento_identificacion as documento,
-            concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto
-        from tb_paciente as p
-        where
-            p.estado = 'Activo'
-            and (
-                p_busqueda is null or p_busqueda = '' or
-                p.nombre like concat('%', p_busqueda, '%') or
-                p.apellido like concat('%', p_busqueda, '%') or
-                p.documento_identificacion like concat('%', p_busqueda, '%')
-            )
+        (
+            select
+                p.id_paciente as id, 'Paciente' as tipo_entidad, p.documento_identificacion as documento,
+                concat(p.nombre, ' ', p.apellido) as nombre_completo, 'Paciente' as rol, p.contacto_emergencia as contacto,
+                p.fecha_nacimiento, p.genero
+            from tb_paciente as p
+            where 
+                p.estado = 'Activo'
+                and (
+                    p_busqueda is null or p_busqueda = '' or 
+                    p.nombre like concat('%', p_busqueda, '%') or 
+                    p.apellido like concat('%', p_busqueda, '%') or 
+                    p.documento_identificacion like concat('%', p_busqueda, '%')
+                )
         );
     end if;
-end //
+end//
 delimiter ;
 
 /* ------------------------------------------------------------------ */
