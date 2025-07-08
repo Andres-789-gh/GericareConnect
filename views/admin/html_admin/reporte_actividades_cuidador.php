@@ -9,16 +9,13 @@ verificarAcceso(['Administrador']);
 $modelo_actividad = new Actividad();
 $modelo_usuario = new usuario();
 
-// Obtener la lista de todos los cuidadores para el filtro
 $cuidadores = $modelo_usuario->obtenerUsuariosPorRol('Cuidador');
 
-// Capturar los filtros de la URL
 $id_cuidador_filtro = $_GET['cuidador'] ?? '';
 $busqueda = $_GET['busqueda'] ?? '';
 $estado_filtro = $_GET['estado'] ?? '';
 
 $actividades = [];
-// Si se ha seleccionado un cuidador, se buscan sus actividades
 if (!empty($id_cuidador_filtro)) {
     $actividades = $modelo_actividad->consultarPorCuidador($id_cuidador_filtro, $busqueda, $estado_filtro);
 }
@@ -32,40 +29,38 @@ if (!empty($id_cuidador_filtro)) {
     <link rel="stylesheet" href="../css_admin/historia_clinica_lista.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .search-container form {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap; /* Para que se ajuste en pantallas pequeñas */
-        }
-        .search-container .form-group {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .search-container label {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .search-container input, .search-container select {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .search-container form { display: flex; gap: 15px; flex-wrap: wrap; }
+        .search-container .form-group { display: flex; flex-direction: column; flex-grow: 1; }
+        .search-container label { font-size: 0.9em; color: #555; margin-bottom: 5px; }
+        .search-container input, .search-container select { padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; outline: none; }
+        .search-container input { min-width: 250px; }
+        .search-container button { align-self: flex-end; }
+        .report-subtitle { text-align: center; color: #6c757d; margin-top: 2rem; font-style: italic; }
+
+        /* ===== ESTILOS PARA EL NUEVO BOTÓN ===== */
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
             font-size: 1rem;
-            outline: none;
+            font-weight: 500;
+            color: white;
+            background-color: #1D6F42; /* Un verde oscuro de Excel */
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
-        .search-container input {
-             min-width: 250px; /* Ancho mínimo para el campo de búsqueda */
+        .btn-export:hover {
+            background-color: #165934; /* Un tono más oscuro al pasar el mouse */
+            transform: translateY(-2px); /* Efecto de levantar el botón */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .search-container button {
-            align-self: flex-end; /* Alinear el botón con la parte inferior de los inputs */
-        }
-        .report-subtitle {
-            text-align: center;
-            color: #6c757d;
-            margin-top: 2rem;
-            font-style: italic;
-        }
+        /* ======================================= */
+
     </style>
 </head>
 <body>
@@ -102,7 +97,6 @@ if (!empty($id_cuidador_filtro)) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="estado">Filtrar por Estado:</label>
                         <select name="estado" id="estado" onchange="this.form.submit()">
@@ -111,12 +105,10 @@ if (!empty($id_cuidador_filtro)) {
                             <option value="Completada" <?= $estado_filtro == 'Completada' ? 'selected' : '' ?>>Completadas</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="busqueda">Buscar en resultados:</label>
                         <input type="search" name="busqueda" id="busqueda" placeholder="Por paciente o actividad..." value="<?= htmlspecialchars($busqueda) ?>">
                     </div>
-
                     <button type="submit"><i class="fas fa-search"></i> Filtrar</button>
                 </form>
             </div>
@@ -151,13 +143,13 @@ if (!empty($id_cuidador_filtro)) {
                             <?php endif; ?>
                         </tbody>
                     </table>
+
                     <div style="text-align: right; margin-top: 20px;">
-                        <a href="../../../controllers/admin/actividad/exportar_actividades_cuidador.php?cuidador=<?= htmlspecialchars($id_cuidador_filtro) ?>&estado=<?= htmlspecialchars($estado_filtro) ?>&busqueda=<?= htmlspecialchars($busqueda) ?>" class="btn-add" style="background-color: #1a73e8;">
+                        <a href="../../../controllers/admin/actividad/exportar_actividades_cuidador.php?cuidador=<?= htmlspecialchars($id_cuidador_filtro) ?>&estado=<?= htmlspecialchars($estado_filtro) ?>&busqueda=<?= htmlspecialchars($busqueda) ?>" class="btn-export">
                             <i class="fas fa-file-excel"></i> Exportar a Excel
                         </a>
                     </div>
                     </div>
-                </div>
             <?php else: ?>
                 <p class="report-subtitle">Por favor, seleccione un cuidador para generar el reporte.</p>
             <?php endif; ?>
