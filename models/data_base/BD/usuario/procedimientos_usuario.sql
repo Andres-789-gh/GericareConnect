@@ -118,7 +118,7 @@ begin
 
     insert into tb_usuario (
         tipo_documento, documento_identificacion, nombre, apellido, direccion,
-        correo_electronico, contraseña, -- <-- CORRECCIÓN APLICADA AQUÍ
+        correo_electronico, contraseña,
         fecha_contratacion, tipo_contrato, contacto_emergencia, fecha_nacimiento,
         id_rol, parentesco
     ) values (
