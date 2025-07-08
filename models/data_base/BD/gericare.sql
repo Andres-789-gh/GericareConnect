@@ -174,7 +174,7 @@ create table tb_solicitud (
 create table tb_paciente_asignado (
     id_paciente_asignado int primary key auto_increment,
     id_usuario_cuidador int not null,
-    id_usuario_administrador int null,
+    id_usuario_administrador int not null,
     id_paciente int not null,
     descripcion varchar(250) null,
     estado enum('Activo','Inactivo') default 'Activo'

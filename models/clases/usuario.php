@@ -82,11 +82,7 @@
             }
         }
         
-        // ======================================================
-        // ||       CAMBIO PARA EL FORMULARIO DE PACIENTES       ||
-        // ======================================================
         // Esta función busca a todos los usuarios que tengan un rol específico 
-        // para rellenar la lista desplegable de familiares en el formulario de pacientes.
         public function obtenerUsuariosPorRol($nombre_rol) {
             try {
                 $query = $this->conn->prepare("
