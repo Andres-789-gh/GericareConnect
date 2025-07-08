@@ -1,29 +1,22 @@
 <?php
-// Desactivar la notificación de errores para no dañar el archivo Excel
-error_reporting(0);
-ob_start(); // Iniciar el buffer de salida
-
 // Requerir los modelos necesarios
 require_once __DIR__ . '/../../../models/clases/actividad.php';
 require_once __DIR__ . '/../../../models/clases/usuario.php';
 
-// Cabeceras para forzar la descarga del archivo como un .xls
-header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-header("Content-Disposition: attachment; filename=reporte_actividades_cuidador_" . date('Y-m-d') . ".xls");
-header("Pragma: no-cache");
-header("Expires: 0");
-
-// --- Lógica para obtener los datos ---
-$modelo_actividad = new Actividad();
-$modelo_usuario = new usuario();
+// Iniciar el buffer de salida para evitar errores
+ob_start();
 
 // Capturar los filtros de la URL
 $id_cuidador_filtro = $_GET['cuidador'] ?? '';
 $busqueda = $_GET['busqueda'] ?? '';
 $estado_filtro = $_GET['estado'] ?? '';
 
+// --- Lógica para obtener los datos ---
+$modelo_actividad = new Actividad();
+$modelo_usuario = new usuario();
+
 $actividades = [];
-$nombre_cuidador = "Todos";
+$nombre_cuidador = "N/A";
 
 if (!empty($id_cuidador_filtro)) {
     $actividades = $modelo_actividad->consultarPorCuidador($id_cuidador_filtro, $busqueda, $estado_filtro);
@@ -33,42 +26,65 @@ if (!empty($id_cuidador_filtro)) {
     }
 }
 
-// --- Generar la tabla HTML que se convertirá en Excel ---
-echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
-echo "<h1>Reporte de Actividades</h1>";
-echo "<h3>Cuidador: " . utf8_decode($nombre_cuidador) . "</h3>";
-echo "<h3>Fecha de Reporte: " . date('d/m/Y') . "</h3>";
+// Cabeceras para forzar la descarga del archivo como un .xls
+header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+header("Content-Disposition: attachment; filename=reporte_actividades_" . date('Y-m-d') . ".xls");
+header("Pragma: no-cache");
+header("Expires: 0");
 
-echo "<table border='1'>
-        <thead>
-            <tr style='background-color:#007bff; color:white; font-weight:bold;'>
-                <th>ID Actividad</th>
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Actividades</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td colspan="7" style="background-color:#EAF1FB; font-size: 18px; font-weight:bold; text-align:center;">Reporte de Actividades</td>
+        </tr>
+        <tr>
+            <td style="font-weight:bold;">Cuidador:</td>
+            <td colspan="2"><?= $nombre_cuidador ?></td>
+            <td style="font-weight:bold;">Fecha de Reporte:</td>
+            <td colspan="3"><?= date('d/m/Y') ?></td>
+        </tr>
+        <tr></tr>
+        <thead style="background-color:#F2F2F2; font-weight:bold;">
+            <tr>
                 <th>Tipo de Actividad</th>
                 <th>Paciente Asignado</th>
                 <th>Fecha</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fin</th>
                 <th>Estado</th>
-                <th>Descripci&oacute;n</th>
+                <th>Descripción</th>
             </tr>
         </thead>
-        <tbody>";
-
-if (is_array($actividades) && count($actividades) > 0) {
-    foreach ($actividades as $fila) {
-        echo "<tr>";
-        echo "<td>" . $fila["id_actividad"] . "</td>";
-        echo "<td>" . utf8_decode($fila["tipo_actividad"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["nombre_paciente"]) . "</td>";
-        echo "<td>" . date("d/m/Y", strtotime($fila["fecha_actividad"])) . "</td>";
-        echo "<td>" . utf8_decode($fila["estado_actividad"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["descripcion_actividad"]) . "</td>";
-        echo "</tr>";
-    }
-} else {
-    echo "<tr><td colspan='6'>No hay datos para exportar con los filtros seleccionados.</td></tr>";
-}
-
-echo "</tbody></table>";
-
+        <tbody>
+            <?php if (is_array($actividades) && count($actividades) > 0): ?>
+                <?php foreach ($actividades as $fila): ?>
+                    <tr>
+                        <td><?= $fila["tipo_actividad"] ?></td>
+                        <td><?= $fila["nombre_paciente"] ?></td>
+                        <td><?= date("d/m/Y", strtotime($fila["fecha_actividad"])) ?></td>
+                        <td><?= $fila["hora_inicio"] ?? 'N/A' ?></td>
+                        <td><?= $fila["hora_fin"] ?? 'N/A' ?></td>
+                        <td><?= $fila["estado_actividad"] ?></td>
+                        <td><?= $fila["descripcion_actividad"] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7">No hay datos para exportar con los filtros seleccionados.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</body>
+</html>
+<?php
 // Envía el contenido del buffer al navegador y finaliza el script
 ob_end_flush();
 exit;

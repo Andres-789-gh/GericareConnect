@@ -20,20 +20,28 @@ $actividades = $modelo_actividad->consultar($busqueda, $estado_filtro);
     <link rel="stylesheet" href="../css_admin/historia_clinica_lista.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Estilos para que los filtros se vean bien */
-        .search-container form {
-            display: flex;
-            gap: 15px;
-        }
-        .search-container input, .search-container select {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            outline: none;
-        }
+        .search-container form { display: flex; gap: 15px; }
+        .search-container input, .search-container select { padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; outline: none; }
         .search-container input { flex-grow: 1; }
         .search-container select { background-color: #f8f9fa; }
+
+        /* ===== ESTILO PARA EL NUEVO BOTÓN DE REPORTE ===== */
+        .btn-report {
+            background-color: #007bff; /* Color azul para reportes/información */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-report:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -51,9 +59,10 @@ $actividades = $modelo_actividad->consultar($busqueda, $estado_filtro);
             </ul>
         </nav>
         <div class="add-button-container">
+            <a href="reporte_actividades_cuidador.php" class="btn-report"><i class="fas fa-chart-line"></i> Reporte Actividades</a>
             <a href="form_actividades.php" class="btn-add"><i class="fas fa-plus"></i> Nueva Actividad</a>
         </div>
-    </header>
+        </header>
 
     <main class="admin-content">
         <div class="historias-container">
@@ -148,7 +157,6 @@ $actividades = $modelo_actividad->consultar($busqueda, $estado_filtro);
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Si se confirma, se crea un formulario y se envía
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = '../../../controllers/admin/actividad/actividad_controller.php';
