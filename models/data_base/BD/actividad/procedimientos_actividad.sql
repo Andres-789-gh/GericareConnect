@@ -86,32 +86,38 @@ begin
 end//
 
 -- consultar actividades (cuidador)
-create procedure consultar_actividades_cuidador(
-    in p_id_cuidador int,
-    in p_busqueda varchar(100),
-    in p_estado_filtro varchar(20)
+CREATE PROCEDURE `consultar_actividades_cuidador`(
+    IN p_id_cuidador INT,
+    IN p_busqueda VARCHAR(100),
+    IN p_estado_filtro VARCHAR(20)
 )
-begin
-    select
-        a.id_actividad, a.tipo_actividad, a.descripcion_actividad,
-        a.fecha_actividad, a.estado_actividad,
-        concat(p.nombre, ' ', p.apellido) as nombre_paciente
-    from tb_actividad a
-    join tb_paciente p on a.id_paciente = p.id_paciente
-    join tb_paciente_asignado pa on p.id_paciente = pa.id_paciente
-    where
-        pa.id_usuario_cuidador = p_id_cuidador and pa.estado = 'activo'
-        and a.estado_actividad != 'inactivo'
-        and (p_estado_filtro is null or p_estado_filtro = '' or a.estado_actividad = p_estado_filtro)
-        and (
-            (p_busqueda is null or p_busqueda = '') or
-            (p.nombre like concat('%', p_busqueda, '%')) or
-            (p.apellido like concat('%', p_busqueda, '%')) or
-            (p.documento_identificacion like concat('%', p_busqueda, '%')) or
-            (a.tipo_actividad like concat('%', p_busqueda, '%'))
+BEGIN
+    SELECT
+        a.id_actividad, 
+        a.tipo_actividad, 
+        a.descripcion_actividad,
+        a.fecha_actividad, 
+        -- AÑADIMOS LAS HORAS FORMATEADAS PARA QUE SE VEAN BIEN --
+        TIME_FORMAT(a.hora_inicio, '%h:%i %p') AS hora_inicio,
+        TIME_FORMAT(a.hora_fin, '%h:%i %p') AS hora_fin,
+        a.estado_actividad,
+        CONCAT(p.nombre, ' ', p.apellido) AS nombre_paciente
+    FROM tb_actividad a
+    JOIN tb_paciente p ON a.id_paciente = p.id_paciente
+    JOIN tb_paciente_asignado pa ON p.id_paciente = pa.id_paciente
+    WHERE
+        pa.id_usuario_cuidador = p_id_cuidador AND pa.estado = 'activo'
+        AND a.estado_actividad != 'inactivo'
+        AND (p_estado_filtro IS NULL OR p_estado_filtro = '' OR a.estado_actividad = p_estado_filtro)
+        AND (
+            (p_busqueda IS NULL OR p_busqueda = '') OR
+            (p.nombre LIKE CONCAT('%', p_busqueda, '%')) OR
+            (p.apellido LIKE CONCAT('%', p_busqueda, '%')) OR
+            (p.documento_identificacion LIKE CONCAT('%', p_busqueda, '%')) OR
+            (a.tipo_actividad LIKE CONCAT('%', p_busqueda, '%'))
         )
-    order by a.fecha_actividad desc;
-end//
+    ORDER BY a.fecha_actividad DESC;
+END//
 
 
 create procedure completar_actividad(
