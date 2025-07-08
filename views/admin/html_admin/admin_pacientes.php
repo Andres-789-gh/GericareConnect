@@ -46,7 +46,6 @@ session_start();
                 <li><a href="admin_pacientes.php" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
                 <li><a href="historia_clinica.php"><i class="fas fa-envelope-open-text"></i> Historias Clinicas</a></li>
                 <li><a href="admin_actividades.php"><i class="fas fa-envelope-open-text"></i> Actividades</a></li>
-                <li><a href="reporte_actividades_cuidador.php"><i class="fas fa-chart-line"></i> Reporte Actividades</a></li>
                 <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </nav>

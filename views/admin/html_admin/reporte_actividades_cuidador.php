@@ -151,6 +151,12 @@ if (!empty($id_cuidador_filtro)) {
                             <?php endif; ?>
                         </tbody>
                     </table>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <a href="../../../controllers/admin/actividad/exportar_actividades_cuidador.php?cuidador=<?= htmlspecialchars($id_cuidador_filtro) ?>&estado=<?= htmlspecialchars($estado_filtro) ?>&busqueda=<?= htmlspecialchars($busqueda) ?>" class="btn-add" style="background-color: #1a73e8;">
+                            <i class="fas fa-file-excel"></i> Exportar a Excel
+                        </a>
+                    </div>
+                    </div>
                 </div>
             <?php else: ?>
                 <p class="report-subtitle">Por favor, seleccione un cuidador para generar el reporte.</p>
