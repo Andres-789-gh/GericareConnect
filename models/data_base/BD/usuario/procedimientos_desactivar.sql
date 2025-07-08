@@ -40,23 +40,23 @@ create procedure desactivar_paciente(
     in p_id_paciente_a_desactivar int
 )
 begin
-    -- 1. Desactivar el paciente principal
+    -- 1. Eliminar el paciente
     update tb_paciente set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
 
-    -- 2. Desactivar las asignaciones del paciente
+    -- 2. Eliminar las asignaciones del paciente
     update tb_paciente_asignado set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
 
-    -- 3. Desactivar la historia clínica del paciente
+    -- 3. Eliminar la HC del paciente
     update tb_historia_clinica set estado = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar;
 
-    -- 4. Actualizar tratamientos activos a 'Finalizado' o 'Cancelado'
-    update tb_tratamiento set estado_tratamiento = 'Finalizado' where id_paciente = p_id_paciente_a_desactivar and estado_tratamiento = 'Activo';
+    -- 4. Eliminar tratamientos
+    update tb_tratamiento set estado_tratamiento = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar and estado_tratamiento = 'Activo';
 
-    -- 5. Cancelar actividades pendientes
-    update tb_actividad set estado_actividad = 'Cancelada' where id_paciente = p_id_paciente_a_desactivar and estado_actividad = 'Pendiente';
+    -- 5. Eliminar actividades 
+    update tb_actividad set estado_actividad = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar and estado_actividad = 'Pendiente';
 
-    -- 6. Cancelar solicitudes pendientes
-    update tb_solicitud set estado_solicitud = 'Cancelada' where id_paciente = p_id_paciente_a_desactivar and estado_solicitud = 'Pendiente';
+    -- 6. Eliminar solicitudes 
+    update tb_solicitud set estado_solicitud = 'Inactivo' where id_paciente = p_id_paciente_a_desactivar and estado_solicitud = 'Pendiente';
 
 end //
 delimiter ;

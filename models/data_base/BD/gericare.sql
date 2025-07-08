@@ -49,8 +49,8 @@ create table tb_paciente (
 -- tabla entrada salida paciente
 create table tb_entrada_salida_paciente (
     id_entrada_salida_paciente int primary key auto_increment,
-    id_usuario_cuidador int not null, -- El cuidador gestiona la entrada/salida del paciente
-    id_usuario_administrador int null,
+    id_usuario_cuidador int not null,
+    id_usuario_administrador int not null, -- El admin gestiona la entrada/salida del paciente
     id_paciente int not null,
     fecha_entrada_salida_paciente datetime not null,
     tipo_movimiento enum('Entrada','Salida') not null,
@@ -125,13 +125,14 @@ create table tb_enfermedad (
 create table tb_tratamiento (
     id_tratamiento int primary key auto_increment,
     id_paciente int not null,
-    id_usuario_cuidador int null,
-    id_usuario_administrador int null,
+    id_usuario_administrador int not null,
+    id_usuario_cuidador int not null,
     descripcion text not null,
     instrucciones_especiales text null,
     fecha_inicio date not null,
     fecha_fin date null,
-    estado_tratamiento enum('Activo','Finalizado','Pausado','Cancelado') default 'Activo'
+    observaciones text null,
+    estado_tratamiento enum('Pendiente','Completado','Inactivo') default 'Pendiente'
 );
 
 -- tabla actividad
@@ -162,12 +163,12 @@ create table tb_solicitud (
     id_solicitud int primary key auto_increment,
     id_paciente int not null,
     id_usuario_familiar int not null,
-    id_usuario_administrador int null,
-    tipo_solicitud varchar(100) not null,
+    id_usuario_administrador int not null,
+    tipo_solicitud enum('Salida','Registro','Retiro','Otro') not null,
     fecha_solicitud datetime not null default current_timestamp,
     urgencia_solicitud enum('Baja','Media','Alta','Urgente') not null,
     motivo_solicitud text not null,
-    estado_solicitud enum('Pendiente','Aprobada','Rechazada','Cancelada') default 'Pendiente'
+    estado_solicitud enum('Pendiente','Aprobada','Rechazada','Inactivo') default 'Pendiente'
 );
 
 -- tabla paciente_asignado
