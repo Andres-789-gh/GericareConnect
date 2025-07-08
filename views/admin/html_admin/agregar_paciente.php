@@ -68,7 +68,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <div class="form-group full-width">
                     <label for="id_usuario_cuidador"><i class="fas fa-user-nurse"></i> Asignar Cuidador</label>
                     <select name="id_usuario_cuidador" id="id_usuario_cuidador" required>
-                        <option value="">-- Seleccione un Cuidador --</option>
+                        <option value=""> Seleccione un Cuidador </option>
                         <?php foreach ($lista_cuidadores as $cuidador): ?>
                             <option value="<?= $cuidador['id_usuario'] ?>" <?= ($asignacion_activa && $asignacion_activa['id_usuario_cuidador'] == $cuidador['id_usuario']) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($cuidador['nombre'] . ' ' . $cuidador['apellido']) ?>
@@ -79,7 +79,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                 <div class="form-group full-width">
                     <label for="descripcion_asignacion">Descripción de la Asignación</label>
-                    <textarea name="descripcion_asignacion" id="descripcion_asignacion" rows="3" placeholder="Ej: Cuidado post-operatorio, monitoreo de medicación..."><?= htmlspecialchars($asignacion_activa['descripcion'] ?? '') ?></textarea>
+                    <textarea name="descripcion_asignacion" id="descripcion_asignacion" rows="3" placeholder="Ej: Asignado para cubrir turno. Paciente requiere supervisión constante."><?= htmlspecialchars($asignacion_activa['descripcion'] ?? '') ?></textarea>
                 </div>
 
                 <div class="form-group full-width">
