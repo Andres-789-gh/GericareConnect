@@ -5,17 +5,22 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['nombre_rol'] !== 'Administrado
     header("Location: /GericareConnect/views/index-login/htmls/index.html");
     exit();
 }
-require_once __DIR__ . '/../../../models/clases/usuario.php';
 require_once __DIR__ . '/../../../models/clases/pacientes.php';
+require_once __DIR__ . '/../../../models/clases/usuario.php';
 
 $user_model = new usuario();
 $lista_familiares = $user_model->obtenerUsuariosPorRol('Familiar');
+$lista_cuidadores = $user_model->obtenerUsuariosPorRol('Cuidador');
+
 $modo_edicion = false;
 $datos_paciente = [];
-if (isset($_GET['id'])) {
+$asignacion_activa = null; 
+
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $modo_edicion = true;
     $pacienteModel = new Paciente();
     $datos_paciente = $pacienteModel->obtenerPorId($_GET['id']);
+    $asignacion_activa = $pacienteModel->obtenerAsignacionActiva($_GET['id']);
 }
 ?>
 <!DOCTYPE html>
@@ -34,6 +39,7 @@ if (isset($_GET['id'])) {
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
         .form-group label { margin-bottom: 8px; font-weight: 500; color: var(--dark-gray); font-size: 0.9rem; }
         input, select, textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--medium-gray); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 80px; }
         .full-width { grid-column: 1 / -1; }
         .toolbar { margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem; }
         .btn { padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
@@ -58,7 +64,35 @@ if (isset($_GET['id'])) {
                 <div class="form-group"><label>Tipo de Sangre</label><select name="tipo_sangre" required><option value="">Seleccione...</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option></select></div>
                 <div class="form-group"><label>Seguro Médico (EPS)</label><input type="text" name="seguro_medico" value="<?= htmlspecialchars($datos_paciente['seguro_medico'] ?? '') ?>"></div>
                 <div class="form-group"><label>Número de Afiliación</label><input type="text" name="numero_seguro" value="<?= htmlspecialchars($datos_paciente['numero_seguro'] ?? '') ?>"></div>
-                <div class="form-group full-width"><label><i class="fas fa-link"></i> Enlazar Familiar (Opcional)</label><select name="id_usuario_familiar"><option value="">Ninguno</option><?php foreach ($lista_familiares as $familiar):?><option value="<?=$familiar['id_usuario']?>" <?= (isset($datos_paciente['id_usuario_familiar']) && $datos_paciente['id_usuario_familiar'] == $familiar['id_usuario']) ? 'selected' : '' ?>><?=htmlspecialchars($familiar['nombre'].' '.$familiar['apellido'])?></option><?php endforeach;?></select></div>
+                
+                <div class="form-group full-width">
+                    <label for="id_usuario_cuidador"><i class="fas fa-user-nurse"></i> Asignar Cuidador</label>
+                    <select name="id_usuario_cuidador" id="id_usuario_cuidador" required>
+                        <option value="">-- Seleccione un Cuidador --</option>
+                        <?php foreach ($lista_cuidadores as $cuidador): ?>
+                            <option value="<?= $cuidador['id_usuario'] ?>" <?= ($asignacion_activa && $asignacion_activa['id_usuario_cuidador'] == $cuidador['id_usuario']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($cuidador['nombre'] . ' ' . $cuidador['apellido']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="descripcion_asignacion">Descripción de la Asignación</label>
+                    <textarea name="descripcion_asignacion" id="descripcion_asignacion" rows="3" placeholder="Ej: Cuidado post-operatorio, monitoreo de medicación..."><?= htmlspecialchars($asignacion_activa['descripcion'] ?? '') ?></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="id_usuario_familiar"><i class="fas fa-link"></i> Enlazar Familiar (Opcional)</label>
+                    <select name="id_usuario_familiar" id="id_usuario_familiar">
+                        <option value="">Ninguno</option>
+                        <?php foreach ($lista_familiares as $familiar):?>
+                            <option value="<?=$familiar['id_usuario']?>" <?= (isset($datos_paciente['id_usuario_familiar']) && $datos_paciente['id_usuario_familiar'] == $familiar['id_usuario']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($familiar['nombre'].' '.$familiar['apellido']) ?>
+                            </option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
             </div>
             <div class="toolbar">
                 <a href="admin_pacientes.php" class="btn btn-secondary">Cancelar</a>

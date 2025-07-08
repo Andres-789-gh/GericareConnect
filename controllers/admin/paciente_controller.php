@@ -9,13 +9,18 @@ if (isset($_POST['id_paciente'])) {
 }
 
 try {
+    // Validación de campos principales
     if (empty($_POST['nombre']) || empty($_POST['apellido']) || empty($_POST['documento_identificacion'])) {
         throw new Exception("Los campos Nombre, Apellido y Documento son obligatorios.");
     }
 
+    // validacion de campo cuiador (obligatorio)
+    if (empty($_POST['id_usuario_cuidador'])) {
+        throw new Exception("Es obligatorio asignar un cuidador al paciente.");
+    }
+
     $paciente_model = new Paciente();
     $accion = $_POST['accion'];
-    $id_familiar = !empty($_POST['id_usuario_familiar']) ? $_POST['id_usuario_familiar'] : null;
 
     $datos_formulario = [
         'id_paciente'              => $_POST['id_paciente'] ?? null,
@@ -29,7 +34,10 @@ try {
         'tipo_sangre'              => $_POST['tipo_sangre'] ?? null,
         'seguro_medico'            => $_POST['seguro_medico'] ?? null,
         'numero_seguro'            => $_POST['numero_seguro'] ?? null,
-        'id_usuario_familiar'      => $id_familiar
+        'id_usuario_familiar'      => !empty($_POST['id_usuario_familiar']) ? $_POST['id_usuario_familiar'] : null,
+        'id_usuario_cuidador'      => $_POST['id_usuario_cuidador'],
+        'id_usuario_administrador' => $_SESSION['id_usuario'],
+        'descripcion_asignacion'   => $_POST['descripcion_asignacion'] ?? null
     ];
 
     switch ($accion) {
