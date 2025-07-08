@@ -54,9 +54,9 @@ if (!isset($_SESSION['id_usuario'])) {
                         <i class="fas fa-user-cog"></i> Mi Perfil
                     </a>
                 </li>
-                <li><a href=""><i class="fas fa-envelope"></i> Enviar Solicitud</a></li>
-                <li><a href=""><i class="fas fa-list-alt"></i> Solicitudes Pendientes</a></li>
-                 <li><a href="../../../controllers/familiar/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+        <!--    li><a href=""><i class="fas fa-envelope"></i> Enviar Solicitud</a></li>
+                <li><a href=""><i class="fas fa-list-alt"></i> Solicitudes Pendientes</a></li> -->
+                <li><a href="../../../controllers/familiar/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </nav>
         </header>
