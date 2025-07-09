@@ -1,83 +1,128 @@
-/* --- FUENTE Y ESTILOS GENERALES --- */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f7f9;
-    margin: 0;
-    color: #333;
+/* --- ESTILOS PARA LA PÁGINA DE PACIENTES --- */
+.pacientes-container h1 {
+    text-align: center;
+    color: #343a40;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
 }
 
-/* --- HEADER IMPECABLE --- */
-.admin-header {
-    background-color: #fff;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #e9ecef;
-}
-.logo-container { display: flex; align-items: center; }
-.logo { width: 40px; margin-right: 10px; cursor: pointer; transition: transform 0.3s ease; }
-.logo:hover { transform: rotate(360deg); }
-.app-name { font-size: 1.2rem; font-weight: 600; color: #2c3e50; }
-.user-info { font-weight: 500; color: #555; background-color: #e9ecef; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; margin-left: 1.5rem; }
-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.5rem; }
-nav ul li a { text-decoration: none; color: #555; font-weight: 500; padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s ease; }
-nav ul li a.active, nav ul li a:hover { color: #007bff; background-color: #e6f2ff; }
-nav ul li a i { margin-right: 0.5rem; }
-.add-button-container { display: flex; gap: 1rem; }
-.add-paciente-button, .add-empleado-button {
-    color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 8px;
-    cursor: pointer; font-size: 0.95rem; text-decoration: none;
-    display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease;
-}
-.add-paciente-button:hover, .add-empleado-button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-.add-paciente-button { background-color: #28a745; }
-.add-empleado-button { background-color: #007bff; }
-
-/* --- CONTENIDO PRINCIPAL --- */
-.admin-content { padding: 2.5rem; }
-.pacientes-container { max-width: 1200px; margin: 0 auto; }
-.pacientes-container h1 { font-size: 2.2rem; font-weight: 700; color: #1b263b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
-
-/* --- BUSCADOR CORREGIDO --- */
+/* --- BARRA DE BÚSQUEDA (ESTILO MEJORADO) --- */
 .search-container {
-    background-color: #fff; padding: 1.5rem; border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 2rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
 }
-.universal-search-container { display: flex; border: 1px solid #ced4da; border-radius: 8px; overflow: hidden; }
-.universal-search-container select, .universal-search-container input { border: none; padding: 0.75rem 1rem; font-size: 1rem; outline: none; }
-.universal-search-container select { background-color: #f8f9fa; border-right: 1px solid #ced4da; }
-.universal-search-container input { flex-grow: 1; }
 
-/* --- TABLA HERMOSA --- */
-.table-container { background-color: #fff; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden; }
-.results-table { width: 100%; border-collapse: collapse; }
-.results-table th, .results-table td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid #f1f1f1; }
-.results-table th { background-color: #007bff; color: white; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
-.results-table tbody tr:last-child td { border-bottom: none; }
-.results-table tbody tr:hover { background-color: #f8f9fa; }
-.actions { text-align: right !important; }
-.actions a, .actions button { color: #6c757d; font-size: 1.2rem; margin-left: 1rem; background: none; border: none; cursor: pointer; transition: all 0.2s ease; }
-.actions a:hover { color: #007bff; transform: scale(1.2); }
-.actions button:hover { color: #dc3545; transform: scale(1.2); }
-.rol-tag, .genero-tag { padding: 5px 12px; border-radius: 20px; color: white; font-size: 0.75em; font-weight: bold; display: inline-flex; align-items: center; gap: 0.5rem; }
+.universal-search-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.universal-search-container select {
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 1rem;
+    min-width: 200px;
+}
+
+.universal-search-container input[type="search"] {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.universal-search-container input[type="search"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* --- ESTILOS PARA LA TABLA DE RESULTADOS (COMO ANTES) --- */
+.table-container {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.results-table th, .results-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.results-table th {
+    background-color: #007bff;
+    color: white;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.results-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.actions a, .actions button {
+    color: #333;
+    margin: 0 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+}
+
+.actions a:hover {
+    color: #007bff;
+    transform: scale(1.2);
+}
+
+.actions button:hover {
+    color: #dc3545;
+    transform: scale(1.2);
+}
+
+/* --- ETIQUETAS DE GÉNERO Y ROLES --- */
+.genero-masculino, .genero-femenino, .rol-tag {
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border-radius: 15px;
+    color: white;
+    font-size: 0.9em;
+}
+
+.genero-masculino {
+    background-color: #0d6efd; /* Azul */
+}
+
+.genero-femenino {
+    background-color: #d63384; /* Rosita */
+}
+
+.rol-tag {
+    font-size: 0.8em;
+    text-transform: uppercase;
+}
 .rol-paciente { background-color: #198754; }
 .rol-cuidador { background-color: #ffc107; color: black; }
 .rol-familiar { background-color: #0dcaf0; }
-.genero-masculino { background-color: #0d6efd; }
-.genero-femenino { background-color: #d63384; }
-
-/* --- FORMULARIOS --- */
-.form-page-container { position: relative; padding: 2rem; overflow: hidden; }
-#particles-js { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; background-color: #f4f7f9;}
-.form-container-card {
-    position: relative; z-index: 2; max-width: 900px; margin: auto;
-    background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
-    border-radius: 1rem; padding: 2.5rem; box-shadow: 0 20px 50px rgba(26, 42, 69, 0.1);
-}
-.form-container-card h1 { font-size: 1.8rem; font-weight: 700; color: #007bff; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
-.form-container-card .form-label { font-weight: 500; color: #555; margin-bottom: 0.3rem; }
-.form-container-card .form-control, .form-container-card .form-select { border-radius: 8px; border: 1px solid #ced4da; padding: 10px 15px; transition: all 0.2s ease-in-out; }
-.form-container-card .form-control:focus, .form-container-card .form-select:focus { border-color: #007bff; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); }
-.form-container-card .btn { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 500; }
+.rol-administrador { background-color: #6c757d; }

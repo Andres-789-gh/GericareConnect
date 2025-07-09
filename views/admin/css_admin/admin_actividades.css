@@ -1,0 +1,86 @@
+.search-container {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+
+.table-custom th {
+    background-color: #6f42c1; /* Púrpura para actividades */
+    color: white;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table-custom td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.table-custom tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f8f0ff;
+}
+
+.chat-bubble-display {
+    background-color: #f0eaff;
+    border: 1px solid #dcd0ff;
+    border-radius: 15px;
+    padding: 10px 15px;
+    max-width: 350px;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+}
+
+.status-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: white;
+    text-transform: uppercase;
+}
+
+.status-pendiente {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.status-completada {
+    background-color: #28a745;
+}
+
+.status-cancelada {
+    background-color: #dc3545;
+}
+
+.actions .btn-action {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 4px;
+    transition: all 0.2s ease-in-out;
+    color: white;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+}
+
+.btn-edit { background-color: #ffc107; }
+.btn-delete { background-color: #dc3545; }
