@@ -1,21 +1,15 @@
 <?php
 session_start();
-// Seguridad y carga de clases
-if (!isset($_SESSION['id_usuario']) || $_SESSION['nombre_rol'] !== 'Administrador') {
-    header("Location: /GericareConnect/views/index-login/htmls/index.html");
-    exit();
-}
+// Tu seguridad y lógica PHP
 require_once __DIR__ . '/../../../models/clases/pacientes.php';
 require_once __DIR__ . '/../../../models/clases/usuario.php';
-
+// ... el resto de tu código PHP
 $user_model = new usuario();
 $lista_familiares = $user_model->obtenerUsuariosPorRol('Familiar');
 $lista_cuidadores = $user_model->obtenerUsuariosPorRol('Cuidador');
-
 $modo_edicion = false;
 $datos_paciente = [];
 $asignacion_activa = null; 
-
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $modo_edicion = true;
     $pacienteModel = new Paciente();
@@ -25,83 +19,72 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title><?= $modo_edicion ? 'Editar' : 'Agregar' ?> Paciente</title>
+    <title>Agregar Paciente</title>
+    <link rel="stylesheet" href="../css_admin/admin_main.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../libs/animate/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        :root { --primary-color: #007bff; --light-gray: #f8f9fa; --medium-gray: #dee2e6; --dark-gray: #6c757d; --text-color: #212529; --white: #ffffff; --shadow: 0 4px 15px rgba(0, 0, 0, 0.08); --success-color: #28a745; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--light-gray); margin: 0; padding: 2rem; }
-        .container { max-width: 950px; margin: 0 auto; background: var(--white); padding: 2rem 3rem; border-radius: 12px; box-shadow: var(--shadow); border-top: 5px solid var(--primary-color); }
-        h1 { font-size: 1.8rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: var(--primary-color); }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
-        .form-group label { margin-bottom: 8px; font-weight: 500; color: var(--dark-gray); font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--medium-gray); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-        textarea { resize: vertical; min-height: 80px; }
-        .full-width { grid-column: 1 / -1; }
-        .toolbar { margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem; }
-        .btn { padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--success-color); color: var(--white); }
-        .btn-secondary { background-color: var(--dark-gray); color: var(--white); }
-    </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1><i class="fas fa-user-plus"></i> <?= $modo_edicion ? 'Editar Paciente' : 'Registrar Paciente' ?></h1>
-        <form action="../../../controllers/admin/paciente_controller.php" method="POST">
-            <input type="hidden" name="accion" value="<?= $modo_edicion ? 'actualizar' : 'registrar' ?>">
-            <?php if ($modo_edicion) echo "<input type='hidden' name='id_paciente' value='{$datos_paciente['id_paciente']}'>"; ?>
-            <div class="form-grid">
-                <div class="form-group"><label>Nombres</label><input type="text" name="nombre" value="<?= htmlspecialchars($datos_paciente['nombre'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Apellidos</label><input type="text" name="apellido" value="<?= htmlspecialchars($datos_paciente['apellido'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Documento</label><input type="number" name="documento_identificacion" value="<?= htmlspecialchars($datos_paciente['documento_identificacion'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Fecha de Nacimiento</label><input type="date" name="fecha_nacimiento" value="<?= htmlspecialchars($datos_paciente['fecha_nacimiento'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Género</label><select name="genero" required><option value="">Seleccione...</option><option value="Masculino" <?= (($datos_paciente['genero'] ?? '') == 'Masculino') ? 'selected' : '' ?>>Masculino</option><option value="Femenino" <?= (($datos_paciente['genero'] ?? '') == 'Femenino') ? 'selected' : '' ?>>Femenino</option></select></div>
-                <div class="form-group"><label>Contacto de Emergencia</label><input type="text" name="contacto_emergencia" value="<?= htmlspecialchars($datos_paciente['contacto_emergencia'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Estado Civil</label><input type="text" name="estado_civil" value="<?= htmlspecialchars($datos_paciente['estado_civil'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Tipo de Sangre</label><select name="tipo_sangre" required><option value="">Seleccione...</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option></select></div>
-                <div class="form-group"><label>Seguro Médico (EPS)</label><input type="text" name="seguro_medico" value="<?= htmlspecialchars($datos_paciente['seguro_medico'] ?? '') ?>"></div>
-                <div class="form-group"><label>Número de Afiliación</label><input type="text" name="numero_seguro" value="<?= htmlspecialchars($datos_paciente['numero_seguro'] ?? '') ?>"></div>
-                
-                <div class="form-group full-width">
-                    <label for="id_usuario_cuidador"><i class="fas fa-user-nurse"></i> Asignar Cuidador</label>
-                    <select name="id_usuario_cuidador" id="id_usuario_cuidador" required>
-                        <option value=""> Seleccione un Cuidador </option>
-                        <?php foreach ($lista_cuidadores as $cuidador): ?>
-                            <option value="<?= $cuidador['id_usuario'] ?>" <?= ($asignacion_activa && $asignacion_activa['id_usuario_cuidador'] == $cuidador['id_usuario']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($cuidador['nombre'] . ' ' . $cuidador['apellido']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+    <div class="main-content">
+        <div class="form-container-card animate__animated animate__fadeInUp">
+            <h1 class="h2 mb-4 text-center text-primary">Registrar Nuevo Paciente</h1>
+            
+            <div class="form-container-card animate__animated animate__fadeInUp">
+                <h1 class="h2 mb-4 text-center text-primary"><?= $modo_edicion ? 'Editar Paciente' : 'Registrar Nuevo Paciente' ?></h1>
+                <form action="../../../controllers/admin/paciente_controller.php" method="POST">
+                    <input type="hidden" name="accion" value="<?= $modo_edicion ? 'actualizar' : 'registrar' ?>">
+                    <?php if ($modo_edicion) echo "<input type='hidden' name='id_paciente' value='{$datos_paciente['id_paciente']}'>"; ?>
+                    
+                    <fieldset class="mb-4"><legend><i class="fas fa-user-circle me-2"></i>Datos Personales</legend>
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label">Nombres</label><input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($datos_paciente['nombre'] ?? '') ?>" required></div>
+                            <div class="col-md-6"><label class="form-label">Apellidos</label><input type="text" name="apellido" class="form-control" value="<?= htmlspecialchars($datos_paciente['apellido'] ?? '') ?>" required></div>
+                            <div class="col-md-6"><label class="form-label">Documento</label><input type="number" name="documento_identificacion" class="form-control" value="<?= htmlspecialchars($datos_paciente['documento_identificacion'] ?? '') ?>" required></div>
+                            <div class="col-md-6"><label class="form-label">Fecha de Nacimiento</label><input type="date" name="fecha_nacimiento" class="form-control" value="<?= htmlspecialchars($datos_paciente['fecha_nacimiento'] ?? '') ?>" required></div>
+                            <div class="col-md-6"><label class="form-label">Género</label><select name="genero" class="form-select" required><option value="">Seleccione...</option><option value="Masculino" <?= (($datos_paciente['genero'] ?? '') == 'Masculino') ? 'selected' : '' ?>>Masculino</option><option value="Femenino" <?= (($datos_paciente['genero'] ?? '') == 'Femenino') ? 'selected' : '' ?>>Femenino</option></select></div>
+                            <div class="col-md-6"><label class="form-label">Contacto de Emergencia</label><input type="text" name="contacto_emergencia" class="form-control" value="<?= htmlspecialchars($datos_paciente['contacto_emergencia'] ?? '') ?>" required></div>
+                        </div>
+                    </fieldset>
 
-                <div class="form-group full-width">
-                    <label for="descripcion_asignacion">Descripción de la Asignación</label>
-                    <textarea name="descripcion_asignacion" id="descripcion_asignacion" rows="3" placeholder="Ej: Asignado para cubrir turno. Paciente requiere supervisión constante."><?= htmlspecialchars($asignacion_activa['descripcion'] ?? '') ?></textarea>
-                </div>
+                    <fieldset class="mb-4"><legend><i class="fas fa-heartbeat me-2"></i>Información Adicional</legend>
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label">Estado Civil</label><input type="text" name="estado_civil" class="form-control" value="<?= htmlspecialchars($datos_paciente['estado_civil'] ?? '') ?>" required></div>
+                            <div class="col-md-6"><label class="form-label">Tipo de Sangre</label><select name="tipo_sangre" id="tipo_sangre" class="form-select" required><option value="">Seleccione...</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option></select></div>
+                            <div class="col-md-6"><label class="form-label">Seguro Médico (EPS)</label><input type="text" name="seguro_medico" class="form-control" value="<?= htmlspecialchars($datos_paciente['seguro_medico'] ?? '') ?>"></div>
+                            <div class="col-md-6"><label class="form-label">Número de Afiliación</label><input type="text" name="numero_seguro" class="form-control" value="<?= htmlspecialchars($datos_paciente['numero_seguro'] ?? '') ?>"></div>
+                        </div>
+                    </fieldset>
 
-                <div class="form-group full-width">
-                    <label for="id_usuario_familiar"><i class="fas fa-link"></i> Enlazar Familiar (Opcional)</label>
-                    <select name="id_usuario_familiar" id="id_usuario_familiar">
-                        <option value="">Ninguno</option>
-                        <?php foreach ($lista_familiares as $familiar):?>
-                            <option value="<?=$familiar['id_usuario']?>" <?= (isset($datos_paciente['id_usuario_familiar']) && $datos_paciente['id_usuario_familiar'] == $familiar['id_usuario']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($familiar['nombre'].' '.$familiar['apellido']) ?>
-                            </option>
-                        <?php endforeach;?>
-                    </select>
-                </div>
+                     <fieldset><legend><i class="fas fa-users-cog me-2"></i>Asignaciones</legend>
+                        <div class="row g-3">
+                            <div class="col-md-6"><label for="id_usuario_cuidador" class="form-label">Asignar Cuidador</label><select name="id_usuario_cuidador" id="id_usuario_cuidador" class="form-select" required><option value="">Seleccione un Cuidador</option><?php foreach ($lista_cuidadores as $cuidador): ?><option value="<?= $cuidador['id_usuario'] ?>" <?= ($asignacion_activa && $asignacion_activa['id_usuario_cuidador'] == $cuidador['id_usuario']) ? 'selected' : '' ?>><?= htmlspecialchars($cuidador['nombre'] . ' ' . $cuidador['apellido']) ?></option><?php endforeach; ?></select></div>
+                            <div class="col-md-6"><label for="id_usuario_familiar" class="form-label">Enlazar Familiar (Opcional)</label><select name="id_usuario_familiar" id="id_usuario_familiar" class="form-select"><option value="">Ninguno</option><?php foreach ($lista_familiares as $familiar):?><option value="<?=$familiar['id_usuario']?>" <?= (isset($datos_paciente['id_usuario_familiar']) && $datos_paciente['id_usuario_familiar'] == $familiar['id_usuario']) ? 'selected' : '' ?>><?= htmlspecialchars($familiar['nombre'].' '.$familiar['apellido']) ?></option><?php endforeach;?></select></div>
+                            <div class="col-12"><label for="descripcion_asignacion" class="form-label">Descripción de la Asignación</label><textarea name="descripcion_asignacion" id="descripcion_asignacion" rows="3" class="form-control" placeholder="Ej: Asignado para cubrir turno. Paciente requiere supervisión constante."><?= htmlspecialchars($asignacion_activa['descripcion'] ?? '') ?></textarea></div>
+                        </div>
+                    </fieldset>
+                    
+                    <div class="d-flex justify-content-end mt-4 pt-4 border-top">
+                        <a href="admin_pacientes.php" class="btn btn-secondary me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i><?= $modo_edicion ? 'Actualizar Cambios' : 'Guardar Paciente' ?></button>
+                    </div>
+                </form>
             </div>
-            <div class="toolbar">
-                <a href="admin_pacientes.php" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <?= $modo_edicion ? 'Actualizar Cambios' : 'Guardar Paciente' ?></button>
-            </div>
-        </form>
+        </div>
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Para que el select de tipo de sangre muestre el valor guardado
+        const tipoSangre = "<?= $datos_paciente['tipo_sangre'] ?? '' ?>";
+        if (tipoSangre) {
+            document.querySelector(`#tipo_sangre option[value="${tipoSangre}"]`).selected = true;
+        }
         <?php if(isset($_SESSION['error'])): ?>
             Swal.fire({ icon: 'error', title: 'Error al Guardar', text: '<?= addslashes($_SESSION['error']) ?>' });
             <?php unset($_SESSION['error']); ?>
