@@ -2,6 +2,9 @@
 session_start();
 require_once (__DIR__ . '/../../models/clases/usuario.php');
 
+$form_location = '../../views/admin/html_admin/registrar_empleado.php';
+$exito_location = '../../views/admin/html_admin/admin_pacientes.php';
+
 // Verificar que solo un administrador pueda ejecutar este script
 if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
     $_SESSION['error'] = "Acceso no autorizado.";
@@ -43,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado correctamente. Se ha enviado la contraseña al correo electrónico del usuario.";
         // $_SESSION['mensaje'] = "Empleado '" . htmlspecialchars($datos['nombre']) . "' registrado. Contraseña temporal: " . $clave_temporal;
 
-        // cod para envira el correo con la contraseña
+        // logica    para envira el correo con la contraseña
         $correo_destinatario = $datos['correo_electronico'];
         $nombre_destinatario = $datos['nombre'];
         $asunto = "Bienvenido a GeriCare Connect - Su Contraseña Temporal";
@@ -73,12 +76,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Se envía el correo (el @ suprime los errores en pantalla si el servidor no está configurado)
         @mail($correo_destinatario, $asunto, $cuerpo_correo, $headers);
 
+        // Si todo es exitoso se redirige al panel del admin
+        header("Location: $exito_location");
+        exit;
+
+    } catch (PDOException $e) {
+        // manejo de errores
+        $errorMessage = $e->getMessage();
+        if (str_contains($errorMessage, 'documento')) {
+            $_SESSION['error_registro'] = 'El documento de identificación ingresado ya pertenece a otro usuario.';
+        } elseif (str_contains($errorMessage, 'correo')) {
+            $_SESSION['error_registro'] = 'El correo electrónico ingresado ya pertenece a otro usuario.';
+        } else {
+            $_SESSION['error_registro'] = 'Ocurrió un error en la base de datos. Por favor, intente de nuevo.';
+        }
     } catch (Exception $e) {
-        $_SESSION['error'] = "Error al registrar: " . $e->getMessage();
+        $_SESSION['error_registro'] = "Se produjo un error inesperado. Por favor, intente de nuevo.";
     }
 
-    // Redirigir siempre al panel de administración
-    header("Location: ../../views/admin/html_admin/admin_pacientes.php");
+    // Si hubo un error redirige de vuelta al form
+    header("Location: $form_location");
     exit;
 }
 ?>

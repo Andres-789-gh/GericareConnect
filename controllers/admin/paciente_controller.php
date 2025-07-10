@@ -74,7 +74,6 @@ try {
     exit();
 
 } catch (Exception $e) {
-    // El manejo de errores ahora funciona para ambos casos
     if ($e instanceof PDOException && $e->errorInfo[1] == 1062) {
         $_SESSION['error'] = "El documento de identificación ingresado ya pertenece a otro paciente.";
     } else {
