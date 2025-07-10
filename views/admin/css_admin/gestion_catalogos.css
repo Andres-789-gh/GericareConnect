@@ -1,0 +1,58 @@
+.gestion-container {
+    display: grid;
+    grid-template-columns: 40% 1fr; /* 40% para el form, el resto para la tabla */
+    gap: 2rem;
+    padding: 0 2rem;
+}
+
+.form-section .form-container-card {
+    position: sticky; /* Para que el formulario se quede fijo al hacer scroll */
+    top: 100px; /* Ajusta según la altura de tu header */
+}
+
+.table-section h2 {
+    font-weight: 600;
+    color: #333;
+}
+
+.btn-export {
+    background-color: #1d6f42;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-export:hover {
+    background-color: #144d2e;
+    color: white;
+}
+
+/* Aplica los mismos estilos de tabla de actividades */
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+
+.table-custom th {
+    background-color: #6c757d; /* Un gris para diferenciar de otras tablas */
+    color: white;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table-custom td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-custom tbody tr:last-child td {
+    border-bottom: none;
+}

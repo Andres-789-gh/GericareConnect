@@ -1,0 +1,405 @@
+/* views/admin/css_admin/admin_main.css */
+
+/* FUENTE Y ESTILOS GENERALES */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    color: #343a40;
+}
+
+/* ===== HEADER IMPECABLE Y ANIMADO ===== */
+.header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+    color: white;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.logo-img {
+    height: 40px;
+    transition: transform 0.4s ease-in-out;
+}
+
+.logo:hover .logo-img {
+    transform: rotate(360deg);
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* NAVEGACIÓN PRINCIPAL */
+.main-nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+.main-nav a:hover, .main-nav a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.main-nav a i {
+    margin-right: 8px;
+}
+
+/* ACCIONES DE USUARIO Y BOTONES */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-header-action {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-header-action:hover {
+    background-color: white;
+    color: #0056b3;
+}
+
+/* ===== CORRECCIÓN DEL MENÚ DESPLEGABLE ===== */
+.user-info {
+    position: relative; /* Contenedor padre debe ser relativo */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.user-role {
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.user-avatar {
+    font-size: 2.5rem;
+}
+
+/* El menú en sí, oculto por defecto */
+.user-info .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 120%; /* Posición debajo del header */
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    width: 200px;
+    z-index: 1100; /* Asegurar que esté por encima de todo */
+}
+
+/* Se muestra al pasar el ratón sobre .user-info */
+.user-info:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-menu a i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+/* BOTÓN AGREGAR PACIENTE PRINCIPAL */
+.btn-main-action {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-main-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    color: white;
+}
+
+
+/* ===== ESTILOS PARA FORMULARIOS (agregar_paciente.php) ===== */
+.form-container-card {
+    background-color: #ffffff;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    margin-top: 30px;
+    border-top: 5px solid #007bff;
+}
+
+.form-title-main {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    color: #0056b3;
+}
+
+.form-container-card fieldset {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-container-card legend {
+    font-weight: 600;
+    color: #333;
+    padding: 0 10px;
+    width: auto;
+    font-size: 1.1em;
+}
+
+.chat-bubble-input {
+    background-color: #e9f5ff;
+    border: 1px solid #b3d7ff;
+    border-radius: 15px;
+    padding: 10px 15px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.btn-action-submit, .btn-action-cancel {
+    padding: 12px 35px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-action-submit {
+    background: #28a745;
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+.btn-action-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.btn-action-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-action-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Encabezado del contenido */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.content-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #333;
+}
+
+.btn-add-activity {
+    background-color: #28a745; /* Verde */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-add-activity:hover {
+    background-color: #218838;
+}
+
+/* Contenedor de la tabla para responsive */
+.table-responsive-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
+}
+
+/* Estilos de la tabla de actividades */
+.activities-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Ancho mínimo para forzar scroll si es necesario */
+}
+
+.activities-table th,
+.activities-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.activities-table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.activities-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para el estado de la actividad */
+.status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+.status-completada { background-color: #28a745; } /* Verde */
+.status-pendiente { background-color: #ffc107; color: #333; } /* Amarillo */
+.status-cancelada { background-color: #dc3545; } /* Rojo */
+
+
+/* Estilos para los botones de acción */
+.activities-table .actions {
+    text-align: center;
+}
+
+.btn-action {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 5px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-action.btn-edit { color: #007bff; } /* Azul */
+.btn-action.btn-delete { color: #dc3545; } /* Rojo */
+
+.btn-action:hover {
+    background-color: #e9ecef;
+}
+/* --- Estilo para botón de acción en cabecera de contenido --- */
+.btn-main-action {
+    background-color: #28a745; /* Verde de éxito */
+    color: white !important; /* !important para asegurar que el texto sea blanco */
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-main-action:hover {
+    background-color: #218838; /* Verde más oscuro */
+    color: white !important;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}

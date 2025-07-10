@@ -1,0 +1,110 @@
+/* Estilos para la sección principal de actividades */
+main {
+    padding: 20px;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.content-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.add-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 18px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #0056b3;
+}
+
+/* Contenedor y estilos de la tabla */
+.table-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden; /* Para que los bordes redondeados se apliquen a la tabla */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #007bff;
+    color: white;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para el estado de la actividad */
+.status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    text-transform: capitalize;
+}
+
+.status.pendiente {
+    background-color: #ffc107; /* Amarillo */
+}
+
+.status.completada {
+    background-color: #28a745; /* Verde */
+}
+
+.status.cancelada {
+    background-color: #dc3545; /* Rojo */
+}
+
+/* Botones de acción en la tabla */
+.actions .action-button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+    margin-right: 5px;
+    transition: opacity 0.3s;
+}
+
+.actions .action-button:hover {
+    opacity: 0.8;
+}
+
+.action-button.edit {
+    background-color: #17a2b8; /* Azul claro */
+}
+
+.action-button.delete {
+    background-color: #c82333; /* Rojo oscuro */
+}
