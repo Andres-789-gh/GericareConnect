@@ -3,6 +3,8 @@ require_once (__DIR__ . '/../../models/clases/usuario.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    
+
     // Generar contraseña aleatoria (10 caracteres hexadecimales)
     $clave_temporal = bin2hex(random_bytes(5));
 

@@ -144,3 +144,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     actualizarVisibilidadCampos(); // iniciar al cargar
 });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            
+            if (registerForm) {
+                registerForm.addEventListener('submit', function() {
+                    // Busca el botón de envío dentro del formulario
+                    const submitButton = registerForm.querySelector('button[type="submit"]');
+                    
+                    if (submitButton) {
+                        // Deshabilita el botón para prevenir múltiples clics
+                        submitButton.disabled = true;
+                        
+                        // Opcional: Cambia el texto para dar retroalimentación al usuario
+                        submitButton.innerHTML = 'Procesando...';
+                    }
+                });
+            }
+        });
