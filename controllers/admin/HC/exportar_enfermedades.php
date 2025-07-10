@@ -34,10 +34,10 @@ if (is_array($enfermedades) && count($enfermedades) > 0) {
     foreach ($enfermedades as $fila) {
         echo "<tr>";
         // La función utf8_decode asegura la compatibilidad de caracteres especiales
-        echo "<td>" . utf8_decode($fila["id_enfermedad"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["nombre_enfermedad"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["descripcion_enfermedad"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["estado"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["id_enfermedad"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["nombre_enfermedad"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["descripcion_enfermedad"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["estado"]) . "</td>";
         echo "</tr>";
     }
 } else {
