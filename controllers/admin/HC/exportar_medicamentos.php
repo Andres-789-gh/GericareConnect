@@ -33,10 +33,10 @@ echo "<table border='1'>
 if (is_array($medicamentos) && count($medicamentos) > 0) {
     foreach ($medicamentos as $fila) {
         echo "<tr>";
-        echo "<td>" . utf8_decode($fila["id_medicamento"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["nombre_medicamento"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["descripcion_medicamento"]) . "</td>";
-        echo "<td>" . utf8_decode($fila["estado"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["id_medicamento"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["nombre_medicamento"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["descripcion_medicamento"]) . "</td>";
+        echo "<td>" . htmlspecialchars($fila["estado"]) . "</td>";
         echo "</tr>";
     }
 } else {
