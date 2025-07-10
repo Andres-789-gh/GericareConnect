@@ -8,8 +8,8 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - GeriCare Connect</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../files_css/index.css">
 </head>
 <body class="bg-light">
@@ -47,11 +47,9 @@ session_start();
                             <option value="PA">Pasaporte</option>
                         </select>
                         <input type="text" name="documento" placeholder="Número de Documento" class="form-control mb-3" required>
-                        <div class="input-group mb-3">
+                        <div class="password-container mb-3">
                             <input type="password" name="password" placeholder="Contraseña" required id="passwordInput" class="form-control">
-                            <span class="input-group-text">
-                                <i class="fas fa-eye toggle-password" id="togglePassword" style="cursor: pointer;"></i>
-                            </span>
+                            <i class="fas fa-eye-slash text-secondary toggle-password" id="togglePassword"></i>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Ingresar</button>
                     </form>

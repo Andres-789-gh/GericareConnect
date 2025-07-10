@@ -124,7 +124,6 @@ select:focus {
 } 
 .password-container {
     position: relative;
-    width: 91%; 
     margin: 10px auto;
 }
 
@@ -168,3 +167,4 @@ p a {
 p a:hover {
     text-decoration: underline;
 }
+

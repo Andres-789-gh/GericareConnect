@@ -33,7 +33,6 @@ session_start();
     </style>
 </head>
 <body data-id-admin="<?= htmlspecialchars($_SESSION['id_usuario'] ?? 0) ?>">
-    <!-- TU HEADER ORIGINAL (NO SE TOCA) -->
     <header class="admin-header">
         <div class="logo-container">
             <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='admin_pacientes.php'">
@@ -57,7 +56,6 @@ session_start();
 
     <main class="admin-content">
         <div class="pacientes-container">
-            <!-- TU BÚSQUEDA GLOBAL ORIGINAL (NO SE TOCA) -->
             <h1><i class="fas fa-search"></i> Búsqueda De Usuarios Y Pacientes</h1>
             <div class="search-container">
                 <form id="universalSearchForm" class="universal-search-container">
@@ -72,17 +70,14 @@ session_start();
                 </form>
             </div>
             
-            <!-- EL CONTENEDOR DONDE EL JS DIBUJARÁ LA TABLA -->
             <div id="resultsContainer">
                 <p style="text-align:center; color: #777;">Use el buscador para encontrar usuarios o pacientes.</p>
             </div>
         </div>
     </main>
 
-    <!-- TU SCRIPT ORIGINAL (APUNTA AL JS CORREGIDO) -->
     <script src="../js_admin/admin_pacientes_copy.js" defer></script>
     <script>
-        // TU SCRIPT DE SWEETALERT ORIGINAL (NO SE TOCA)
         document.addEventListener('DOMContentLoaded', function() {
             <?php if(isset($_SESSION['mensaje'])): ?>
                 Swal.fire({ icon: 'success', title: '¡Éxito!', text: '<?= addslashes($_SESSION['mensaje']) ?>', timer: 3000, showConfirmButton: false });
@@ -96,9 +91,3 @@ session_start();
     </script>
 </body>
 </html>
-
-
-
-
-
-<ksfajñhñwHFÑ>

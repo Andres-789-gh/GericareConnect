@@ -812,14 +812,9 @@ end//
 
 create procedure actualizar_paciente(
     in p_id_paciente int,
-    in p_documento_identificacion int,
-    in p_nombre varchar(50),
-    in p_apellido varchar(50),
-    in p_fecha_nacimiento date,
-    in p_genero enum('masculino','femenino'),
+    in p_genero enum('Masculino','Femenino'),
     in p_contacto_emergencia varchar(20),
     in p_estado_civil varchar(30),
-    in p_tipo_sangre enum('a+','a-','b+','b-','ab+','ab-','o+','o-'),
     in p_seguro_medico varchar(100),
     in p_numero_seguro varchar(50),
     in p_id_usuario_familiar int,
@@ -830,27 +825,27 @@ create procedure actualizar_paciente(
 begin
     start transaction;
 
+    -- actualiza solo los campos permitidos en la tabla de pacientes
     update tb_paciente set
-        documento_identificacion = p_documento_identificacion,
-        nombre = p_nombre,
-        apellido = p_apellido,
-        fecha_nacimiento = p_fecha_nacimiento,
         genero = p_genero,
         contacto_emergencia = p_contacto_emergencia,
         estado_civil = p_estado_civil,
-        tipo_sangre = p_tipo_sangre,
         seguro_medico = p_seguro_medico,
         numero_seguro = p_numero_seguro,
         id_usuario_familiar = p_id_usuario_familiar
     where id_paciente = p_id_paciente;
 
-    update tb_paciente_asignado set estado = 'inactivo' where id_paciente = p_id_paciente;
+    -- desactiva la asignación anterior
+    update tb_paciente_asignado 
+    set estado = 'Inactivo' 
+    where id_paciente = p_id_paciente and estado = 'Activo';
 
+    -- inserta la nueva asignación de cuidador si se proporcionó uno
     if p_id_usuario_cuidador is not null then
         insert into tb_paciente_asignado(
             id_usuario_cuidador, id_usuario_administrador, id_paciente, descripcion, estado
         ) values (
-            p_id_usuario_cuidador, p_id_usuario_administrador, p_id_paciente, p_descripcion_asignacion, 'activo'
+            p_id_usuario_cuidador, p_id_usuario_administrador, p_id_paciente, p_descripcion_asignacion, 'Activo'
         );
     end if;
 
