@@ -138,17 +138,16 @@ button:hover {
 }
 
 .toggle-password:hover {
-    color: #007bff; 
+    color: #6200ea; 
 }
 
 p {
     margin-top: 15px;
     color: #555;
-    text-align: center;
 }
 
 p a {
-    color: #007bff;
+    color: #6200ea;
     text-decoration: none;
     font-weight: bold;
 }
