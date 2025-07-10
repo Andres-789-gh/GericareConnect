@@ -14,7 +14,7 @@ class Paciente {
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception("Error al consultar pacientes: " . $e->getMessage());
         }
     }
 
@@ -27,7 +27,7 @@ class Paciente {
             $query->execute([$id_paciente]);
             return $query->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception("Error al obtener paciente por ID: " . $e->getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ class Paciente {
             ]);
             return $query->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception("Error al registrar paciente: " . $e->getMessage());
         }
     }
 
@@ -67,7 +67,7 @@ class Paciente {
             ]);
             return true;
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception("Error al actualizar paciente: " . $e->getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ class Paciente {
             $query->execute([$id_paciente]);
             return true;
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception("Error al desactivar paciente: " . $e->getMessage());
         }
     }
 

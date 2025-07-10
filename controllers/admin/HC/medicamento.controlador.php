@@ -84,7 +84,7 @@ class ControladorMedicamentosAdmin {
             );
 
             $modelo = new ModeloMedicamentos();
-            $respuesta = $modelo->desactivarEstadoMedicamento($tabla, $datos);
+            $respuesta = $modelo->mdlActualizarEstadoMedicamento($tabla, $datos);
 
             if ($respuesta == "ok") {
                 echo '<script>

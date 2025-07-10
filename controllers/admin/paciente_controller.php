@@ -55,19 +55,10 @@ try {
 
 } catch (Exception $e) {
     if ($e instanceof PDOException) {
-        // Si el error es de base de datos (PDOException)
-        if ($e->errorInfo[1] == 1062) {
-            // Error 1062: Entrada duplicada (documento ya existe)
-            $_SESSION['error'] = "El documento de identificación ingresado ya pertenece a otro paciente. Por favor, verifique.";
-        } else {
-            // Cualquier otro error de base de datos
-            $_SESSION['error'] = "No se pudo procesar la solicitud debido a un problema de datos.";
-        }
+        $_SESSION['error'] = "Error de Base de Datos: " . ($e->errorInfo[1] == 1062 ? "Documento ya existe." : "Verifique los datos.");
     } else {
-        // Si es cualquier otra excepción (ej. campos obligatorios)
-        $_SESSION['error'] = "Error: " . $e->getMessage();
+        $_SESSION['error'] = "Error al guardar: " . $e->getMessage();
     }
-    
     header("Location: $form_location");
     exit();
 }
