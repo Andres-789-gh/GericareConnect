@@ -23,7 +23,7 @@ session_start();
         <div id="particles-js"></div>
         <div class="header-content animate__animated animate__fadeIn">
             <div class="logo" onclick="window.location.href='admin_pacientes.php'">
-                <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
+                <img src="../../imagenes/Geri_Logo-..png" alt="Logo GeriCare" class="logo-img">
                 <h1>GeriCareConnect</h1>
             </div>
             <nav class="main-nav">

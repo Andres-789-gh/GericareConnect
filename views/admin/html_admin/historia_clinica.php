@@ -43,7 +43,7 @@ $historias = $modelo->consultarHistorias($busqueda);
         <div id="particles-js"></div>
         <div class="header-content animate__animated animate__fadeIn">
             <div class="logo" onclick="window.location.href='admin_pacientes.php'">
-                <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
+                <img src="../../imagenes/Geri_Logo-..png" alt="Logo GeriCare" class="logo-img">
                 <h1>GeriCareConnect</h1>
             </div>
             <nav class="main-nav">
@@ -67,7 +67,7 @@ $historias = $modelo->consultarHistorias($busqueda);
         <div class="d-flex justify-content-between align-items-center mb-4">
              <h1 class="mb-0"><i class="fas fa-file-medical"></i> Gestión de Historias Clínicas</h1>
              <a href="form_historia_clinica.php" class="btn-main-action">
-                 <i class="fas fa-plus"></i> Crear Historia Clínica
+                <i class="fas fa-plus"></i> Crear Historia Clínica
             </a>
         </div>
         
