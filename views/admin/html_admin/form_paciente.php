@@ -2,7 +2,7 @@
 session_start();
 // Seguridad: solo los administradores pueden acceder.
 if (!isset($_SESSION['id_usuario']) || $_SESSION['nombre_rol'] !== 'Administrador') {
-    header("Location: /GericareConnect/views/index-login/htmls/index.html");
+    header("Location: /GericareConnect/views/index-login/htmls/index.php");
     exit();
 }
 

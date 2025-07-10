@@ -4,7 +4,7 @@ verificarAcceso(['Cuidador']);
 
 // Si no hay un usuario en la sesión redirige al login
 if (!isset($_SESSION['id_usuario'])) {
-    header("Location: ../../index-login/htmls/index.html");
+    header("Location: ../../index-login/htmls/index.php");
     exit();
 }
 ?>

@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 // Incluimos la clase que sabe cómo desactivar usuarios.
 require_once(__DIR__ . '/../../models/clases/usuario.php');
+require_once(__DIR__ . '/../../models/clases/pacientes.php');
 
 // Seguridad: solo un admin puede desactivar.
 if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
@@ -25,13 +26,14 @@ if ($id_entidad <= 0 || empty($tipo_entidad)) {
 try {
     // Creamos un objeto administrador para usar sus métodos.
     $admin = new administrador();
+    $paciente = new Paciente();
     
     // Decidimos qué método llamar basado en lo que se quiere desactivar.
     if ($tipo_entidad === 'Usuario') {
         $admin->desactivarUsuario($id_entidad, $id_admin_actual);
         $message = 'Usuario desactivado correctamente.';
     } elseif ($tipo_entidad === 'Paciente') {
-        $admin->desactivarPaciente($id_entidad);
+        $paciente->desactivar($id_entidad);
         $message = 'Paciente desactivado correctamente.';
     } else {
         throw new Exception('Tipo de entidad no reconocido.');

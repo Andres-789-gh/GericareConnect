@@ -5,7 +5,7 @@ require_once (__DIR__ . '/../../models/clases/usuario.php');
 // Verificar que solo un administrador pueda ejecutar este script
 if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
     $_SESSION['error'] = "Acceso no autorizado.";
-    header("Location: /GericareConnect/views/index-login/htmls/index.html");
+    header("Location: /GericareConnect/views/index-login/htmls/index.php");
     exit();
 }
 

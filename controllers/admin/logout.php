@@ -9,7 +9,7 @@ session_unset();
 session_destroy();
 
 // Redirigir al usuario a la página de inicio de sesión.
-header("Location: ../../views/index-login/htmls/index.html"); 
+header("Location: ../../views/index-login/htmls/index.php"); 
 
 // El script se detiene después de la redirección
 exit();

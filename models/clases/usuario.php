@@ -208,15 +208,5 @@
                 throw $e;
             }
         }
-
-        public function desactivarPaciente($id_paciente) {
-            try {
-                $query = $this->conn->prepare("call desactivar_paciente(?)");
-                $query->execute([$id_paciente]);
-                return true;
-            } catch (Exception $e) {
-                throw $e;
-            }
-        }
     }
 ?> 

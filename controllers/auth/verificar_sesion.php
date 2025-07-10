@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 function verificarAcceso($rolesPermitidos = null) {
     // El usuario ha iniciado sesión?
     if (!isset($_SESSION['id_usuario'])) {
-        header("Location: /gericareconnect/views/index-login/htmls/index.html");
+        header("Location: /gericareconnect/views/index-login/htmls/index.php");
         exit();
     }
 

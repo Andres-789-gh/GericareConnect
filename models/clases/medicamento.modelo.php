@@ -4,48 +4,78 @@ class ModeloMedicamentos {
     
     private $conn;
 
-    // Constructor para la conexión
+    /* Constructor para la conexión a la base de datos. */
     public function __construct() {
         require(__DIR__ . '/../data_base/database.php');
         $this->conn = $conn;
     }
 
-    // --- Métodos convertidos a no estáticos ---
-
+    /* Crea un nuevo medicamento en la base de datos. */
     public function mdlCrearMedicamento($tabla, $datos) {
-        $stmt = $this->conn->prepare("INSERT INTO $tabla(nombre_medicamento, descripcion_medicamento, estado) VALUES (:nombre_medicamento, :descripcion_medicamento, :estado)");
-        $stmt->bindParam(":nombre_medicamento", $datos["nombre_medicamento"], PDO::PARAM_STR);
-        $stmt->bindParam(":descripcion_medicamento", $datos["descripcion_medicamento"], PDO::PARAM_STR);
-        $stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_STR);
-        return $stmt->execute() ? "ok" : "error";
-    }
-
-    public function mdlMostrarMedicamentos($tabla, $item, $valor) {
-        if ($item != null) {
-            $stmt = $this->conn->prepare("SELECT * FROM $tabla WHERE $item = :$item AND estado = 'Activo'");
-            $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
+        try {
+            $stmt = $this->conn->prepare("insert into $tabla(nombre_medicamento, descripcion_medicamento, estado) values (:nombre_medicamento, :descripcion_medicamento, :estado)");
+            $stmt->bindParam(":nombre_medicamento", $datos["nombre_medicamento"], PDO::PARAM_STR);
+            $stmt->bindParam(":descripcion_medicamento", $datos["descripcion_medicamento"], PDO::PARAM_STR);
+            $stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_STR);
+            
             $stmt->execute();
-            return $stmt->fetch();
-        } else {
-            $stmt = $this->conn->prepare("SELECT * FROM $tabla WHERE estado = 'Activo'");
-            $stmt->execute();
-            return $stmt->fetchAll();
+            return true;
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 
-    public function mdlEditarMedicamento($tabla, $datos) {
-        $stmt = $this->conn->prepare("UPDATE $tabla SET nombre_medicamento = :nombre_medicamento, descripcion_medicamento = :descripcion_medicamento WHERE id_medicamento = :id_medicamento");
-        $stmt->bindParam(":nombre_medicamento", $datos["nombre_medicamento"], PDO::PARAM_STR);
-        $stmt->bindParam(":descripcion_medicamento", $datos["descripcion_medicamento"], PDO::PARAM_STR);
-        $stmt->bindParam(":id_medicamento", $datos["id_medicamento"], PDO::PARAM_INT);
-        return $stmt->execute() ? "ok" : "error";
+    /* Muestra los medicamentos, opcionalmente filtrando por una columna y valor. */
+    public function mdlMostrarMedicamentos($tabla, $item, $valor) {
+        try {
+            if ($item != null) {
+                // Lista blanca de columnas para prevenir inyección SQL.
+                $columnasPermitidas = ['id_medicamento', 'nombre_medicamento'];
+                if (!in_array($item, $columnasPermitidas)) {
+                    throw new InvalidArgumentException("Columna no válida para la búsqueda.");
+                }
+
+                $stmt = $this->conn->prepare("select * from $tabla where $item = :valor AND estado = 'Activo'");
+                $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
+                $stmt->execute();
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $stmt = $this->conn->prepare("select * from $tabla where estado = 'Activo'");
+                $stmt->execute();
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
-    public function mdlActualizarEstadoMedicamento($tabla, $datos) {
-        $stmt = $this->conn->prepare("UPDATE $tabla SET estado = :estado WHERE id_medicamento = :id_medicamento");
-        $stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_STR);
-        $stmt->bindParam(":id_medicamento", $datos["id_medicamento"], PDO::PARAM_INT);
-        return $stmt->execute() ? "ok" : "error";
+    /* Edita la información de un medicamento existente. */
+    public function mdlEditarMedicamento($tabla, $datos) {
+        try {
+            $stmt = $this->conn->prepare("update $tabla set nombre_medicamento = :nombre_medicamento, descripcion_medicamento = :descripcion_medicamento where id_medicamento = :id_medicamento");
+            $stmt->bindParam(":nombre_medicamento", $datos["nombre_medicamento"], PDO::PARAM_STR);
+            $stmt->bindParam(":descripcion_medicamento", $datos["descripcion_medicamento"], PDO::PARAM_STR);
+            $stmt->bindParam(":id_medicamento", $datos["id_medicamento"], PDO::PARAM_INT);
+            
+            $stmt->execute();
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Actualiza el estado de un medicamento para un borrado lógico. */
+    public function desactivarEstadoMedicamento($tabla, $datos) {
+        try {
+            $stmt = $this->conn->prepare("update $tabla set estado = :estado where id_medicamento = :id_medicamento");
+            $stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_STR);
+            $stmt->bindParam(":id_medicamento", $datos["id_medicamento"], PDO::PARAM_INT);
+
+            $stmt->execute();
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }
 ?>

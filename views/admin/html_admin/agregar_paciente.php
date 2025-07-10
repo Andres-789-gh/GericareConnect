@@ -2,7 +2,7 @@
 session_start();
 // Seguridad y carga de clases
 if (!isset($_SESSION['id_usuario']) || $_SESSION['nombre_rol'] !== 'Administrador') {
-    header("Location: /GericareConnect/views/index-login/htmls/index.html");
+    header("Location: /GericareConnect/views/index-login/htmls/index.php");
     exit();
 }
 require_once __DIR__ . '/../../../models/clases/pacientes.php';

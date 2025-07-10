@@ -4,7 +4,7 @@ verificarAcceso(['Administrador']);
 // Asegurarse de que solo el administrador pueda ver esta página
 if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
     // Redirigir si no es administrador
-    header("Location: /GericareConnect/views/index-login/htmls/index.html");
+    header("Location: /GericareConnect/views/index-login/htmls/index.php");
     exit();
 }
 ?>

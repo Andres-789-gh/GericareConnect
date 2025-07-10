@@ -9,59 +9,118 @@ class Actividad {
         $this->conn = $conn;
     }
 
+    /*
+     Registra una nueva actividad.
+     Lanza una excepción si ocurre un error en la base de datos.
+     */
     public function registrar($datos) {
-        $stmt = $this->conn->prepare("CALL registrar_actividad(?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $datos['id_paciente'], $_SESSION['id_usuario'], $datos['tipo_actividad'],
-            $datos['descripcion_actividad'], $datos['fecha_actividad'], $datos['hora_inicio'],
-            $datos['hora_fin']
-        ]);
-        return true;
+        try {
+            $stmt = $this->conn->prepare("call registrar_actividad(?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $datos['id_paciente'], $_SESSION['id_usuario'], $datos['tipo_actividad'],
+                $datos['descripcion_actividad'], $datos['fecha_actividad'], $datos['hora_inicio'],
+                $datos['hora_fin']
+            ]);
+            return true;
+        } catch (Exception $e) {
+            // Relanza la excepción original para que el controlador la maneje.
+            throw $e;
+        }
     }
 
+    /*
+     Consulta actividades con filtros opcionales.
+     Lanza una excepción si ocurre un error en la base de datos.
+     */
     public function consultar($busqueda = null, $estado_filtro = null) {
-        $stmt = $this->conn->prepare("CALL consultar_actividades(?, ?)");
-        $stmt->execute([$busqueda, $estado_filtro]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->conn->prepare("call consultar_actividades(?, ?)");
+            $stmt->execute([$busqueda, $estado_filtro]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
     
+    /*
+     Obtiene una actividad específica por su ID.
+     Lanza una excepción si la consulta subyacente falla.
+     */
     public function obtenerPorId($id_actividad) {
-        // Se usa el mismo SP de consulta, pero se filtra por ID en PHP
-        $actividades = $this->consultar(null);
-        foreach ($actividades as $actividad) {
-            if ($actividad['id_actividad'] == $id_actividad) {
-                return $actividad;
+        try {
+            // Llama a consultar, que ya tiene su propio manejo de errores.
+            $actividades = $this->consultar(null, null); 
+            foreach ($actividades as $actividad) {
+                if ($actividad['id_actividad'] == $id_actividad) {
+                    return $actividad;
+                }
             }
+            // Si no se encuentra, devuelve null. (Esto no es un error de BD)
+            return null;
+        } catch (Exception $e) {
+            // Si el método consultar() lanzó un error, lo atrapamos y relanzamos.
+            throw $e;
         }
-        return null;
     }
 
+    /*
+     Actualiza una actividad existente.
+     Lanza una excepción si ocurre un error en la base de datos.
+     */
     public function actualizar($datos) {
-        $stmt = $this->conn->prepare("CALL actualizar_actividad(?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $datos['id_actividad'], $datos['id_paciente'], $datos['tipo_actividad'],
-            $datos['descripcion_actividad'], $datos['fecha_actividad'], $datos['hora_inicio'],
-            $datos['hora_fin']
-        ]);
-        return true;
+        try {
+            $stmt = $this->conn->prepare("call actualizar_actividad(?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $datos['id_actividad'], $datos['id_paciente'], $datos['tipo_actividad'],
+                $datos['descripcion_actividad'], $datos['fecha_actividad'], $datos['hora_inicio'],
+                $datos['hora_fin']
+            ]);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
+    /*
+     Elimina una actividad.
+     Lanza una excepción si ocurre un error en la base de datos.
+     */
     public function eliminar($id_actividad) {
-        $stmt = $this->conn->prepare("CALL eliminar_actividad(?)");
-        $stmt->execute([$id_actividad]);
-        return true;
+        try {
+            $stmt = $this->conn->prepare("call eliminar_actividad(?)");
+            $stmt->execute([$id_actividad]);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
+    /*
+     Consulta actividades asignadas a un cuidador específico.
+     Lanza una excepción si ocurre un error en la base de datos.
+     */
     public function consultarPorCuidador($id_cuidador, $busqueda = null, $estado_filtro = null) {
-        $stmt = $this->conn->prepare("CALL consultar_actividades_cuidador(?, ?, ?)");
-        $stmt->execute([$id_cuidador, $busqueda, $estado_filtro]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->conn->prepare("call consultar_actividades_cuidador(?, ?, ?)");
+            $stmt->execute([$id_cuidador, $busqueda, $estado_filtro]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
+    /*
+     Marca una actividad como completada.
+     Lanza una excepción si ocurre un error en la base de datos.
+     */
     public function marcarComoCompletada($id_actividad, $id_cuidador) {
-        $stmt = $this->conn->prepare("CALL completar_actividad(?, ?)");
-        $stmt->execute([$id_actividad, $id_cuidador]);
-        return true;
+        try {
+            $stmt = $this->conn->prepare("call completar_actividad(?, ?)");
+            $stmt->execute([$id_actividad, $id_cuidador]);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }
 ?>

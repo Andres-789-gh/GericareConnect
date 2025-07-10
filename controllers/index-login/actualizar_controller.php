@@ -4,7 +4,7 @@ verificarAcceso();
 require_once (__DIR__ . '/../../models/clases/usuario.php');
 
 /* Definir la URL de retorno dependiendo del rol */
-$url_retorno = '../../views/index-login/htmls/index.html'; // URL por defecto
+$url_retorno = '../../views/index-login/htmls/index.php'; // URL por defecto
 if (isset($_SESSION['nombre_rol'])) {
     switch ($_SESSION['nombre_rol']) {
         case 'Administrador':
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Reedirigir dependiendo del rol
-    $url_redireccion = '../../views/index-login/htmls/index.html'; // En caso de que algo falle se reedirije al index
+    $url_redireccion = '../../views/index-login/htmls/index.php'; // En caso de que algo falle se reedirije al index
     
     if (isset($_SESSION['nombre_rol'])) {
         switch ($_SESSION['nombre_rol']) {

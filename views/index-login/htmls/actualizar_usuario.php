@@ -89,7 +89,7 @@ $esFamiliar = $rol === 'Familiar';
 
             <?php
             /* Logica para el botón Cancelar */
-            $url_cancelar = '../../views/index-login/htmls/index.html'; // URL por defecto
+            $url_cancelar = '../../views/index-login/htmls/index.php'; // URL por defecto
 
             if (isset($_SESSION['nombre_rol'])) {
                 switch ($_SESSION['nombre_rol']) {
