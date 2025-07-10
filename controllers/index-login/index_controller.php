@@ -1,9 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../models/clases/usuario.php';
-
-/* Definir la ubicación del login para no repetirla */
-$login_location = '/GericareConnect/views/index-login/htmls/index.php';
+include "../../models/clases/usuario.php";
 
 $acceso_usuario = new usuario();
 // quitamos la contraseña del llamado al método Login, porque la validaremos manualmente después
@@ -38,27 +35,30 @@ if(!empty($respuesta)) {
                     header("location:../../views/familiar/html_familiar/familiares.php");
                     break;
                 default:
-                    $_SESSION['error_login'] = "Rol de usuario no reconocido.";
-                    header("Location: $login_location");
-                    exit();
+                    echo "<script>
+                        alert('Rol no reconocido: " . $respuesta[0]["nombre_rol"] . "');
+                        window.history.back();
+                    </script>";
             }
-            exit();
 
         } else {
-            $_SESSION['error_login'] = "El tipo de documento, número de documento o la contraseña son incorrectos.";
-            header("Location: $login_location");
-            exit();
+            echo "<script>
+                alert('Contraseña incorrecta');
+                window.history.back();
+            </script>";
         }
 
     } else {
-        $_SESSION['error_login'] = "No se pudo determinar el rol del usuario.";
-        header("Location: $login_location");
-        exit();
+        echo "<script>
+            alert('Error: No se pudo determinar el rol del usuario');
+            window.history.back();
+        </script>";
     }
 
 } else {
-    $_SESSION['error_login'] = "Datos incorrectos";
-    header("Location: $login_location");
-    exit();
+    echo "<script>
+        alert('Datos incorrectos');
+        window.history.back();
+    </script>";
 }
 ?>

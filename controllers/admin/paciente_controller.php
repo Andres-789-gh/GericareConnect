@@ -58,7 +58,7 @@ try {
         // Si el error es de base de datos (PDOException)
         if ($e->errorInfo[1] == 1062) {
             // Error 1062: Entrada duplicada (documento ya existe)
-            $_SESSION['error'] = "El documento de identificación ingresado ya pertenece a otro paciente.";
+            $_SESSION['error'] = "El documento de identificación ingresado ya pertenece a otro paciente. Por favor, verifique.";
         } else {
             // Cualquier otro error de base de datos
             $_SESSION['error'] = "No se pudo procesar la solicitud debido a un problema de datos.";

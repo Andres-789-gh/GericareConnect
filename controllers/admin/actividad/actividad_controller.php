@@ -48,17 +48,8 @@ try {
     exit();
 
 } catch (Exception $e) {
-    // Verificar si el error viene de la base de datos
-    if ($e instanceof PDOException) {
-        // Si es un error de BD
-        $_SESSION['error'] = "No se logro guardar la actividad. Verifique que los datos no estén duplicados.";
-    } else {
-        // Si es otro tipo de error (como una validación), mostrar su mensaje.
-        $_SESSION['error'] = "Error: " . $e->getMessage();
-    }
-    
-    /* redirección de vuelta al formulario */
-    $id_param = ($_POST['accion'] === 'actualizar' && isset($_POST['id_actividad'])) ? '?id=' . $_POST['id_actividad'] : '';
+    $_SESSION['error'] = "Error: " . $e->getMessage();
+    $id_param = ($accion === 'actualizar' && isset($_POST['id_actividad'])) ? '?id=' . $_POST['id_actividad'] : '';
     header("Location: " . $form_location . $id_param);
     exit();
 }
