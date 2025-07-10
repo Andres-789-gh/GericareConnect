@@ -24,11 +24,43 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
         .search-container select { background-color: #f8f9fa; }
         .btn-completar { background-color: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9em; transition: background-color 0.2s; }
         .btn-completar:hover { background-color: #218838; }
+
+        /* Estilo para el botón de exportar */
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            background-color: #1D6F42; /* Verde oscuro de Excel */
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-export:hover {
+            background-color: #165934;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
     <header class="admin-header">
-        </header>
+        <div class="logo-container">
+            <img src="../../imagenes/Geri_Logo-..png" alt="Logo" class="logo" onclick="window.location.href='cuidadores_panel_principal.php'">
+            <span class="app-name">GERICARE CONNECT</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="cuidadores_panel_principal.php"><i class="fas fa-chevron-left"></i> Volver</a></li>
+                <li><a href="cuidador_actividades.php" class="active"><i class="fas fa-tasks"></i> Actividades</a></li>
+                <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <main class="admin-content">
         <div class="historias-container">
@@ -53,7 +85,8 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
                             <th>Paciente</th>
                             <th>Fecha</th>
                             <th>Estado</th>
-                            <th>Completar</th> </tr>
+                            <th>Completar</th> 
+                        </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($actividades)): ?>
@@ -82,6 +115,11 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
                         <?php endif; ?>
                     </tbody>
                 </table>
+                 <div style="text-align: right; margin-top: 20px;">
+                    <a href="../../../controllers/cuidador/actividad/exportar_actividades_cuidador.php?estado=<?= htmlspecialchars($estado_filtro) ?>&busqueda=<?= htmlspecialchars($busqueda) ?>" class="btn-export">
+                        <i class="fas fa-file-excel"></i> Exportar a Excel
+                    </a>
+                </div>
             </div>
         </div>
     </main>
