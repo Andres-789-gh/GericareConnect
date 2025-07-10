@@ -43,7 +43,6 @@ try {
 
 } catch (Exception $e) {
     http_response_code(500);
-    // Extraemos solo el mensaje de error de la base de datos para mostrarlo de forma amigable.
     $errorMessage = explode(":", $e->getMessage());
     echo json_encode(['success' => false, 'message' => trim(end($errorMessage))]);
 }

@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Se envía el correo (el @ suprime los errores en pantalla si el servidor no está configurado)
         @mail($correo_destinatario, $asunto, $cuerpo_correo, $headers);
 
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         $mensaje = $e->errorInfo[2] ?? '';
 
         if (str_contains($mensaje, 'Ya existe un usuario')) {
