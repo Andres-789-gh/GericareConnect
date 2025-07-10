@@ -4,12 +4,12 @@ require_once __DIR__ . '/../../../models/clases/actividad.php';
 verificarAcceso(['Administrador']);
 
 // Capturar los filtros de la URL
-$busqueda = $_GET['busqueda'] ?? '';
-$estado_filtro = $_GET['estado'] ?? '';
-
+$busqueda_inicial = $_GET['busqueda'] ?? '';
+$estado_inicial = $_GET['estado'] ?? '';
 $modelo_actividad = new Actividad();
+
 // Pasar los filtros al método de consulta
-$actividades = $modelo_actividad->consultar($busqueda, $estado_filtro);
+$actividades = $modelo_actividad->consultar($busqueda_inicial, $estado_inicial);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -69,14 +69,13 @@ $actividades = $modelo_actividad->consultar($busqueda, $estado_filtro);
             <h1><i class="fas fa-tasks"></i> Actividades Programadas</h1>
             
             <div class="search-container">
-                <form method="GET">
-                    <select name="estado" onchange="this.form.submit()">
+                <form id="searchForm" onsubmit="return false;">
+                    <select id="filtro_estado" name="estado">
                         <option value=""> Todos los Estados </option>
-                        <option value="Pendiente" <?= $estado_filtro == 'Pendiente' ? 'selected' : '' ?>>Pendientes</option>
-                        <option value="Completada" <?= $estado_filtro == 'Completada' ? 'selected' : '' ?>>Completadas</option>
+                        <option value="Pendiente" <?= $estado_inicial == 'Pendiente' ? 'selected' : '' ?>>Pendientes</option>
+                        <option value="Completada" <?= $estado_inicial == 'Completada' ? 'selected' : '' ?>>Completadas</option>
                     </select>
-                    <input type="search" name="busqueda" placeholder="Buscar por paciente, documento o tipo de actividad..." value="<?= htmlspecialchars($busqueda) ?>">
-                    <button type="submit"><i class="fas fa-search"></i></button>
+                    <input id="termino_busqueda" type="search" name="busqueda" placeholder="Buscar por paciente, documento o tipo de actividad..." value="<?= htmlspecialchars($busqueda_inicial) ?>">
                 </form>
             </div>
 
@@ -179,5 +178,6 @@ $actividades = $modelo_actividad->consultar($busqueda, $estado_filtro);
             })
         }
     </script>
+    <script src="../js_admin/buscar_actividad_admin.js"></script>
 </body>
 </html>
