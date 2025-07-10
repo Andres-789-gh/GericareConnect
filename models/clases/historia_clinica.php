@@ -9,11 +9,10 @@ class HistoriaClinica {
         $this->conn = $conn;
     }
 
-    // ... (MÉTODOS ANTERIORES SE MANTIENEN IGUAL) ...
+    /* Consulta una lista de historias clínicas, opcionalmente con un término de búsqueda. */
     public function consultarHistorias($busqueda = null) {
         try {
-            // Este CALL ahora devuelve los contadores med_count y enf_count
-            $stmt = $this->conn->prepare("CALL consultar_historia_clinica(NULL, ?)");
+            $stmt = $this->conn->prepare("call consultar_historia_clinica(null, ?)");
             $stmt->execute([$busqueda]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -21,9 +20,11 @@ class HistoriaClinica {
             return [];
         }
     }
+
+    /* Obtiene los datos de una única historia clínica por su ID. */
     public function obtenerHistoriaPorId($id_historia_clinica) {
         try {
-            $stmt = $this->conn->prepare("CALL consultar_historia_clinica(?, NULL)");
+            $stmt = $this->conn->prepare("call consultar_historia_clinica(?, null)");
             $stmt->execute([$id_historia_clinica]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -31,64 +32,118 @@ class HistoriaClinica {
             return null;
         }
     }
+
+    /* Registra una nueva historia clínica en la base de datos. */
     public function registrarHistoria($datos) {
         try {
-            $stmt = $this->conn->prepare("CALL registrar_historia_clinica(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("call registrar_historia_clinica(?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$datos['id_paciente'], $datos['id_usuario_administrador'], $datos['estado_salud'], $datos['condiciones'], $datos['antecedentes_medicos'], $datos['alergias'], $datos['dietas_especiales'], $datos['fecha_ultima_consulta'], $datos['observaciones']]);
             return true;
-        } catch (Exception $e) { throw $e; }
-    }
-    public function actualizarHistoria($datos) {
-        try {
-            $stmt = $this->conn->prepare("CALL actualizar_historia_clinica(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$datos['id_historia_clinica'], $datos['id_usuario_administrador'], $datos['estado_salud'], $datos['condiciones'], $datos['antecedentes_medicos'], $datos['alergias'], $datos['dietas_especiales'], $datos['fecha_ultima_consulta'], $datos['observaciones']]);
-            return true;
-        } catch (Exception $e) { throw $e; }
-    }
-    public function desactivarHistoria($id_historia_clinica) {
-        try {
-            $stmt = $this->conn->prepare("CALL eliminar_historia_clinica(?)");
-            $stmt->execute([$id_historia_clinica]);
-            return true;
-        } catch (Exception $e) { throw $e; }
-    }
-    public function consultarEnfermedadesAsignadas($id_historia_clinica) {
-        $stmt = $this->conn->prepare("CALL consultar_enfermedades_hc(?)");
-        $stmt->execute([$id_historia_clinica]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public function asignarEnfermedad($id_hc, $id_enfermedad) {
-        $stmt = $this->conn->prepare("CALL asignar_enfermedad_hc(?, ?)");
-        $stmt->execute([$id_hc, $id_enfermedad]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    public function eliminarEnfermedadAsignada($id_hc_enfermedad) {
-        $stmt = $this->conn->prepare("CALL eliminar_enfermedad_hc(?)");
-        return $stmt->execute([$id_hc_enfermedad]);
-    }
-    public function consultarMedicamentosAsignados($id_historia_clinica) {
-        $stmt = $this->conn->prepare("CALL consultar_medicamentos_hc(?)");
-        $stmt->execute([$id_historia_clinica]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public function asignarMedicamento($datos) {
-        $stmt = $this->conn->prepare("CALL asignar_medicamento_hc(?, ?, ?, ?, ?)");
-        $stmt->execute([$datos['id_historia_clinica'], $datos['id_medicamento'], $datos['dosis'], $datos['frecuencia'], $datos['instrucciones']]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    public function actualizarMedicamentoAsignado($datos) {
-        $stmt = $this->conn->prepare("CALL actualizar_medicamento_hc(?, ?, ?, ?)");
-        return $stmt->execute([$datos['id_hc_medicamento'], $datos['dosis'], $datos['frecuencia'], $datos['instrucciones']]);
-    }
-    public function eliminarMedicamentoAsignado($id_hc_medicamento) {
-        $stmt = $this->conn->prepare("CALL eliminar_medicamento_hc(?)");
-        return $stmt->execute([$id_hc_medicamento]);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
-    // --- NUEVO MÉTODO PARA EL REPORTE ---
+    /* Actualiza la información de una historia clínica existente. */
+    public function actualizarHistoria($datos) {
+        try {
+            $stmt = $this->conn->prepare("call actualizar_historia_clinica(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$datos['id_historia_clinica'], $datos['id_usuario_administrador'], $datos['estado_salud'], $datos['condiciones'], $datos['antecedentes_medicos'], $datos['alergias'], $datos['dietas_especiales'], $datos['fecha_ultima_consulta'], $datos['observaciones']]);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Desactiva una historia clínica mediante un borrado lógico. */
+    public function desactivarHistoria($id_historia_clinica) {
+        try {
+            $stmt = $this->conn->prepare("call eliminar_historia_clinica(?)");
+            $stmt->execute([$id_historia_clinica]);
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Obtiene todas las enfermedades asignadas a una historia clínica. */
+    public function consultarEnfermedadesAsignadas($id_historia_clinica) {
+        try {
+            $stmt = $this->conn->prepare("call consultar_enfermedades_hc(?)");
+            $stmt->execute([$id_historia_clinica]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Asigna una enfermedad a una historia clínica. */
+    public function asignarEnfermedad($id_hc, $id_enfermedad) {
+        try {
+            $stmt = $this->conn->prepare("call asignar_enfermedad_hc(?, ?)");
+            $stmt->execute([$id_hc, $id_enfermedad]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Elimina la asignación de una enfermedad a una historia clínica. */
+    public function eliminarEnfermedadAsignada($id_hc_enfermedad) {
+        try {
+            $stmt = $this->conn->prepare("call eliminar_enfermedad_hc(?)");
+            return $stmt->execute([$id_hc_enfermedad]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Obtiene todos los medicamentos asignados a una historia clínica. */
+    public function consultarMedicamentosAsignados($id_historia_clinica) {
+        try {
+            $stmt = $this->conn->prepare("call consultar_medicamentos_hc(?)");
+            $stmt->execute([$id_historia_clinica]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Asigna un medicamento con su dosis a una historia clínica. */
+    public function asignarMedicamento($datos) {
+        try {
+            $stmt = $this->conn->prepare("call asignar_medicamento_hc(?, ?, ?, ?, ?)");
+            $stmt->execute([$datos['id_historia_clinica'], $datos['id_medicamento'], $datos['dosis'], $datos['frecuencia'], $datos['instrucciones']]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Actualiza los detalles de un medicamento asignado. */
+    public function actualizarMedicamentoAsignado($datos) {
+        try {
+            $stmt = $this->conn->prepare("call actualizar_medicamento_hc(?, ?, ?, ?)");
+            return $stmt->execute([$datos['id_hc_medicamento'], $datos['dosis'], $datos['frecuencia'], $datos['instrucciones']]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Elimina la asignación de un medicamento a una historia clínica. */
+    public function eliminarMedicamentoAsignado($id_hc_medicamento) {
+        try {
+            $stmt = $this->conn->prepare("call eliminar_medicamento_hc(?)");
+            return $stmt->execute([$id_hc_medicamento]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /* Obtiene un reporte consolidado de una historia clínica. */
     public function obtenerReporteCompleto($id_historia_clinica) {
         try {
-            $stmt = $this->conn->prepare("CALL consultar_reporte_completo_hc(?)");
+            $stmt = $this->conn->prepare("call consultar_reporte_completo_hc(?)");
             $stmt->execute([$id_historia_clinica]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -97,24 +152,22 @@ class HistoriaClinica {
         }
     }
 
-    /* funcion para ver si un paciente ya tiene una historia clinica activa */
+    /* Verifica si un paciente ya tiene una historia clínica activa. */
     public function verificarHcExistente($id_paciente) {
         try {
-            $stmt = $this->conn->prepare("SELECT 1 FROM tb_historia_clinica WHERE id_paciente = ? AND estado = 'Activo' LIMIT 1");
+            $stmt = $this->conn->prepare("select 1 from tb_historia_clinica where id_paciente = ? and estado = 'Activo' limit 1");
             $stmt->execute([$id_paciente]);
-            // fetchColumn() devuelve el valor de la columna o false si no hay fila.
             return $stmt->fetchColumn() !== false;
         } catch (Exception $e) {
-            // En caso de error, es más seguro asumir que podría existir para evitar duplicados.
             error_log("Error en verificarHcExistente: " . $e->getMessage());
             return true; 
         }
     }
 
-    /* llamar al Procedimiento almacenado del cuidador para consultar las HC */
+    /* Consulta las historias clínicas de los pacientes de un cuidador. */
     public function consultarHistoriasPorCuidador($id_cuidador, $busqueda = null) {
         try {
-            $stmt = $this->conn->prepare("CALL consultar_historias_cuidador(?, ?)");
+            $stmt = $this->conn->prepare("call consultar_historias_cuidador(?, ?)");
             $stmt->execute([$id_cuidador, $busqueda]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
