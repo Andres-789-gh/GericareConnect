@@ -1,36 +1,64 @@
+<?php
+/*Inicia la sesión para poder leer las variables de sesión como $_SESSION['error_login'].*/
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - GeriCare Connect</title>
-    <link rel="stylesheet" href="../files_css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../files_css/index.css">
 </head>
-<body>
-    <div class="login-container">
-        <img src="../../imagenes/Geri_Logo-..png" alt="Logo Gericare" class="logo2">
-        <h2>Iniciar Sesión</h2>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm p-4">
+                    <div class="text-center mb-4">
+                        <img src="../../imagenes/Geri_Logo-..png" alt="Logo Gericare" style="width: 100px;">
+                        <h2 class="mt-3">Iniciar Sesión</h2>
+                    </div>
 
-        <div id="error-container" class="error-box" style="display: none;">
-            <p id="error-message" class="error-msg"></p>
-        </div>
+                    <?php
+                    /*
+                    1. "isset" comprueba si la variable $_SESSION['error_login'] existe.
+                    2. Si existe, imprime el mensaje de error dentro de un div con estilo.
+                    3. "unset" borra la variable para que el error no se muestre de nuevo si recargas la página.
+                    */
+                    if (isset($_SESSION['error_login'])) {
+                        /* Se aplica la clase "alert alert-danger" de Bootstrap al mensaje de error */
+                        echo "<div class='alert alert-danger'>" . htmlspecialchars($_SESSION['error_login']) . "</div>";
+                        unset($_SESSION['error_login']);
+                    }
+                    ?>
 
-        <form id="loginForm" action="../../../controllers/index-login/index_controller.php" method="POST">
-            <select name="tipo_documento" required>
-                <option value="" disabled selected>Selecciona el tipo de documento</option>
-                <option value="CC">Cédula de Ciudadanía</option>
-                <option value="CE">Cédula de Extranjería</option>
-                <option value="PA">Pasaporte</option>
-            </select>
-            <input type="text" name="documento" placeholder="Número de Documento" required>
-            <div class="password-container">
-                <input type="password" name="password" placeholder="Contraseña" required id="passwordInput">
-                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                    <div id="error-container" class="error-box" style="display: none;">
+                        <p id="error-message" class="error-msg"></p>
+                    </div>
+
+                    <form id="loginForm" action="../../../controllers/index-login/index_controller.php" method="POST">
+                        <select name="tipo_documento" class="form-select mb-3" required>
+                            <option value="" disabled selected>Selecciona el tipo de documento</option>
+                            <option value="CC">Cédula de Ciudadanía</option>
+                            <option value="CE">Cédula de Extranjería</option>
+                            <option value="PA">Pasaporte</option>
+                        </select>
+                        <input type="text" name="documento" placeholder="Número de Documento" class="form-control mb-3" required>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" placeholder="Contraseña" required id="passwordInput" class="form-control">
+                            <span class="input-group-text">
+                                <i class="fas fa-eye toggle-password" id="togglePassword" style="cursor: pointer;"></i>
+                            </span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                    </form>
+                    <p class="alert-link">¿No tienes cuenta? <a href="../../familiar/html_familiar/registro_familiar_view.php">Regístrate aquí</a>.</p>
+                </div>
             </div>
-            <button type="submit">Ingresar</button>
-        </form>
-        <p>¿No tienes cuenta? <a href="../../familiar/html_familiar/registro_familiar_view.php">Regístrate aquí</a>.</p>
+        </div>
     </div>
 
     <script>
@@ -52,7 +80,6 @@
             errorContainer.classList.add('success-box'); 
         }
 
-
         const passwordInput = document.getElementById('passwordInput');
         const togglePassword = document.getElementById('togglePassword');
 
@@ -66,7 +93,6 @@
         }
     </script>
      <style>
-        
         .success-box {
             background-color: #d4edda;
             color: #155724;
