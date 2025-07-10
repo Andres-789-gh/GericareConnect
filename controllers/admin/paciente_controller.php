@@ -4,29 +4,26 @@ require_once __DIR__ . '/../../models/clases/pacientes.php';
 
 $redirect_location = '../../views/admin/html_admin/admin_pacientes.php';
 $form_location = '../../views/admin/html_admin/agregar_paciente.php';
+
+// Mantener el ID en la URL del formulario si estamos editando
 if (isset($_POST['id_paciente'])) {
     $form_location .= '?id=' . $_POST['id_paciente'];
 }
 
 try {
     $paciente_model = new Paciente();
-    $accion = $_POST['accion'];
+    $accion = $_POST['accion'] ?? null;
 
-    // Si la acción es registrar, se validan todos los campos.
+    $datos_formulario = [];
+
     if ($accion === 'registrar') {
         if (empty($_POST['nombre']) || empty($_POST['apellido']) || empty($_POST['documento_identificacion'])) {
             throw new Exception("Los campos Nombre, Apellido y Documento son obligatorios.");
         }
-    }
+        if (empty($_POST['id_usuario_cuidador'])) {
+            throw new Exception("Es obligatorio asignar un cuidador al paciente.");
+        }
 
-    if (empty($_POST['id_usuario_cuidador'])) {
-        throw new Exception("Es obligatorio asignar un cuidador al paciente.");
-    }
-    
-    // El array de datos se construye dependiendo de la acción.
-    $datos_formulario = [];
-
-    if ($accion === 'registrar') {
         $datos_formulario = [
             'documento_identificacion' => $_POST['documento_identificacion'],
             'nombre'                   => $_POST['nombre'],
@@ -43,10 +40,16 @@ try {
             'id_usuario_administrador' => $_SESSION['id_usuario'],
             'descripcion_asignacion'   => $_POST['descripcion_asignacion'] ?? null
         ];
+        
         $paciente_model->registrar($datos_formulario);
         $_SESSION['mensaje'] = "¡Paciente registrado con éxito!";
 
     } elseif ($accion === 'actualizar') {
+        // Para actualizar, no validamos los campos deshabilitados
+        if (empty($_POST['id_usuario_cuidador'])) {
+            throw new Exception("Es obligatorio asignar un cuidador al paciente.");
+        }
+
         $datos_formulario = [
             'id_paciente'              => $_POST['id_paciente'],
             'genero'                   => $_POST['genero'] ?? null,
@@ -59,20 +62,21 @@ try {
             'id_usuario_administrador' => $_SESSION['id_usuario'],
             'descripcion_asignacion'   => $_POST['descripcion_asignacion'] ?? null
         ];
+
         $paciente_model->actualizar($datos_formulario);
         $_SESSION['mensaje'] = "¡Paciente actualizado correctamente!";
+    
+    } else {
+        throw new Exception("Acción no válida.");
     }
 
     header("Location: $redirect_location");
     exit();
 
 } catch (Exception $e) {
-    if ($e instanceof PDOException) {
-        if ($e->errorInfo[1] == 1062) {
-            $_SESSION['error'] = "El documento de identificación ingresado ya pertenece a otro paciente.";
-        } else {
-            $_SESSION['error'] = "No se pudo procesar la solicitud debido a un problema de datos.";
-        }
+    // El manejo de errores ahora funciona para ambos casos
+    if ($e instanceof PDOException && $e->errorInfo[1] == 1062) {
+        $_SESSION['error'] = "El documento de identificación ingresado ya pertenece a otro paciente.";
     } else {
         $_SESSION['error'] = "Error: " . $e->getMessage();
     }

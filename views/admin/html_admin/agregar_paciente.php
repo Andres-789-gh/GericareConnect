@@ -51,29 +51,33 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <body>
     <div class="container">
         <h1><i class="fas fa-user-plus"></i> <?= $modo_edicion ? 'Editar Paciente' : 'Registrar Paciente' ?></h1>
+        
         <form action="../../../controllers/admin/paciente_controller.php" method="POST">
             <input type="hidden" name="accion" value="<?= $modo_edicion ? 'actualizar' : 'registrar' ?>">
             <?php if ($modo_edicion): ?>
                 <input type="hidden" name="id_paciente" value="<?= htmlspecialchars($datos_paciente['id_paciente']) ?>">
-                <input type="hidden" name="nombre" value="<?= htmlspecialchars($datos_paciente['nombre']) ?>">
-                <input type="hidden" name="apellido" value="<?= htmlspecialchars($datos_paciente['apellido']) ?>">
-                <input type="hidden" name="documento_identificacion" value="<?= htmlspecialchars($datos_paciente['documento_identificacion']) ?>">
-                <input type="hidden" name="fecha_nacimiento" value="<?= htmlspecialchars($datos_paciente['fecha_nacimiento']) ?>">
-                <input type="hidden" name="tipo_sangre" value="<?= htmlspecialchars($datos_paciente['tipo_sangre']) ?>">
             <?php endif; ?>
 
             <div class="form-grid">
-                <div class="form-group"><label>Nombres</label><input type="text" name="nombre_display" value="<?= htmlspecialchars($datos_paciente['nombre'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>></div>
-                <div class="form-group"><label>Apellidos</label><input type="text" name="apellido_display" value="<?= htmlspecialchars($datos_paciente['apellido'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>></div>
-                <div class="form-group"><label>Documento</label><input type="number" name="documento_identificacion_display" value="<?= htmlspecialchars($datos_paciente['documento_identificacion'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>></div>
-                <div class="form-group"><label>Fecha de Nacimiento</label><input type="date" name="fecha_nacimiento_display" value="<?= htmlspecialchars($datos_paciente['fecha_nacimiento'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>></div>
-                <div class="form-group"><label>Género</label><select name="genero" required><option value="">Seleccione...</option><option value="Masculino" <?= (($datos_paciente['genero'] ?? '') == 'Masculino') ? 'selected' : '' ?>>Masculino</option><option value="Femenino" <?= (($datos_paciente['genero'] ?? '') == 'Femenino') ? 'selected' : '' ?>>Femenino</option></select></div>
-                <div class="form-group"><label>Contacto de Emergencia</label><input type="text" name="contacto_emergencia" value="<?= htmlspecialchars($datos_paciente['contacto_emergencia'] ?? '') ?>" required></div>
-                <div class="form-group"><label>Estado Civil</label><input type="text" name="estado_civil" value="<?= htmlspecialchars($datos_paciente['estado_civil'] ?? '') ?>" required></div>
-                
+                <div class="form-group">
+                    <label>Nombres</label>
+                    <input type="text" name="nombre" value="<?= htmlspecialchars($datos_paciente['nombre'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>>
+                </div>
+                <div class="form-group">
+                    <label>Apellidos</label>
+                    <input type="text" name="apellido" value="<?= htmlspecialchars($datos_paciente['apellido'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>>
+                </div>
+                <div class="form-group">
+                    <label>Documento</label>
+                    <input type="number" name="documento_identificacion" value="<?= htmlspecialchars($datos_paciente['documento_identificacion'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" value="<?= htmlspecialchars($datos_paciente['fecha_nacimiento'] ?? '') ?>" required <?= $modo_edicion ? 'disabled' : '' ?>>
+                </div>
                 <div class="form-group">
                     <label>Tipo de Sangre</label>
-                    <select name="tipo_sangre_display" required <?= $modo_edicion ? 'disabled' : '' ?>>
+                    <select name="tipo_sangre" required <?= $modo_edicion ? 'disabled' : '' ?>>
                         <?php $tipos_sangre = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']; ?>
                         <option value="">Seleccione...</option>
                         <?php foreach ($tipos_sangre as $tipo): ?>
@@ -82,8 +86,30 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                     </select>
                 </div>
 
-                <div class="form-group"><label>Seguro Médico (EPS)</label><input type="text" name="seguro_medico" value="<?= htmlspecialchars($datos_paciente['seguro_medico'] ?? '') ?>"></div>
-                <div class="form-group"><label>Número de Afiliación</label><input type="text" name="numero_seguro" value="<?= htmlspecialchars($datos_paciente['numero_seguro'] ?? '') ?>"></div>
+                <div class="form-group">
+                    <label>Género</label>
+                    <select name="genero" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Masculino" <?= (isset($datos_paciente['genero']) && $datos_paciente['genero'] == 'Masculino') ? 'selected' : '' ?>>Masculino</option>
+                        <option value="Femenino" <?= (isset($datos_paciente['genero']) && $datos_paciente['genero'] == 'Femenino') ? 'selected' : '' ?>>Femenino</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Contacto de Emergencia</label>
+                    <input type="number" name="contacto_emergencia" value="<?= htmlspecialchars($datos_paciente['contacto_emergencia'] ?? '') ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado Civil</label>
+                    <input type="text" name="estado_civil" value="<?= htmlspecialchars($datos_paciente['estado_civil'] ?? '') ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Seguro Médico (EPS)</label>
+                    <input type="text" name="seguro_medico" value="<?= htmlspecialchars($datos_paciente['seguro_medico'] ?? '') ?>">
+                </div>
+                <div class="form-group">
+                    <label>Número de Afiliación</label>
+                    <input type="text" name="numero_seguro" value="<?= htmlspecialchars($datos_paciente['numero_seguro'] ?? '') ?>">
+                </div>
                 
                 <div class="form-group full-width">
                     <label for="id_usuario_cuidador"><i class="fas fa-user-nurse"></i> Asignar Cuidador</label>
