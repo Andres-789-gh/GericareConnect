@@ -1,4 +1,8 @@
 <?php
+// Se añade la verificación de sesión para mayor seguridad.
+require_once __DIR__ . "/../../../controllers/auth/verificar_sesion.php";
+verificarAcceso(['Administrador']);
+
 require_once __DIR__ . "/../../../controllers/admin/HC/medicamento.controlador.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,8 +25,36 @@ if (isset($_GET['idEliminar'])) {
     <title>Gestión de Medicamentos</title>
     <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .admin-header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem; /* Espacio para separar del contenido */
+        }
+        .logo-container { display: flex; align-items: center; }
+        .logo { width: 40px; cursor: pointer; margin-right: 10px; }
+        .app-name { font-size: 1.3rem; font-weight: 600; color: #343a40; }
+        nav ul { list-style: none; margin: 0; padding: 0; }
+        nav ul li a { text-decoration: none; color: #555; font-weight: 500; transition: color 0.3s; display: flex; align-items: center; gap: 8px;}
+        nav ul li a:hover { color: #007bff; }
+    </style>
 </head>
 <body>
+    <header class="admin-header">
+        <div class="logo-container">
+            <img src="../../imagenes/Geri_Logo-..png" alt="Logo" class="logo" onclick="window.location.href='historia_clinica.php'">
+            <span class="app-name">GERICARE CONNECT</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="historia_clinica.php"><i class="fas fa-arrow-left"></i> Volver a Historias Clínicas</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="container">
         <h1>Gestión de Medicamentos</h1>
         <div class="form-container">
@@ -94,7 +126,6 @@ if (isset($_GET['idEliminar'])) {
         </div>
     </div>
     <script>
-        // Script para manejar la edición en el formulario
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-editar').forEach(button => {
                 button.addEventListener('click', function() {
@@ -103,7 +134,7 @@ if (isset($_GET['idEliminar'])) {
                     document.getElementById('nombre_medicamento').value = this.dataset.nombre;
                     document.getElementById('descripcion_medicamento').value = this.dataset.descripcion;
                     document.getElementById('btn-cancelar').style.display = 'inline-block';
-                    window.scrollTo(0, 0); // Sube al inicio de la página para ver el form
+                    window.scrollTo(0, 0);
                 });
             });
 
