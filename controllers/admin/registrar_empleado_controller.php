@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: $exito_location");
         exit;
 
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         // manejo de errores
         $errorMessage = $e->getMessage();
         if (str_contains($errorMessage, 'documento')) {
