@@ -45,7 +45,7 @@ unset($_SESSION['mensaje'], $_SESSION['error']);
 
                 <input type="text" name="direccion" placeholder="Dirección" required>
                 <input type="email" name="correo_electronico" placeholder="Correo electrónico" required>
-                <input type="text" name="numero_telefono" placeholder="Número de teléfono">
+                <input type="number" name="numero_telefono" placeholder="Número de teléfono">
 
                 <!-- Parentesco -->
                 <input type="text" name="parentesco" placeholder="Parentesco con el paciente" required>

@@ -56,13 +56,13 @@ if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrado
 
             <input type="text" name="direccion" placeholder="Dirección" required>
             <input type="email" name="correo_electronico" placeholder="Correo Electrónico" required>
-            <input type="text" name="numero_telefono" placeholder="Número de Teléfono" required>
+            <input type="number" name="numero_telefono" placeholder="Número de Teléfono" required>
 
             <label for="fecha_contratacion" style="margin-bottom: -10px; font-size: 0.9em; color: #555;">Fecha de Contratación</label>
             <input type="date" name="fecha_contratacion" required>
 
             <input type="text" name="tipo_contrato" placeholder="Tipo de Contrato" required>
-            <input type="text" name="contacto_emergencia" placeholder="Contacto de Emergencia" required>
+            <input type="number" name="contacto_emergencia" placeholder="Contacto de Emergencia" required>
 
         </div>
         <div id="boton-registro" style="margin-top: 20px;">
@@ -71,5 +71,20 @@ if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrado
         </div>
     </form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const registerForm = document.getElementById('registerForm');
+        
+        if (registerForm) {
+            registerForm.addEventListener('submit', function() {
+                const submitButton = registerForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = 'Procesando...';
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
