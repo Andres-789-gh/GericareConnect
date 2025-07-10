@@ -18,7 +18,7 @@ class ModeloEnfermedades {
         del archivo actual, garantizando que la ruta sea siempre correcta sin
         importar desde dónde se llame la clase.
         */
-        require_once(__DIR__ . '/../data_base/database.php');
+        require(__DIR__ . '/../data_base/database.php');
         $this->conn = $conn;
     }
 
