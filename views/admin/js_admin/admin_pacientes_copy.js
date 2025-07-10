@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td>${edad}</td>
                             <td>${generoHtml}</td>
                             <td class="actions">
-                                ${item.tipo_entidad === 'Paciente' ? `<a href="agregar_paciente.php?id=${item.id}" title="Editar"><i class="fas fa-edit"></i></a>` : ''}
+                                ${item.tipo_entidad === 'Paciente' ? `<a href="agregar_paciente.php?id=${item.id_paciente}&nombres=${encodeURIComponent(item.nombres)}&apellidos=${encodeURIComponent(item.apellidos)}&documento=${encodeURIComponent(item.documento)}&fecha_nacimiento=${item.fecha_nacimiento}&tipo_sangre=${encodeURIComponent(item.tipo_sangre)}&telefono=${encodeURIComponent(item.telefono)}&direccion=${encodeURIComponent(item.direccion)}" class="btn-action btn-edit" title="Editar Paciente"><i class="fas fa-user-edit"></i></a>` : ''}
                                 <button class="delete-button" data-id="${item.id}" data-tipo="${item.tipo_entidad}" data-nombre="${item.nombre_completo}" title="Desactivar"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>`;
