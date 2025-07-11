@@ -1,11 +1,24 @@
 <?php
+// Importa el script de conexión a la BD. `_once` evita inclusiones múltiples.
 require_once __DIR__ . '/../data_base/database.php';
 
+// Define la clase que encapsula toda la lógica de negocio para las actividades.
 class Actividad {
+    // Propiedad privada para almacenar el objeto de conexión (PDO).
+    // Su acceso está restringido solo a métodos dentro de esta clase.
     private $conn;
 
+    /**
+     * Constructor: se ejecuta automáticamente al instanciar la clase (ej: new Actividad()).
+     * Su objetivo es establecer la conexión a la base de datos para el objeto.
+     */
     public function __construct() {
+        // Importa la variable de conexión '$conn' del ámbito global al local de esta función.
+        // Es un paso necesario para acceder a la conexión definida en 'database.php'.
         global $conn;
+        
+        // Asigna la conexión a la propiedad de la clase.
+        // Esto permite que los demás métodos (registrar, actualizar, etc.) la utilicen a través de '$this->conn'.
         $this->conn = $conn;
     }
 
