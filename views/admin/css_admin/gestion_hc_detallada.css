@@ -54,17 +54,60 @@ h1 {
     gap: 1.5rem;
 }
 
-.form-group { display: flex; flex-direction: column; }
-.form-group.full-width { grid-column: 1 / -1; }
-.form-group label { margin-bottom: 0.5rem; font-weight: 500; }
-.form-group input, .form-group select, .form-group textarea {
+.form-group { 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.form-group.full-width { 
+    grid-column: 1 / -1; 
+}
+
+.form-group label { 
+    margin-bottom: 0.5rem; 
+    font-weight: 500; 
+}
+
+/* Estilos base para inputs y selects */
+.form-group input, 
+.form-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 5px;
     font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.form-group select[disabled] { background-color: #e9ecef; }
+
+.form-group select[disabled] { 
+    background-color: #e9ecef; 
+}
+
+/* === ESTILOS CORREGIDOS Y DEFINITIVOS PARA TEXTAREA === */
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
+    /* PROPIEDADES CLAVE PARA LA SOLUCIÓN */
+    resize: none;           /* Desactiva el cambio de tamaño */
+    min-height: 140px;      /* Define una altura mínima cómoda */
+}
+
+/* Efecto focus para todos los campos de formulario */
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 
 /* Estilos para las listas de asignados */
 .lista-asignados {

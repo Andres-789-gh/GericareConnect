@@ -151,15 +151,18 @@ $historias = $modelo->consultarHistorias($busqueda);
                                     <td><?= htmlspecialchars($historia['fecha_formateada']) ?></td>
                                     <td><?= htmlspecialchars(substr($historia['estado_salud'], 0, 50)) . '...' ?></td>
                                     <td class="actions">
-                                        <a href="reporte_hc_completo.php?id=<?= $historia['id_historia_clinica'] ?>" class="btn-action btn-info" title="Ver Reporte Completo">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        
-                                        <a href="javascript:void(0);" onclick="confirmarDesactivacionHC(<?= $historia['id_historia_clinica'] ?>)" class="btn-action btn-danger" title="Desactivar">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+    <a href="reporte_hc_completo.php?id=<?= $historia['id_historia_clinica'] ?>" class="btn-action btn-info" title="Ver Reporte Completo">
+        <i class="fas fa-eye"></i>
+    </a>
+    
+    <a href="form_historia_clinica.php?id=<?= $historia['id_historia_clinica'] ?>" class="btn-action <?= $claseBoton ?>" title="<?= $textoBoton ?> Historia">
+        <i class="fas <?= $iconoBoton ?>"></i>
+    </a>
+
+    <a href="javascript:void(0);" onclick="confirmarDesactivacionHC(<?= $historia['id_historia_clinica'] ?>)" class="btn-action btn-danger" title="Desactivar">
+        <i class="fas fa-trash-alt"></i>
+    </a>
+</td>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
