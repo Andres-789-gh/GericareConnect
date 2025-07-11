@@ -24,8 +24,16 @@ if (!empty($id_cuidador_filtro)) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Actividades por Cuidador</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - GeriCare Connect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="../css_admin/admin_header.css?v=<?= time(); ?>"> 
+    <link rel="stylesheet" href="../css_admin/a.css?v=<?= time(); ?>">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css_admin/historia_clinica_lista.css">
+    <link rel="stylesheet" href="../css_admin/historia_clinica_lista.css">
+      <link rel="stylesheet" href="../css_admin/admin_main.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="../css_admin/historia_clinica_lista.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -63,21 +71,39 @@ if (!empty($id_cuidador_filtro)) {
 
     </style>
 </head>
-<body>
-    <header class="admin-header">
-        <div class="logo-container">
-            <img src="../../imagenes/Geri_Logo-..png" alt="Logo" class="logo" onclick="window.location.href='admin_pacientes.php'">
-            <span class="app-name">GERICARE CONNECT</span>
+<body data-id-admin="<?= htmlspecialchars($_SESSION['id_usuario'] ?? 0) ?>">
+
+    <header class="header">
+        <div id="particles-js"></div>
+        
+        <div class="header-content animate__animated animate__fadeIn">
+            <a href="admin_pacientes.php" class="logo">
+                <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
+                <h1>GeriCareConnect</h1>
+            </a>
+            
+            <nav class="main-nav">
+                <a href="admin_pacientes.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_pacientes.php' ? 'active' : ''; ?>"><i class="fas fa-user-injured"></i> Pacientes</a>
+                <a href="historia_clinica.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'historia_clinica.php' ? 'active' : ''; ?>"><i class="fas fa-notes-medical"></i> Historias Clínicas</a>
+                <a href="admin_actividades.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_actividades.php' ? 'active' : ''; ?>"><i class="fas fa-calendar-alt"></i> Actividades</a>
+            </nav>
+
+            <div class="user-actions">
+                <a href="registrar_empleado.php" class="btn-header-action"><i class="fas fa-user-tie"></i> Registrar Empleado</a>
+                
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name"><?= htmlspecialchars($_SESSION['nombre_completo'] ?? 'Admin') ?></span>
+                        <span class="user-role"><?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Administrador') ?></span>
+                    </div>
+                    <i class="fas fa-user-circle user-avatar"></i>
+                    <ul class="dropdown-menu">
+                        <li><a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>"><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
+                        <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="admin_pacientes.php"><i class="fas fa-user-injured"></i> Pacientes</a></li>
-                <li><a href="historia_clinica.php"><i class="fas fa-file-medical"></i> Historias Clínicas</a></li>
-                <li><a href="admin_actividades.php"><i class="fas fa-tasks"></i> Actividades</a></li>
-                <li><a href="reporte_actividades_cuidador.php" class="active"><i class="fas fa-chart-line"></i> Reporte Actividades</a></li>
-                <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main class="admin-content">
@@ -155,5 +181,121 @@ if (!empty($id_cuidador_filtro)) {
             <?php endif; ?>
         </div>
     </main>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userInfo = document.querySelector('.user-info');
+        
+        if (userInfo) {
+            userInfo.addEventListener('click', function(event) {
+                // Detiene la propagación para que el clic no cierre el menú inmediatamente
+                event.stopPropagation();
+                
+                // Busca el menú desplegable dentro del elemento clickeado
+                const dropdownMenu = this.querySelector('.dropdown-menu');
+                if (dropdownMenu) {
+                    // Alterna la clase 'show' para mostrar u ocultar el menú
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        }
+
+        // Cierra el menú si se hace clic en cualquier otro lugar de la página
+        window.addEventListener('click', function() {
+            const openDropdown = document.querySelector('.dropdown-menu.show');
+            if (openDropdown) {
+                openDropdown.classList.remove('show');
+            }
+        });
+    });
+</script>
+    <script>
+        // Mensajes de éxito y error
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php if(isset($_SESSION['mensaje'])): ?>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '<?= addslashes($_SESSION['mensaje']) ?>',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6'
+                });
+                <?php unset($_SESSION['mensaje']); ?>
+            <?php endif; ?>
+            <?php if(isset($_SESSION['error'])): ?>
+                Swal.fire({
+                    title: 'Error',
+                    text: '<?= addslashes($_SESSION['error']) ?>',
+                    icon: 'error',
+                    confirmButtonColor: '#d33'
+                });
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+        });
+
+        // Función para la confirmación de eliminar
+        function confirmarDesactivacion(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "La actividad se eliminara.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '¡Sí, eliminar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '../../../controllers/admin/actividad/actividad_controller.php';
+                    
+                    const hiddenFieldAccion = document.createElement('input');
+                    hiddenFieldAccion.type = 'hidden';
+                    hiddenFieldAccion.name = 'accion';
+                    hiddenFieldAccion.value = 'eliminar';
+                    form.appendChild(hiddenFieldAccion);
+
+                    const hiddenFieldId = document.createElement('input');
+                    hiddenFieldId.type = 'hidden';
+                    hiddenFieldId.name = 'id_actividad';
+                    hiddenFieldId.value = id;
+                    form.appendChild(hiddenFieldId);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            })
+        }
+    </script>
+    <script src="../js_admin/buscar_actividad_admin.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="../js_admin/admin_scripts.js"></script>
+    <a href="form_actividades.php" class="floating-add-button" title="Crear Nueva Actividad"><i class="fas fa-plus"></i></a>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userInfo = document.querySelector('.user-info');
+        
+        if (userInfo) {
+            userInfo.addEventListener('click', function(event) {
+                // Detiene la propagación para que el clic no cierre el menú inmediatamente
+                event.stopPropagation();
+                
+                // Busca el menú desplegable dentro del elemento clickeado
+                const dropdownMenu = this.querySelector('.dropdown-menu');
+                if (dropdownMenu) {
+                    // Alterna la clase 'show' para mostrar u ocultar el menú
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        }
+
+        // Cierra el menú si se hace clic en cualquier otro lugar de la página
+        window.addEventListener('click', function() {
+            const openDropdown = document.querySelector('.dropdown-menu.show');
+            if (openDropdown) {
+                openDropdown.classList.remove('show');
+            }
+        });
+    });
+</script>
 </body>
 </html>

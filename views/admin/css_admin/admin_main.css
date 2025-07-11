@@ -439,3 +439,52 @@ body {
     transform: translateY(-5px) scale(1.1);
     box-shadow: 0 8px 25px rgba(0, 123, 255, 0.5);
 }
+/*
+=====================================
+    BOTONES FLOTANTES
+=====================================
+*/
+.floating-button {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 1000;
+}
+
+.floating-button:hover {
+    transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+}
+
+.floating-button i {
+    font-size: 24px;
+}
+
+/* Botón flotante para reportes (Verde) */
+.floating-report-button {
+    background-color: #28a745; /* Verde Bootstrap 'success' */
+    top: 110px; /* Distancia desde arriba */
+    right: 30px; /* Distancia desde la derecha */
+}
+
+.floating-report-button:hover {
+    background-color: #218838; /* Verde más oscuro */
+}
+
+/* Botón flotante para agregar (Azul) - Ya que estamos, lo estandarizamos */
+.floating-add-button {
+    background-color: #007bff; /* Azul Bootstrap 'primary' */
+    bottom: 30px; /* Distancia desde abajo */
+    right: 30px;
+}
+
+.floating-add-button:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+}

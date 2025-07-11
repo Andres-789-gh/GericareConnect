@@ -144,7 +144,9 @@ $actividades = $modelo_actividad->consultar($busqueda_inicial, $estado_inicial);
                     <input id="termino_busqueda" type="search" name="busqueda" placeholder="Buscar por paciente, documento o tipo de actividad..." value="<?= htmlspecialchars($busqueda_inicial) ?>">
                 </form>
             </div>
-
+<a href="reporte_actividades_cuidador.php" class="floating-button floating-report-button" title="Generar Reporte de Actividades">
+    <i class="fas fa-chart-line"></i>
+</a>
             <div class="table-container">
                 <table>
                     <thead>
