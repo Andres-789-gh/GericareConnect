@@ -1,11 +1,10 @@
 <?php
-require_once __DIR__ . '/../data_base/database.php';
 
 class HistoriaClinica {
     private $conn;
 
     public function __construct() {
-        global $conn;
+        require(__DIR__ . '/../data_base/database.php');
         $this->conn = $conn;
     }
 

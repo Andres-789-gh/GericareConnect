@@ -56,11 +56,10 @@ class Paciente {
      */
     public function actualizar($datos) {
         try {
-            $query = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $query = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $query->execute([
-                $datos['id_paciente'], $datos['documento_identificacion'], $datos['nombre'],
-                $datos['apellido'], $datos['fecha_nacimiento'], $datos['genero'],
-                $datos['contacto_emergencia'], $datos['estado_civil'], $datos['tipo_sangre'],
+                $datos['id_paciente'], $datos['genero'],
+                $datos['contacto_emergencia'], $datos['estado_civil'], 
                 $datos['seguro_medico'], $datos['numero_seguro'],
                 $datos['id_usuario_familiar'], $datos['id_usuario_cuidador'],
                 $datos['id_usuario_administrador'], $datos['descripcion_asignacion']
