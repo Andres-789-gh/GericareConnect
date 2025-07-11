@@ -34,36 +34,8 @@ verificarAcceso(['Cuidador']);
 </head>
 <body>
 
-<header class="header-cuidador">
-    <div id="particles-js-cuidador"></div>
-    <div class="header-content">
-        <a href="cuidadores_panel_principal.php" class="logo">
-            <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
-            <h1>GeriCare Connect</h1>
-        </a>
-        
-        <nav class="main-nav">
-            <a href="cuidadores_panel_principal.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'cuidadores_panel_principal.php' ? 'active' : ''; ?>">
-                <i class="fas fa-users"></i> Mis Pacientes
-            </a>
-            <a href="cuidador_actividades.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'cuidador_actividades.php' ? 'active' : ''; ?>">
-                <i class="fas fa-calendar-alt"></i> Actividades
-            </a>
-        </nav>
+<?php include_once 'header_cuidador.php'; ?>
 
-        <div class="user-info">
-            <div class="user-details">
-                <span class="user-name"><?= htmlspecialchars($_SESSION['nombre_completo'] ?? 'Cuidador') ?></span>
-                <span class="user-role"><?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Rol') ?></span>
-            </div>
-            <i class="fas fa-user-circle user-avatar"></i>
-            <ul class="dropdown-menu">
-                <li><a href="#"><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
-                <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            </ul>
-        </div>
-    </div>
-</header>
 <main class="main-content">
     <div class="content-container animated fadeInUp">
         

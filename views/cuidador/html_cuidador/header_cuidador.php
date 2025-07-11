@@ -52,6 +52,9 @@ verificarAcceso(['Cuidador']);
             <a href="cuidador_actividades.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'cuidador_actividades.php' ? 'active' : ''; ?>">
                 <i class="fas fa-calendar-alt"></i> Actividades
             </a>
+            <a href="historia_clinica.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'historia_clinica.php' ? 'active' : ''; ?>">
+                <i class="fas fa-calendar"></i> Historias Clínicas
+            </a>
         </nav>
 
         <div class="user-info">

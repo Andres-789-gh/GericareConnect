@@ -18,19 +18,8 @@ $historias = $modelo->consultarHistoriasPorCuidador($_SESSION['id_usuario'], $bu
     <link rel="stylesheet" href="../../admin/css_admin/historia_clinica_lista.css">
 </head>
 <body>
-    <header class="admin-header">
-        <div class="logo-container">
-            <img src="../../imagenes/Geri_Logo-..png" alt="Logo" class="logo" onclick="window.location.href='cuidadores_panel_principal.php'">
-            <span class="app-name">GERICARE CONNECT</span>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="cuidadores_panel_principal.php"><i class="fas fa-chevron-left"></i> Volver Al Panel Principal</a></li>
-                <li><a href="historia_clinica.php" class="active"><i class="fas fa-file-medical"></i> Historias Clínicas</a></li>
-                <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            </ul>
-        </nav>
-    </header>
+
+<?php include_once 'header_cuidador.php'; ?>
 
     <main class="admin-content">
         <div class="historias-container">
