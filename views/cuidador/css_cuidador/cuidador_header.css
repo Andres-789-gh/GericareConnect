@@ -8,7 +8,7 @@
     background: #FFC107; /* Color de respaldo */
     /* Degradado Amarillo-Naranja Oscuro */
     background: linear-gradient(135deg, #F57C00, #FFC107);
-    overflow: hidden;
+    overflow: visible;
      z-index: 10;
 }
 

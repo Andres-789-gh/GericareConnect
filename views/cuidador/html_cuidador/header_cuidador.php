@@ -61,7 +61,7 @@ verificarAcceso(['Cuidador']);
             </div>
             <i class="fas fa-user-circle user-avatar"></i>
             <ul class="dropdown-menu">
-                <li><a href="#"><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
+                <li><a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>"><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
                 <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </div>
