@@ -99,6 +99,7 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
                                     <td><?= htmlspecialchars(date("d/m/Y", strtotime($actividad['fecha_actividad']))) ?></td>
                                     <td><?= htmlspecialchars($actividad['estado_actividad']) ?></td>
                                     <td>
+                                        <a href="/GericareConnect/controllers/admin/actividad/ver_actividad.php?id=<?= $actividad['id_actividad'] ?>" class="btn-action" title="Ver Detalles"><i class="fas fa-eye"></i></a>
                                         <?php if ($actividad['estado_actividad'] == 'Pendiente'): ?>
                                             <button class="btn-completar" 
                                                     onclick="confirmarCompletar(
