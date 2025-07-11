@@ -10,7 +10,7 @@ class Paciente {
 
     public function consultar() {
         try {
-            $query = $this->conn->prepare("CALL consultar_pacientes()");
+            $query = $this->conn->prepare("call consultar_pacientes()");
             $query->execute();
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -36,7 +36,7 @@ class Paciente {
      */
     public function registrar($datos) {
         try {
-            $query = $this->conn->prepare("CALL registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $query = $this->conn->prepare("call registrar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $query->execute([
                 $datos['documento_identificacion'], $datos['nombre'], $datos['apellido'],
                 $datos['fecha_nacimiento'], $datos['genero'], $datos['contacto_emergencia'],
@@ -56,7 +56,7 @@ class Paciente {
      */
     public function actualizar($datos) {
         try {
-            $query = $this->conn->prepare("CALL actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $query = $this->conn->prepare("call actualizar_paciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $query->execute([
                 $datos['id_paciente'], $datos['genero'],
                 $datos['contacto_emergencia'], $datos['estado_civil'], 
@@ -72,7 +72,7 @@ class Paciente {
 
     public function desactivar($id_paciente) {
         try {
-            $query = $this->conn->prepare("CALL desactivar_paciente(?)");
+            $query = $this->conn->prepare("call desactivar_paciente(?)");
             $query->execute([$id_paciente]);
             return true;
         } catch (Exception $e) {
@@ -84,7 +84,7 @@ class Paciente {
     {
         try {
             // Llama al procedimiento almacenado usando PDO
-            $stmt = $this->conn->prepare("CALL ConsultarPacientesActivos()");
+            $stmt = $this->conn->prepare("call ConsultarPacientesActivos()");
             $stmt->execute();
             // Devuelve un array con los pacientes activos
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
