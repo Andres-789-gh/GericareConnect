@@ -38,7 +38,7 @@
                     and u.estado = 'Activo'
                 ");
                 // Ejecuta la consulta que se preparo pasando los datos de forma segura.
-                // El "?" en la consulta se reemplaza por los valores que se pasa aquí.
+                // El "?" en la consulta se reemplaza por los valores que se pasan aquí.
                 $validar->execute([$tipo_documento, $documento_identificacion]);
                 
                 // Devuelve todos los resultados que encontró en un formato de array.
@@ -157,7 +157,7 @@
                 $query->bindParam(4,  $datos['apellido']);
                 $query->bindParam(5,  $datos['direccion']);
                 $query->bindParam(6,  $datos['correo_electronico']);
-                $query->bindParam(7,  $datos['contraseña']);
+                $query->bindParam(7,  $datos['contraseña']); // Esta contraseña ya viene procesada (hashed) desde el controlador.
                 $query->bindParam(8,  $datos['numero_telefono']);
                 $query->bindParam(9,  $datos['parentesco']);
 

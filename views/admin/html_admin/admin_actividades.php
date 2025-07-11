@@ -107,7 +107,7 @@ $actividades = $modelo_actividad->consultar($busqueda_inicial, $estado_inicial);
             </a>
             
             <nav class="main-nav">
-                <a href="admin_pacientes.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_pacientes.php' ? 'active' : ''; ?>"><i class="fas fa-user-injured"></i> Pacientes</a>
+                <a href="admin_pacientes.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_pacientes.php' ? 'active' : ''; ?>"><i class="fas fa-user"></i> Usuarios</a>
                 <a href="historia_clinica.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'historia_clinica.php' ? 'active' : ''; ?>"><i class="fas fa-notes-medical"></i> Historias Clínicas</a>
                 <a href="admin_actividades.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_actividades.php' ? 'active' : ''; ?>"><i class="fas fa-calendar-alt"></i> Actividades</a>
             </nav>
@@ -169,10 +169,10 @@ $actividades = $modelo_actividad->consultar($busqueda_inicial, $estado_inicial);
                                     <td><?= htmlspecialchars(date("d/m/Y", strtotime($actividad['fecha_actividad']))) ?></td>
                                     <td><?= htmlspecialchars($actividad['estado_actividad']) ?></td>
                                     <td class="actions">
+                                        <a href="/GericareConnect/controllers/admin/actividad/ver_actividad.php?id=<?= $actividad['id_actividad'] ?>" class="btn-action" title="Ver Detalles"><i class="fas fa-eye"></i></a>
                                         <?php if ($actividad['estado_actividad'] == 'Pendiente'): ?>
                                             <a href="form_actividades.php?id=<?= $actividad['id_actividad'] ?>" class="btn-action btn-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                                        <?php endif; ?>
-                                        
+                                        <?php endif; ?>                                        
                                         <button class="btn-action btn-delete" 
                                                 onclick="confirmarDesactivacion(<?= $actividad['id_actividad'] ?>)" 
                                                 title="Eliminar Actividad">
