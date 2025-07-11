@@ -43,6 +43,34 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="../css_admin/gestion_hc_detallada.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    .form-group textarea, textarea#descripcion .form-asignar-medicamento{
+        resize: none !important; 
+        min-height: 70px;
+    }
+.form-group textarea .medicamentos .form-asignar-medicamento{
+    
+    /* Evita que el usuario pueda cambiar el tamaño del textarea */
+    resize: none; 
+    
+    /* Define una altura inicial para que no se vea tan pequeño */
+    min-height: 50px; 
+    
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif; /* Asegura que use la misma fuente */
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transición suave */
+}
+
+.form-group textarea:focus .me{
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+</style>
 </head>
 <body>
     <div class="main-container">
@@ -171,7 +199,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                         </select>
                         <input type="text" id="input-dosis" placeholder="Dosis (ej. 500mg)" required>
                         <input type="text" id="input-frecuencia" placeholder="Frecuencia (ej. cada 8 horas)" required>
-                        <textarea id="input-instrucciones" placeholder="Instrucciones adicionales..." rows="2"></textarea>
+                        <textarea class="medicamentos" id="input-instrucciones" placeholder="Instrucciones adicionales..." rows="2"></textarea>
                         <div class="form-actions-inline">
                            <button type="submit" class="btn btn-success">Recetar Medicamento</button>
                            <a href="gestion_medicamentos.php" target="_blank" class="btn btn-link">Crear Nuevo</a>

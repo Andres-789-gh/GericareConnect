@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
 require_once __DIR__ . '/../../../models/clases/actividad.php';
+$titulo_pagina = 'Pacientes Asignados';
+include 'header_cuidador.php'; // Incluye el nuevo header
+
 verificarAcceso(['Cuidador']);
 
 $busqueda = $_GET['busqueda'] ?? '';
@@ -18,50 +21,115 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
     <link rel="stylesheet" href="../../admin/css_admin/historia_clinica_lista.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .search-container form { display: flex; gap: 15px; }
-        .search-container input, .search-container select { padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; outline: none; }
-        .search-container input { flex-grow: 1; }
-        .search-container select { background-color: #f8f9fa; }
-        .btn-completar { background-color: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9em; transition: background-color 0.2s; }
-        .btn-completar:hover { background-color: #218838; }
+          /* Forzamos al header a estar siempre en la capa superior */
+        header.header-cuidador {
+            position: relative;
+            z-index: 1000 !important; 
+        }
 
-        /* Estilo para el botón de exportar */
-        .btn-export {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: white;
-            background-color: #1D6F42; /* Verde oscuro de Excel */
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+        /* Forzamos al contenido principal a estar en una capa inferior */
+        main.main-content {
+            position: relative;
+            z-index: 1 !important;
         }
-        .btn-export:hover {
-            background-color: #165934;
-            transform: translateY(-2px);
-        }
-    </style>
+        /* --- Contenedor Principal --- */
+    .historias-container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        margin: 0;
+    }
+
+    .historias-container h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #343a40;
+        margin: 0 0 1.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-bottom: 3px solid #F57C00;
+        padding-bottom: 0.8rem;
+    }
+
+    /* --- Barra de Búsqueda y Filtros (CON LUPA NARANJA) --- */
+    .search-container {
+        margin-bottom: 2rem;
+    }
+
+    .search-container form {
+        display: flex;
+        width: 100%;
+    }
+
+    .search-container form > * {
+        border: 1px solid #ced4da;
+        padding: 12px 15px;
+        font-size: 1rem;
+        outline: none;
+        margin: 0;
+        height: 50px;
+        box-sizing: border-box;
+    }
+
+    .search-container select {
+        background-color: #f8f9fa;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        border-right-width: 0;
+    }
+
+    .search-container input[type="search"] {
+        flex-grow: 1;
+        border-radius: 0;
+    }
+    
+    /* === ESTILO CORREGIDO DEL BOTÓN DE LA LUPA === */
+    .search-container button[type="submit"] {
+        background-color: #F57C00;  /* ¡FONDO NARANJA! */
+        color: white;               /* ¡ÍCONO BLANCO! */
+        border-color: #F57C00;      /* Borde del mismo color */
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        flex-shrink: 0;
+    }
+
+    .search-container button[type="submit"]:hover {
+        background-color: #ef6c00; /* Naranja más oscuro al pasar el mouse */
+    }
+
+    .search-container form:focus-within {
+        box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.25);
+        border-radius: 8px;
+    }
+
+    /* --- Estilos de la Tabla --- */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    table thead th { background-color: #F57C00; color: white; font-weight: 600; padding: 15px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
+    table thead th:first-child { border-top-left-radius: 8px; }
+    table thead th:last-child { border-top-right-radius: 8px; }
+    table tbody tr { border-bottom: 1px solid #f1f1f1; transition: background-color 0.2s ease; }
+    table tbody tr:last-child { border-bottom: none; }
+    table tbody tr:hover { background-color: #fff8e1; }
+    table tbody td { padding: 15px; vertical-align: middle; color: #555; }
+    table tbody td:nth-child(4) { font-weight: 600; }
+    
+    /* --- Estilos de los Botones --- */
+    .btn-completar { background-color: #28a745; color: white; border: none; border-radius: 50px; padding: 8px 15px; font-size: 0.9em; font-weight: 500; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3); }
+    .btn-completar:hover { background-color: #218838; transform: translateY(-1px); }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 1rem; font-weight: 500; color: white; background-color: #1D6F42; border: none; border-radius: 8px; text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
+    .btn-export:hover { background-color: #165934; transform: translateY(-2px); }
+</style>
 </head>
 <body>
-    <header class="admin-header">
-        <div class="logo-container">
-            <img src="../../imagenes/Geri_Logo-..png" alt="Logo" class="logo" onclick="window.location.href='cuidadores_panel_principal.php'">
-            <span class="app-name">GERICARE CONNECT</span>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="cuidadores_panel_principal.php"><i class="fas fa-chevron-left"></i> Volver</a></li>
-                <li><a href="cuidador_actividades.php" class="active"><i class="fas fa-tasks"></i> Actividades</a></li>
-                <li><a href="../../../controllers/cuidador/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            </ul>
-        </nav>
-    </header>
+   
 
+<script src="../js_cuidador/cuidadores_panel_principal.js" defer></script>
+<?php include 'footer_cuidador.php'; // Incluye el nuevo footer ?>
     <main class="admin-content">
         <div class="historias-container">
             <h1><i class="fas fa-tasks"></i> Actividades de mis Pacientes</h1>
