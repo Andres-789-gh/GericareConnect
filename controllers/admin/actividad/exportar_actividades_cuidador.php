@@ -29,8 +29,8 @@ if (!empty($id_cuidador_filtro)) {
 // Cabeceras para forzar la descarga del archivo como un .xls
 header("Content-Type: application/vnd.ms-excel; charset=utf-8");
 header("Content-Disposition: attachment; filename=reporte_actividades_" . date('Y-m-d') . ".xls");
-header("Pragma: no-cache");
-header("Expires: 0");
+header("Pragma: no-cache"); //No guardar archivo en caché.
+header("Expires: 0"); //Se considera obsoleto para que no lo guarde ne cache
 
 ?>
 <!DOCTYPE html>
