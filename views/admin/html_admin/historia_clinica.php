@@ -155,7 +155,7 @@ $historias = $modelo->consultarHistorias($busqueda);
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         
-                                        <a href="javascript:void(0);" onclick="confirmarDesactivacion(<?= $historia['id_historia_clinica'] ?>)" class="btn-action btn-danger" title="Desactivar">
+                                        <a href="javascript:void(0);" onclick="confirmarDesactivacionHC(<?= $historia['id_historia_clinica'] ?>)" class="btn-action btn-danger" title="Desactivar">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
                                     </td>
@@ -178,7 +178,7 @@ $historias = $modelo->consultarHistorias($busqueda);
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
         });
-        function confirmarDesactivacion(id) {
+        function confirmarDesactivacionHC(id) {
             Swal.fire({
                 title: '¿Estás seguro?', text: "La historia clínica se marcará como inactiva.", icon: 'warning',
                 showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6',

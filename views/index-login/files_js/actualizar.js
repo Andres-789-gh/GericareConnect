@@ -94,8 +94,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isValid) {
             form.submit();
         } else {
-            // Si algo falló, se notifica al usuario.
-            alert('Por favor, revisa y corrige los errores marcados en el formulario.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Opss...',
+                text: 'Por favor, revisa y corrige los errores marcados en el formulario.',
+                confirmButtonColor: '#6200ea'
+            });
         }
     });
 });

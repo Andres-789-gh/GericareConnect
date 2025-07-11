@@ -13,6 +13,7 @@ $esFamiliar = $rol === 'Familiar';
     <meta charset="UTF-8">
     <title>Actualizar Usuario</title>
     <link rel="stylesheet" href="/GericareConnect/views/index-login/files_css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/GericareConnect/views/index-login/files_js/actualizar.js" defer></script>
 </head>
 <body>
@@ -63,7 +64,7 @@ $esFamiliar = $rol === 'Familiar';
             <div id="campos-cuidador-admin" class="campos-rol form-grid" style="<?= $esFamiliar ? 'display:none;' : '' ?>">
 
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>">
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>" disabled>
                 <small id="error-fecha_nacimiento" class="mensaje-error-campo"></small>
 
                 <label for="fecha_contratacion" class="form-label">Fecha de contratación</label>

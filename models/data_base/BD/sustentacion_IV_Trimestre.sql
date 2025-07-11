@@ -1239,7 +1239,7 @@ insert into tb_actividad (id_paciente, id_usuario_administrador, tipo_actividad,
 (2, 1, 'terapia ocupacional', 'sesión de ejercicios de motricidad fina.', '2024-07-16', '11:00:00', '12:00:00', 'pendiente');
 
 use gericare_connect;
-select * from tb_usuario; 
+select * from tb_usuario;
 select * from tb_rol;
 select * from tb_telefono;
 select * from tb_paciente;
