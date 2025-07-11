@@ -20,3 +20,5 @@ debug_logfile=debug.log
 auth_username=gericareconnect@gmail.com
 auth_password=voyibwjqznskfkio
 force_sender=gericareconnect@gmail.com
+
+http://localhost/GericareConnect/views/index-login/htmls/
