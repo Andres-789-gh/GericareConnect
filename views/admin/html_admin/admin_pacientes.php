@@ -7,18 +7,19 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Pacientes - GeriCare Connect</title>
+    <title>Panel de Administrador - GeriCare Connect</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
-    <link rel="stylesheet" href="../css_admin/admin_main.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="../css_admin/admin_header.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="../css_admin/admin_pacientes.css?v=<?= time(); ?>">
-
+    <link rel="stylesheet" href="../css_admin/admin_main.css?v=<?= time(); ?>">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <!-- ESTILOS "PRO" PARA LA TABLA DE RESULTADOS -->
     <style>
+         body {  font-family: 'Sans-serif', sans-serif; background-color: #f4f7f9; margin: 0; color: #333; }
+        .admin-header { background-color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9ecef; }
         .table-container { margin-top: 1.5rem; overflow-x: auto; }
         .results-table { width: 100%; border-collapse: collapse; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .results-table th, .results-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e9ecef; }
@@ -42,28 +43,32 @@ session_start();
 
     <header class="header">
         <div id="particles-js"></div>
+        
         <div class="header-content animate__animated animate__fadeIn">
-            <div class="logo" onclick="window.location.href='admin_pacientes.php'">
+            <a href="admin_pacientes.php" class="logo">
                 <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
                 <h1>GeriCareConnect</h1>
-            </div>
+            </a>
+            
             <nav class="main-nav">
-                <a href="admin_pacientes.php" class="active"><i class="fas fa-user-injured"></i> Pacientes</a>
-                <a href="historia_clinica.php"><i class="fas fa-notes-medical"></i> Historias Clínicas</a>
-                <a href="admin_actividades.php"><i class="fas fa-calendar-alt"></i> Actividades</a>
+                <a href="admin_pacientes.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_pacientes.php' ? 'active' : ''; ?>"><i class="fas fa-user-injured"></i> Pacientes</a>
+                <a href="historia_clinica.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'historia_clinica.php' ? 'active' : ''; ?>"><i class="fas fa-notes-medical"></i> Historias Clínicas</a>
+                <a href="admin_actividades.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin_actividades.php' ? 'active' : ''; ?>"><i class="fas fa-calendar-alt"></i> Actividades</a>
             </nav>
+
             <div class="user-actions">
                 <a href="registrar_empleado.php" class="btn-header-action"><i class="fas fa-user-tie"></i> Registrar Empleado</a>
-                 <div class="user-info">
+                
+                <div class="user-info">
                     <div class="user-details">
-                        <span class="user-name"><?= htmlspecialchars($_SESSION['nombre_usuario'] ?? 'Usuario') ?></span>
-                        <span class="user-role"><?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Desconocido') ?></span>
+                        <span class="user-name"><?= htmlspecialchars($_SESSION['nombre_completo'] ?? 'Admin') ?></span>
+                        <span class="user-role"><?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Administrador') ?></span>
                     </div>
                     <i class="fas fa-user-circle user-avatar"></i>
-                    <div class="dropdown-menu">
-                        <a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>"><i class="fas fa-user-cog"></i><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión Mi Perfil</a>
-                         <a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-                        </div>
+                    <ul class="dropdown-menu">
+                        <li><a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>"><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
+                        <li><a href="../../../controllers/admin/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -89,7 +94,7 @@ session_start();
             </div>
         </div>
     </main>
-
+ <a href="agregar_paciente.php" class="floating-add-button" title="Agregar Nuevo Paciente"><i class="fas fa-plus"></i></a>
     <script src="../js_admin/admin_pacientes_copy.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -106,5 +111,79 @@ session_start();
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="../js_admin/admin_scripts.js"></script>
     <script src="../js_admin/admin_pacientes_copy.js" defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userInfo = document.querySelector('.user-info');
+        if (userInfo) {
+            userInfo.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const dropdownMenu = this.querySelector('.dropdown-menu');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        }
+        window.addEventListener('click', function() {
+            const openDropdown = document.querySelector('.dropdown-menu.show');
+            if (openDropdown) {
+                openDropdown.classList.remove('show');
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userInfo = document.querySelector('.user-info');
+        
+        if (userInfo) {
+            userInfo.addEventListener('click', function(event) {
+                // Detiene la propagación para que el clic no cierre el menú inmediatamente
+                event.stopPropagation();
+                
+                // Busca el menú desplegable dentro del elemento clickeado
+                const dropdownMenu = this.querySelector('.dropdown-menu');
+                if (dropdownMenu) {
+                    // Alterna la clase 'show' para mostrar u ocultar el menú
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        }
+
+        // Cierra el menú si se hace clic en cualquier otro lugar de la página
+        window.addEventListener('click', function() {
+            const openDropdown = document.querySelector('.dropdown-menu.show');
+            if (openDropdown) {
+                openDropdown.classList.remove('show');
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userInfo = document.querySelector('.user-info');
+        
+        if (userInfo) {
+            userInfo.addEventListener('click', function(event) {
+                // Detiene la propagación para que el clic no cierre el menú inmediatamente
+                event.stopPropagation();
+                
+                // Busca el menú desplegable dentro del elemento clickeado
+                const dropdownMenu = this.querySelector('.dropdown-menu');
+                if (dropdownMenu) {
+                    // Alterna la clase 'show' para mostrar u ocultar el menú
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        }
+
+        // Cierra el menú si se hace clic en cualquier otro lugar de la página
+        window.addEventListener('click', function() {
+            const openDropdown = document.querySelector('.dropdown-menu.show');
+            if (openDropdown) {
+                openDropdown.classList.remove('show');
+            }
+        });
+    });
+</script>
 </body>
 </html>

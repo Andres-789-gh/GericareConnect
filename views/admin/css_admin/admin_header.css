@@ -1,0 +1,172 @@
+
+/* Contenedor principal del header */
+.header {
+    position: relative;
+    background-color: #0d1b2a; /* Fondo oscuro */
+    color: #fff;
+    padding: 1rem 2.5rem;
+    z-index: 100;
+}
+
+/* Fondo de partículas animado */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Detrás del contenido */
+}
+
+/* Contenido del header (logo, nav, acciones) */
+.header-content {
+    position: relative;
+    z-index: 2; /* Por encima de las partículas */
+    display: flex;
+    align-items: center; /* Centra todo verticalmente */
+    width: 100%;
+}
+
+/* --- SECCIÓN DEL LOGO (25% del ancho) --- */
+.header .logo {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
+.header .logo-img {
+    height: 45px;
+    transition: transform 0.4s ease;
+}
+
+.header .logo:hover .logo-img {
+    transform: rotate(360deg);
+}
+
+.header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* --- BARRA DE NAVEGACIÓN (50% del ancho, centrada) --- */
+.main-nav {
+    width: 50%;
+    display: flex;
+    justify-content: center; /* Centra los botones en su 50% de espacio */
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.main-nav a {
+    color: #e0e1dd;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s ease-in-out;
+}
+
+.main-nav a.active,
+.main-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* --- ACCIONES DE USUARIO (25% del ancho, a la derecha) --- */
+.user-actions {
+    width: 25%;
+    display: flex;
+    justify-content: flex-end; /* Alinea el contenido a la derecha */
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-header-action {
+    background-color: #007bff;
+    border: 2px solid #007bff;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-header-action:hover {
+    background-color: transparent;
+    color: #007bff;
+}
+
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-avatar {
+    font-size: 2rem;
+    color: #adb5bd;
+}
+
+.user-details {
+    text-align: right;
+    margin-right: 1rem;
+}
+
+.user-name {
+    display: block;
+    font-weight: 600;
+}
+
+.user-role {
+    display: block;
+    font-size: 0.8rem;
+    color: #adb5bd;
+}
+
+/* Menú desplegable del usuario */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 200px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    z-index: 1100;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-menu a i {
+    width: 16px;
+    text-align: center;
+}

@@ -6,14 +6,6 @@ body {
     color: #333;
 }
 
-.admin-header {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 .logo-container { display: flex; align-items: center; }
 .logo { width: 40px; cursor: pointer; margin-right: 10px; }
