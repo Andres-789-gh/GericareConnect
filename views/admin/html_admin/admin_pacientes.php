@@ -1,6 +1,6 @@
 <?php
-session_start();
-// Tu código de seguridad y sesión...
+require_once __DIR__ . '/../../../controllers/auth/verificar_sesion.php';
+verificarAcceso(['Administrador']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,7 +16,6 @@ session_start();
     <link rel="stylesheet" href="../css_admin/admin_main.css?v=<?= time(); ?>">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- ESTILOS "PRO" PARA LA TABLA DE RESULTADOS -->
     <style>
          body {  font-family: 'Sans-serif', sans-serif; background-color: #f4f7f9; margin: 0; color: #333; }
         .admin-header { background-color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9ecef; }

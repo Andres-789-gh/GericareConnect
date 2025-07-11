@@ -21,4 +21,21 @@ auth_username=gericareconnect@gmail.com
 auth_password=voyibwjqznskfkio
 force_sender=gericareconnect@gmail.com
 
+
 http://localhost/GericareConnect/views/index-login/htmls/
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+
+para enviar correos con la contraseña temporal en InfinityFree o cualquier hosting similar:
+
+Lo de la función mail() de PHP y de configurar php.ini en XAMPP no sirve en ese caso. 
+Se debe usar una librería como PHPMailer para conectarte a un servidor SMTP externo (como Gmail, SendGrid, etc.). 
+El servidor SMTP externo es como una "oficina de correos" que se encarga de enviar los emails de forma fiable.
+
+Un servidor SMTP "externo" es un servidor de correo que no está alojado en la propia máquina o en el mismo servidor donde está la pagina. 
+En lugar de que la pag intente enviar el correo directamente (igualmente esto suele ser bloqueado por temas de spam en hostings compartidos), 
+le dice a un servidor SMTP (como el de Gmail, Outlook, etc.) que envíe el correo.
+
+Y PHPMailer es una librería PHP muy popular y robusta que simplifica el proceso de envío de correos electrónicos desde una aplicación PHP.
+SMTP: Simple Mail Transfer Protocol (Protocolo Simple de Transferencia de Correo).
