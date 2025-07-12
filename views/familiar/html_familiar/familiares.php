@@ -38,16 +38,15 @@ if (!isset($_SESSION['id_usuario'])) {
     }
     ?>
     
-   <header class="header-familiar animated fadeInDown">
-    <div id="particles-js"></div>
-    
-    <div class="header-content">
+    <header class="header-familiar animated fadeInDown">
+    <div id="particles-js-header"></div>
+    <div class="header-familiar-content">
         <a href="familiares.php" class="logo">
             <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
-            <h1>GeriCareConnect</h1>
+            <span class="app-name">GeriCareConnect</span>
         </a>
-
-        <nav class="main-nav">
+        
+        <nav class="user-navigation">
             <a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>">
                 <i class="fas fa-user-cog"></i> Mi Perfil
             </a>
@@ -84,24 +83,26 @@ if (!isset($_SESSION['id_usuario'])) {
     </main>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="[https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js](https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js)"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar partículas si el contenedor existe
-        if (document.getElementById('particles-js')) {
-            particlesJS('particles-js', {
+        const particlesContainer = document.getElementById('particles-js-header');
+        if (particlesContainer) {
+            particlesJS('particles-js-header', {
                 "particles": {
-                    "number": {"value": 80, "density": {"enable": true, "value_area": 800}}, /* Más partículas */
-                    "color": {"value": "#ffffff"},
-                    "shape": {"type": "circle"},
-                    "opacity": {"value": 0.8, "random": false}, /* Mayor opacidad */
-                    "size": {"value": 5, "random": true}, /* Tamaño un poco mayor */
-                    "line_linked": {"enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1}, /* Líneas entre partículas */
-                    "move": {"enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out", "attract": {"enable": false, "rotateX": 600, "rotateY": 1200}}
+                    "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#ffffff" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.6, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                    "move": { "enable": true, "speed": 4, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
                 },
                 "interactivity": {
                     "detect_on": "canvas",
-                    "events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}}, /* Interacción al pasar el ratón y hacer clic */
-                    "modes": {"grab": {"distance": 200, "line_linked": {"opacity": 1}}, "bubble": {"distance": 200, "size": 80, "duration": 0.4}, "repulse": {"distance": 200, "duration": 0.4}, "push": {"particles_nb": 4}, "remove": {"particles_nb": 2}}
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
+                    "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 4 } }
                 },
                 "retina_detect": true
             });
