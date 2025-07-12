@@ -57,27 +57,27 @@
         public function Actualizar($datos) {
             try {
                 // Prepara la llamada al procedimiento almacenado 'actualizar_usuario'.
-                $query = $this->conn->prepare("call actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); // "?" son marcadores
+                $actualizar = $this->conn->prepare("call actualizar_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); // "?" son marcadores
 
                 // Vincula cada '?' del procedimiento con una variable del array '$datos'.
                 // Esto se hace para pasar los datos de forma segura y en el orden correcto.
-                $query->bindParam(1,  $datos['id_usuario']);
-                $query->bindParam(2,  $datos['tipo_documento']);
-                $query->bindParam(3,  $datos['documento_identificacion']);
-                $query->bindParam(4,  $datos['nombre']);
-                $query->bindParam(5,  $datos['apellido']);
-                $query->bindParam(6,  $datos['direccion']);
-                $query->bindParam(7,  $datos['correo_electronico']);
-                $query->bindParam(8,  $datos['numero_telefono']);
-                $query->bindParam(9,  $datos['fecha_contratacion']);
-                $query->bindParam(10, $datos['tipo_contrato']);
-                $query->bindParam(11, $datos['contacto_emergencia']);
-                $query->bindParam(12, $datos['fecha_nacimiento']);
-                $query->bindParam(13, $datos['parentesco']);
-                $query->bindParam(14, $datos['nombre_rol']); 
+                $actualizar->bindParam(1,  $datos['id_usuario']);
+                $actualizar->bindParam(2,  $datos['tipo_documento']);
+                $actualizar->bindParam(3,  $datos['documento_identificacion']);
+                $actualizar->bindParam(4,  $datos['nombre']);
+                $actualizar->bindParam(5,  $datos['apellido']);
+                $actualizar->bindParam(6,  $datos['direccion']);
+                $actualizar->bindParam(7,  $datos['correo_electronico']);
+                $actualizar->bindParam(8,  $datos['numero_telefono']);
+                $actualizar->bindParam(9,  $datos['fecha_contratacion']);
+                $actualizar->bindParam(10, $datos['tipo_contrato']);
+                $actualizar->bindParam(11, $datos['contacto_emergencia']);
+                $actualizar->bindParam(12, $datos['fecha_nacimiento']);
+                $actualizar->bindParam(13, $datos['parentesco']);
+                $actualizar->bindParam(14, $datos['nombre_rol']); 
 
                 // Ejecuta el procedimiento con los datos que se pasaron.
-                $query->execute();
+                $actualizar->execute();
 
                 // Si todo sale bien devuelve 'true'.
                 return true;
@@ -148,24 +148,24 @@
         public function registrar($datos) {
             try {
                 // Prepara la llamada al procedimiento 'registrar_familiar'.
-                $query = $this->conn->prepare("call registrar_familiar(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $registrar = $this->conn->prepare("call registrar_familiar(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 // Vincula cada '?' con los datos del formulario.
-                $query->bindParam(1,  $datos['tipo_documento']);
-                $query->bindParam(2,  $datos['documento_identificacion']);
-                $query->bindParam(3,  $datos['nombre']);
-                $query->bindParam(4,  $datos['apellido']);
-                $query->bindParam(5,  $datos['direccion']);
-                $query->bindParam(6,  $datos['correo_electronico']);
-                $query->bindParam(7,  $datos['contraseña']); // Esta contraseña ya viene procesada (hashed) desde el controlador.
-                $query->bindParam(8,  $datos['numero_telefono']);
-                $query->bindParam(9,  $datos['parentesco']);
+                $registrar->bindParam(1,  $datos['tipo_documento']);
+                $registrar->bindParam(2,  $datos['documento_identificacion']);
+                $registrar->bindParam(3,  $datos['nombre']);
+                $registrar->bindParam(4,  $datos['apellido']);
+                $registrar->bindParam(5,  $datos['direccion']);
+                $registrar->bindParam(6,  $datos['correo_electronico']);
+                $registrar->bindParam(7,  $datos['contraseña']); // Esta contraseña ya viene procesada (hashed) desde el controlador.
+                $registrar->bindParam(8,  $datos['numero_telefono']);
+                $registrar->bindParam(9,  $datos['parentesco']);
 
                 // Ejecuta el procedimiento.
-                $query->execute();
+                $registrar->execute();
 
                 // Devuelve el resultado del procedimiento (el ID del usuario creado).
-                return $query->fetch(PDO::FETCH_ASSOC);
+                return $registrar->fetch(PDO::FETCH_ASSOC);
             } catch (Exception $e) {
                 throw $e;
             }
@@ -209,27 +209,27 @@
         // Registra un nuevo empleado (puede ser otro Administrador o un Cuidador).
         public function registrarEmpleado($datos) {
             try {
-                $query = $this->conn->prepare("call registrar_empleado(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $registrarEmp = $this->conn->prepare("call registrar_empleado(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 
                 // Vincula los datos del empleado.
-                $query->bindParam(1,  $datos['tipo_documento']);
-                $query->bindParam(2,  $datos['documento_identificacion']);
-                $query->bindParam(3,  $datos['nombre']);
-                $query->bindParam(4,  $datos['apellido']);
-                $query->bindParam(5,  $datos['direccion']);
-                $query->bindParam(6,  $datos['correo_electronico']);
-                $query->bindParam(7,  $datos['contraseña']); // Esta contraseña ya viene procesada (hashed) desde el controlador.
-                $query->bindParam(8,  $datos['numero_telefono']);
-                $query->bindParam(9,  $datos['fecha_contratacion']);
-                $query->bindParam(10, $datos['tipo_contrato']);
-                $query->bindParam(11, $datos['contacto_emergencia']);
-                $query->bindParam(12, $datos['fecha_nacimiento']);
-                $query->bindParam(13, $datos['nombre_rol']);
+                $registrarEmp->bindParam(1,  $datos['tipo_documento']);
+                $registrarEmp->bindParam(2,  $datos['documento_identificacion']);
+                $registrarEmp->bindParam(3,  $datos['nombre']);
+                $registrarEmp->bindParam(4,  $datos['apellido']);
+                $registrarEmp->bindParam(5,  $datos['direccion']);
+                $registrarEmp->bindParam(6,  $datos['correo_electronico']);
+                $registrarEmp->bindParam(7,  $datos['contraseña']); // Esta contraseña ya viene procesada (hashed) desde el controlador.
+                $registrarEmp->bindParam(8,  $datos['numero_telefono']);
+                $registrarEmp->bindParam(9,  $datos['fecha_contratacion']);
+                $registrarEmp->bindParam(10, $datos['tipo_contrato']);
+                $registrarEmp->bindParam(11, $datos['contacto_emergencia']);
+                $registrarEmp->bindParam(12, $datos['fecha_nacimiento']);
+                $registrarEmp->bindParam(13, $datos['nombre_rol']);
 
-                $query->execute();
+                $registrarEmp->execute();
 
                 // Devuelve el ID del nuevo empleado creado.
-                return $query->fetch(PDO::FETCH_ASSOC);
+                return $registrarEmp->fetch(PDO::FETCH_ASSOC);
 
             } catch (Exception $e) {
                 // Si algo sale mal (ej: correo duplicado), la excepción se lanza para que el controlador la maneje.
