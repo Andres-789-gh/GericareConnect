@@ -12,7 +12,7 @@ $exito_location = '../../views/admin/html_admin/admin_pacientes.php';    // A d�
 // Se verifica que el usuario haya iniciado sesión y que su rol sea 'Administrador'.
 // Si no cumple estas condiciones, no puede continuar.
 require_once __DIR__ . '/../auth/verificar_sesion.php';
-verificarAcceso(['Administrador', 'Cuidador']);
+verificarAcceso(['Administrador']);
 
 // Se comprueba que el formulario se haya enviado usando el método POST.
 // Esto evita que alguien pueda acceder a este controlador escribiendo la URL en el navegador.
