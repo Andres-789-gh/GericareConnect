@@ -23,11 +23,11 @@
             $this->conn = $conn;
         }
 
-        // MÉTODO Login
+        // MÉTODO Login: manejo dinamico de roles
         // Este método se usa para verificar si un usuario puede iniciar sesión.
         public function Login($tipo_documento, $documento_identificacion) {
             try {
-                // Prepara una consulta SQL para buscar un usuario.
+                // Prepara una consulta SQL con la propiedad "$this->conn" que tiene la conexion a BD para buscar un usuario.
                 // Usar 'prepare' es una medida de seguridad clave para prevenir ataques de inyección SQL.
                 $validar = $this->conn->prepare("
                     select u.*, r.nombre_rol 
