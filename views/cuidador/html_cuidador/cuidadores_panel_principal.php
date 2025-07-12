@@ -15,6 +15,8 @@ verificarAcceso(['Cuidador']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet" href="../css_cuidador/cuidador_header.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="../css_cuidador/cuidador_main.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="../../familiar/css_familiar/fami.css?v=<?= time(); ?>">
@@ -30,7 +32,7 @@ verificarAcceso(['Cuidador']);
             position: relative;
             z-index: 1 !important;
         }
-        </style>
+    </style>
 </head>
 <body>
 
@@ -60,10 +62,19 @@ verificarAcceso(['Cuidador']);
 
 <script src="../js_cuidador/cuidadores_panel_principal.js" defer></script>
 
-<?php 
-include 'footer_cuidador.php'; 
-?>
-
+<?php include 'footer_cuidador.php'; ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+            <?php if(isset($_SESSION['mensaje'])): ?>
+                Swal.fire({ icon: 'success', title: '¡Éxito!', text: '<?= addslashes($_SESSION['mensaje']) ?>', timer: 3000, showConfirmButton: false });
+                <?php unset($_SESSION['mensaje']); ?>
+            <?php endif; ?>
+            <?php if(isset($_SESSION['error'])): ?>
+                Swal.fire({ icon: 'error', title: 'Oops...', text: '<?= addslashes($_SESSION['error']) ?>' });
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+        });
+</script>
 
 </body>
 </html>
