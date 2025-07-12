@@ -11,11 +11,8 @@ $exito_location = '../../views/admin/html_admin/admin_pacientes.php';    // A d�
 // CAPA DE SEGURIDAD 
 // Se verifica que el usuario haya iniciado sesión y que su rol sea 'Administrador'.
 // Si no cumple estas condiciones, no puede continuar.
-if (!isset($_SESSION['nombre_rol']) || $_SESSION['nombre_rol'] !== 'Administrador') {
-    $_SESSION['error'] = "Acceso no autorizado.";
-    header("Location: /GericareConnect/views/index-login/htmls/index.php"); // Se le envía a la página de login.
-    exit(); // Se detiene el script.
-}
+require_once __DIR__ . '/../auth/verificar_sesion.php';
+verificarAcceso(['Administrador', 'Cuidador']);
 
 // Se comprueba que el formulario se haya enviado usando el método POST.
 // Esto evita que alguien pueda acceder a este controlador escribiendo la URL en el navegador.
