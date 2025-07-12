@@ -10,7 +10,6 @@ $exito_location = '../../views/admin/html_admin/admin_pacientes.php';    // A d�
 
 // CAPA DE SEGURIDAD 
 // Se verifica que el usuario haya iniciado sesión y que su rol sea 'Administrador'.
-// Si no cumple estas condiciones, no puede continuar.
 require_once __DIR__ . '/../auth/verificar_sesion.php';
 verificarAcceso(['Administrador']);
 
@@ -21,16 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // CREACIÓN DE CONTRASEÑA 
     
     // Se genera una contraseña temporal aleatoria.
-    // 'random_bytes(5)' crea 5 bytes de datos criptográficamente seguros (que no son legibles, son simbolos extraños tipo: _qC).
+    // 'random_bytes(5)' crea 5 bytes de datos seguros (que no son legibles).
     // 'bin2hex()' los convierte a una cadena de texto hexadecimal (10 caracteres) 
     // osea traduce esa cadena de datos binarios ilegibles a su representación en texto hexadecimal.
     $clave_temporal = bin2hex(random_bytes(5));
 
     // HASH DE CONTRASEÑA
     // 'password_hash()' crea un cifrado seguro que no se puede revertir.
-    // PASSWORD_DEFAULT: es una constante de PHP que le dice a la función "password_hash()"
-    // que use el algoritmo de cifrado más recomendado que exista actualmente."
-    // Y todo eos se guarda en la variable "$contraseña_hashed" para usarla despues.
+    // PASSWORD_DEFAULT: es una constante de PHP para usar el algoritmo de cifrado más reciente."
+    // Y se guarda en la variable "$contraseña_hashed" para usarla despues.
     $contraseña_hashed = password_hash($clave_temporal, PASSWORD_DEFAULT);
 
     // Se recogen todos los datos enviados desde el formulario en un array llamado '$datos'.
@@ -86,12 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ";
 
         // Se preparan las cabeceras para indicar que el correo es HTML y tiene caracteres UTF-8.
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers = "MIME-Version: 1.0" . "\r\n"; // Le dice al programa de correo (Gmail, etc.)que el correo no es solo texto simple (formato moderno).
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n"; // Se especifica que el contenido es HTML y la codificación de caracteres es UTF-8.
         // Se define el remitente del correo.
         $headers .= 'From: GeriCare Connect <gericareconnect@gmail.com>' . "\r\n";
-
-        // Se envía el correo. La '@' suprime los errores si el servidor de correo no está bien configurado.
+        // Se ejecuta la función mail() de PHP con todos los parámetros. La '@' suprime los errores si el servidor de correo no está bien configurado.
         @mail($correo_destinatario, $asunto, $cuerpo_correo, $headers);
 
         // Si todo fue exitoso, se redirige al administrador a su panel principal.
