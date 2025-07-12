@@ -26,7 +26,10 @@
     align-items: center; /* Centra todo verticalmente */
     width: 100%;
 }
-
+/* Se mostrará solo cuando el JS le añada la clase .show */
+.header .user-info .dropdown-menu.show {
+    display: block;
+}
 /* --- SECCIÓN DEL LOGO (25% del ancho) --- */
 .header .logo {
     width: 20%;
@@ -53,13 +56,10 @@
     margin: 0;
 }
 
-/* --- BARRA DE NAVEGACIÓN (50% del ancho, centrada) --- */
 .main-nav {
-    width: 50%;
     display: flex;
-    justify-content: center; /* Centra los botones en su 50% de espacio */
     align-items: center;
-    gap: 0.5rem;
+    gap: 1.5rem;
 }
 
 .main-nav a {
@@ -68,8 +68,15 @@
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
     font-weight: 500;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     transition: all 0.2s ease-in-out;
+}
+
+.main-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
 .main-nav a.active,

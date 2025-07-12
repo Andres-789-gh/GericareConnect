@@ -7,7 +7,16 @@ body {
     background: #f0f2f5;
     color: #333;
 }
+/* El menú estará oculto por defecto */
+.user-info .dropdown-menu {
+    display: none;
+    /* ... (el resto de tus estilos para el menú se mantienen) ... */
+}
 
+/* Y se mostrará solo cuando le añadamos la clase .show */
+.user-info .dropdown-menu.show {
+    display: block;
+}
 .admin-header {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

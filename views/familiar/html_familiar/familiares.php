@@ -18,6 +18,7 @@ if (!isset($_SESSION['id_usuario'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css_familiar/familiar_header.css?v=<?= time(); ?>">
 </head>
 <body>
     <?php
@@ -37,29 +38,26 @@ if (!isset($_SESSION['id_usuario'])) {
     }
     ?>
     
-    <header class="main-header animated fadeInDown">
-        <div class="logo-container">
-            <img src="../../imagenes/Geri_Logo-..png" alt="Logo de la aplicación" class="logo" onclick="window.location.href='familiares.php'">
-            <span class="app-name">GERICARE CONNECT</span>
+   <header class="header-familiar animated fadeInDown">
+    <div id="particles-js"></div>
+    
+    <div class="header-content">
+        <a href="familiares.php" class="logo">
+            <img src="../../imagenes/Geri_Logo-_blanco.png" alt="Logo GeriCare" class="logo-img">
+            <h1>GeriCareConnect</h1>
+        </a>
 
-            <div class="user-info">
-                <strong>Rol:</strong> <?= htmlspecialchars($_SESSION['nombre_rol'] ?? 'Familiar') ?>
-            </div>
-        </div>
-        
-        <nav class="top-navigation">
-            <ul>
-                <li>
-                    <a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>">
-                        <i class="fas fa-user-cog"></i> Mi Perfil
-                    </a>
-                </li>
-        <!--    li><a href=""><i class="fas fa-envelope"></i> Enviar Solicitud</a></li>
-                <li><a href=""><i class="fas fa-list-alt"></i> Solicitudes Pendientes</a></li> -->
-                <li><a href="../../../controllers/familiar/logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            </ul>
+        <nav class="main-nav">
+            <a href="../../../controllers/index-login/actualizar_controller.php?id=<?= $_SESSION['id_usuario'] ?>">
+                <i class="fas fa-user-cog"></i> Mi Perfil
+            </a>
+            <a href="../../../controllers/familiar/logout.php">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
         </nav>
-        </header>
+    </div>
+</header>
+        
     <main class="admin-content">
         <div class="pacientes-container animated fadeInUp">
             <h1 class="animated slideInLeft"><i class="fas fa-users"></i> Tus Familiares (Pacientes Asociados)</h1>
@@ -84,7 +82,32 @@ if (!isset($_SESSION['id_usuario'])) {
              <div id="detalle-paciente-popup" style="display: none; margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></div>
         </div>
     </main>
-
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="[https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js](https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js)"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar partículas si el contenedor existe
+        if (document.getElementById('particles-js')) {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {"value": 80, "density": {"enable": true, "value_area": 800}}, /* Más partículas */
+                    "color": {"value": "#ffffff"},
+                    "shape": {"type": "circle"},
+                    "opacity": {"value": 0.8, "random": false}, /* Mayor opacidad */
+                    "size": {"value": 5, "random": true}, /* Tamaño un poco mayor */
+                    "line_linked": {"enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1}, /* Líneas entre partículas */
+                    "move": {"enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out", "attract": {"enable": false, "rotateX": 600, "rotateY": 1200}}
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}}, /* Interacción al pasar el ratón y hacer clic */
+                    "modes": {"grab": {"distance": 200, "line_linked": {"opacity": 1}}, "bubble": {"distance": 200, "size": 80, "duration": 0.4}, "repulse": {"distance": 200, "duration": 0.4}, "push": {"particles_nb": 4}, "remove": {"particles_nb": 2}}
+                },
+                "retina_detect": true
+            });
+        }
+    });
+</script>
     <script src="/GericareConnect/views/familiar/js_familiar/familiares_vista_copy.js"></script>
 </body>
 </html>

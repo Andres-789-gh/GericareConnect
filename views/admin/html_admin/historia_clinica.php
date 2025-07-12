@@ -225,32 +225,6 @@ $historias = $modelo->consultarHistorias($busqueda);
 
 </div>
 <a href="form_historia_clinica.php" class="floating-add-button" title="Crear Nueva Historia Clínica"><i class="fas fa-plus"></i></a>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const userInfo = document.querySelector('.user-info');
-        
-        if (userInfo) {
-            userInfo.addEventListener('click', function(event) {
-                // Detiene la propagación para que el clic no cierre el menú inmediatamente
-                event.stopPropagation();
-                
-                // Busca el menú desplegable dentro del elemento clickeado
-                const dropdownMenu = this.querySelector('.dropdown-menu');
-                if (dropdownMenu) {
-                    // Alterna la clase 'show' para mostrar u ocultar el menú
-                    dropdownMenu.classList.toggle('show');
-                }
-            });
-        }
 
-        // Cierra el menú si se hace clic en cualquier otro lugar de la página
-        window.addEventListener('click', function() {
-            const openDropdown = document.querySelector('.dropdown-menu.show');
-            if (openDropdown) {
-                openDropdown.classList.remove('show');
-            }
-        });
-    });
-</script>
 </body>
 </html>
