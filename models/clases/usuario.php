@@ -43,7 +43,7 @@
                 
                 // Devuelve todos los resultados que encontró en un formato de array.
                 // Si no encuentra nada devuelve un array vacío.
-                return $validar->fetchAll(PDO::FETCH_ASSOC);
+                return $validar->fetchAll(PDO::FETCH_ASSOC); // formato asociativo
 
             } catch (Exception $e) {
                 // Si algo sale mal (ej: la base de datos se cae) se "lanza" el error.
