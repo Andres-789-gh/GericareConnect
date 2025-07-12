@@ -65,5 +65,8 @@ $historias = $modelo->consultarHistoriasPorCuidador($_SESSION['id_usuario'], $bu
             </div>
         </div>
     </main>
+    <?php 
+include 'footer_cuidador.php'; 
+?>
 </body>
 </html>

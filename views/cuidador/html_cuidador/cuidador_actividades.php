@@ -140,7 +140,7 @@ $actividades = $modelo_actividad->consultarPorCuidador($_SESSION['id_usuario'], 
                         <option value="Pendiente" <?= $estado_filtro == 'Pendiente' ? 'selected' : '' ?>>Pendientes</option>
                         <option value="Completada" <?= $estado_filtro == 'Completada' ? 'selected' : '' ?>>Completadas</option>
                     </select>
-                    <input type="search" name="busqueda" placeholder="Buscar por paciente, documento o actividad..." value="<?= htmlspecialchars($busqueda) ?>">
+                    <input type="search" name="busqueda" placeholder="Buscar paciente, CC o actividad..." value="<?= htmlspecialchars($busqueda) ?>">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
