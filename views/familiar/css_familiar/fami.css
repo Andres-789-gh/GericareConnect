@@ -42,7 +42,7 @@ body {
 .app-name {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: white;
 }
 
 .main-header .top-navigation ul {
@@ -369,4 +369,76 @@ input[type="search"]::-webkit-search-cancel-button {
         transform: translate(-50%, -100px);
         opacity: 0;
     }
+}
+/* --- ESTILOS PARA EL NUEVO HEADER OSCURO Y ANIMADO --- */
+.header-familiar {
+    background: linear-gradient(135deg, #1e3a8a, #0d1b2a); /* Degradado azul oscuro */
+    color: #fff;
+    padding: 1rem 2.5rem;
+    position: relative;
+    overflow: hidden; /* Para que las partículas no se salgan */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#particles-js-header {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.header-familiar-content {
+    position: relative;
+    z-index: 2; /* Contenido sobre las partículas */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-familiar .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: #fff;
+}
+
+.header-familiar .logo-img {
+    height: 45px;
+    transition: transform 0.4s ease;
+}
+
+.header-familiar .logo:hover .logo-img {
+    transform: rotate(360deg) scale(1.1);
+}
+
+.header-familiar .app-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Estilo para los enlaces de la derecha */
+.header-familiar .user-navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-familiar .user-navigation a {
+    color: #e0e1dd;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1rem;
+    transition: color 0.2s ease-in-out;
+}
+
+.header-familiar .user-navigation a:hover {
+    color: #fff;
+    text-decoration: underline;
 }
