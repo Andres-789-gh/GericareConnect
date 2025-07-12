@@ -54,6 +54,8 @@
 
         // MÉTODO Actualizar
         // Llama a un procedimiento almacenado en la base de datos para actualizar la información de un usuario.
+        // donde solo recibe un parametro ($datos), esta variable es un array asociativo que encapsula toda la información del usuario 
+        // que se envía desde el controlador.
         public function Actualizar($datos) {
             try {
                 // Prepara la llamada al procedimiento almacenado 'actualizar_usuario'.
@@ -61,6 +63,7 @@
 
                 // Vincula cada '?' del procedimiento con una variable del array '$datos'.
                 // Esto se hace para pasar los datos de forma segura y en el orden correcto.
+                // bindParam vincula una variable de PHP a los marcadores de posición de la consulta preparada.
                 $actualizar->bindParam(1,  $datos['id_usuario']);
                 $actualizar->bindParam(2,  $datos['tipo_documento']);
                 $actualizar->bindParam(3,  $datos['documento_identificacion']);
