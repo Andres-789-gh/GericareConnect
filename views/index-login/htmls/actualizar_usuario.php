@@ -64,7 +64,7 @@ $esFamiliar = $rol === 'Familiar';
             <div id="campos-cuidador-admin" class="campos-rol form-grid" style="<?= $esFamiliar ? 'display:none;' : '' ?>">
 
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>" disabled>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="<?= htmlspecialchars($datosUsuario['fecha_nacimiento']) ?>" readonly>
                 <small id="error-fecha_nacimiento" class="mensaje-error-campo"></small>
 
                 <label for="fecha_contratacion" class="form-label">Fecha de contratación</label>

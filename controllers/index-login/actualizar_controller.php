@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha_contratacion = null;
         $tipo_contrato = null;
         $contacto_emergencia = null;
-    } else { // Si no es Familiar (es Admin o Cuidador), el campo de parentesco se pone en 'null'.
+    } else if ($rol === 'Administrador' || $rol === 'Cuidador'){ // Si no es Familiar (es Admin o Cuidador), el campo de parentesco se pone en 'null'.
         $parentesco = null;
     }
 
