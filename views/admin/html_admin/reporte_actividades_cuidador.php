@@ -270,32 +270,6 @@ if (!empty($id_cuidador_filtro)) {
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="../js_admin/admin_scripts.js"></script>
     <a href="form_actividades.php" class="floating-add-button" title="Crear Nueva Actividad"><i class="fas fa-plus"></i></a>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const userInfo = document.querySelector('.user-info');
-        
-        if (userInfo) {
-            userInfo.addEventListener('click', function(event) {
-                // Detiene la propagación para que el clic no cierre el menú inmediatamente
-                event.stopPropagation();
-                
-                // Busca el menú desplegable dentro del elemento clickeado
-                const dropdownMenu = this.querySelector('.dropdown-menu');
-                if (dropdownMenu) {
-                    // Alterna la clase 'show' para mostrar u ocultar el menú
-                    dropdownMenu.classList.toggle('show');
-                }
-            });
-        }
-
-        // Cierra el menú si se hace clic en cualquier otro lugar de la página
-        window.addEventListener('click', function() {
-            const openDropdown = document.querySelector('.dropdown-menu.show');
-            if (openDropdown) {
-                openDropdown.classList.remove('show');
-            }
-        });
-    });
 </script>
 </body>
 </html>
